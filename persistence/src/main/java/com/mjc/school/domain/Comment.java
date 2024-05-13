@@ -2,13 +2,19 @@ package com.mjc.school.domain;
 
 import com.mjc.school.util.Formatting;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+@Entity
 public class Comment {
 
-    SimpleDateFormat SIMPLEDATEFORMAT = Formatting.SIMPLEDATEFORMAT;
+    @Transient
+    private SimpleDateFormat SIMPLEDATEFORMAT = Formatting.SIMPLEDATEFORMAT;
+    @Id
     private Long id;
     private String content;
     private News news;

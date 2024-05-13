@@ -1,11 +1,19 @@
 package com.mjc.school.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class NewsTag {
+    @Id
     private Long id;
     private News news;
     private Tag tag;
+
 
     public NewsTag() {
     }

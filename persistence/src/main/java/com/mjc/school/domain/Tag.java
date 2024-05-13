@@ -1,9 +1,15 @@
 package com.mjc.school.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Objects;
 
+@Entity
 public class Tag {
+    @Id
     private Long id;
+    @Column(unique = true)
     private String name;
 
     public Tag() {

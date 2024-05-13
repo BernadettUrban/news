@@ -1,10 +1,21 @@
 package com.mjc.school.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
 public class Author {
+    @Id
     private Long id;
+    @Column(unique = true)
     private String name;
+    @OneToMany(mappedBy = "author")
+    private final List<News> news = new ArrayList<>();
 
     public Author() {
     }

@@ -2,20 +2,25 @@ package com.mjc.school.domain;
 
 import com.mjc.school.util.Formatting;
 
+import javax.persistence.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+@Entity
 public class News {
 
+    @Transient
     SimpleDateFormat SIMPLEDATEFORMAT = Formatting.SIMPLEDATEFORMAT;
 
-           // new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
-
+    @Id
     private Long id;
+    @Column(unique = true)
     private String title;
     private String content;
+    @ManyToOne()
+    @JoinColumn(name = "author_id")
     private Author author;
     private String created;
     private String modified;
