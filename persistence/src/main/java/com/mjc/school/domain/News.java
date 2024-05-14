@@ -5,8 +5,7 @@ import com.mjc.school.util.Formatting;
 import javax.persistence.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class News {
@@ -24,7 +23,10 @@ public class News {
     private Author author;
     private String created;
     private String modified;
-
+    @OneToMany(mappedBy = "news")
+    private Set<NewsTag> tags;
+    @OneToMany(mappedBy = "news")
+    private List<Comment> comments = new ArrayList<>();
 
     public News() {
     }
@@ -46,7 +48,28 @@ public class News {
         setModified();
     }
 
+    public News(Long id, String title, String content, Author author, String created, String modified, Set<NewsTag> tags, List<Comment> comments) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.created = created;
+        this.modified = modified;
+        this.tags = tags;
+        this.comments = comments;
+    }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public Set<NewsTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<NewsTag> tags) {
+        this.tags = tags;
+    }
 
     public void setCreated() {
         this.created = SIMPLEDATEFORMAT.format(new Date());

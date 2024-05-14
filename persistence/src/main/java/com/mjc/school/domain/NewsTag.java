@@ -1,8 +1,6 @@
 package com.mjc.school.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,7 +9,12 @@ import java.util.Objects;
 public class NewsTag {
     @Id
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "news_id")
     private News news;
+    @ManyToOne
+    @JoinColumn(name = "tag_id")
     private Tag tag;
 
 

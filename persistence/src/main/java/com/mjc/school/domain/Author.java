@@ -15,7 +15,7 @@ public class Author {
     @Column(unique = true)
     private String name;
     @OneToMany(mappedBy = "author")
-    private final List<News> news = new ArrayList<>();
+    private List<News> news = new ArrayList<>();
 
     public Author() {
     }
@@ -23,6 +23,16 @@ public class Author {
     public Author(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Author(Long id, String name, List<News> news) {
+        this.id = id;
+        this.name = name;
+        this.news = news;
+    }
+
+    public List<News> getNews() {
+        return news;
     }
 
     public Author(String name) {

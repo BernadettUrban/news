@@ -2,9 +2,7 @@ package com.mjc.school.domain;
 
 import com.mjc.school.util.Formatting;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -17,6 +15,8 @@ public class Comment {
     @Id
     private Long id;
     private String content;
+    @ManyToOne()
+    @JoinColumn(name = "news_id")
     private News news;
     private String created;
     private String modified;

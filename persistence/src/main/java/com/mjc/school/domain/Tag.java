@@ -3,7 +3,9 @@ package com.mjc.school.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Tag {
@@ -11,6 +13,8 @@ public class Tag {
     private Long id;
     @Column(unique = true)
     private String name;
+    @OneToMany(mappedBy = "tag")
+    private Set<NewsTag> tags;
 
     public Tag() {
     }
@@ -18,6 +22,20 @@ public class Tag {
     public Tag(Long id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Tag(Long id, String name, Set<NewsTag> tags) {
+        this.id = id;
+        this.name = name;
+        this.tags = tags;
+    }
+
+    public Set<NewsTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<NewsTag> tags) {
+        this.tags = tags;
     }
 
     public Tag(String name) {
