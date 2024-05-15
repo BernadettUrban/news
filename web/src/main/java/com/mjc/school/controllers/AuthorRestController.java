@@ -21,10 +21,10 @@ public class AuthorRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Author>> getAuthors(){
+    public ResponseEntity<List<Author>> getAuthors() {
         List<Author> authors = newsService.listAllAuthors();
 
-        return new ResponseEntity<>( authors, HttpStatus.OK);
+        return new ResponseEntity<>(authors, HttpStatus.OK);
     }
 
 }

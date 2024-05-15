@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
+@Table(name = "comment")
 public class Comment {
 
     @Transient

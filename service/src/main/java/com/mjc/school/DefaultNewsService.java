@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class DefaultNewsService implements NewsService{
+public class DefaultNewsService implements NewsService {
     private final AuthorRepository authorRepository;
 
     public DefaultNewsService(AuthorRepository authorRepository) {

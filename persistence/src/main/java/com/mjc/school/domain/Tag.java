@@ -1,20 +1,19 @@
 package com.mjc.school.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Table(name = "tag")
 public class Tag {
     @Id
     private Long id;
     @Column(unique = true)
     private String name;
     @OneToMany(mappedBy = "tag")
-    private Set<NewsTag> tags;
+    private Set<NewsTag> newstags = new HashSet<>();
 
     public Tag() {
     }
@@ -27,15 +26,15 @@ public class Tag {
     public Tag(Long id, String name, Set<NewsTag> tags) {
         this.id = id;
         this.name = name;
-        this.tags = tags;
+        this.newstags = tags;
     }
 
     public Set<NewsTag> getTags() {
-        return tags;
+        return newstags;
     }
 
     public void setTags(Set<NewsTag> tags) {
-        this.tags = tags;
+        this.newstags = tags;
     }
 
     public Tag(String name) {

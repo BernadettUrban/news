@@ -3,11 +3,11 @@ package com.mjc.school.domain;
 import com.mjc.school.util.Formatting;
 
 import javax.persistence.*;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Entity
+@Table(name = "news")
 public class News {
 
     @Transient
@@ -24,7 +24,7 @@ public class News {
     private String created;
     private String modified;
     @OneToMany(mappedBy = "news")
-    private Set<NewsTag> tags;
+    private Set<NewsTag> newstags = new HashSet<>();
     @OneToMany(mappedBy = "news")
     private List<Comment> comments = new ArrayList<>();
 
@@ -55,7 +55,7 @@ public class News {
         this.author = author;
         this.created = created;
         this.modified = modified;
-        this.tags = tags;
+        this.newstags = tags;
         this.comments = comments;
     }
 
@@ -64,11 +64,11 @@ public class News {
     }
 
     public Set<NewsTag> getTags() {
-        return tags;
+        return newstags;
     }
 
     public void setTags(Set<NewsTag> tags) {
-        this.tags = tags;
+        this.newstags = tags;
     }
 
     public void setCreated() {
