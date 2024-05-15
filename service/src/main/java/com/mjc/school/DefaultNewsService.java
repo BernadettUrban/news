@@ -18,6 +18,6 @@ public class DefaultNewsService implements NewsService {
 
     @Override
     public List<Author> listAllAuthors() {
-        return (List<Author>) authorRepository.findAll();
+        return authorRepository.findAll();
     }
 }

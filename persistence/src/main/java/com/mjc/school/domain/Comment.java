@@ -12,8 +12,10 @@ import java.util.Objects;
 public class Comment {
 
     @Transient
-    private SimpleDateFormat SIMPLEDATEFORMAT = Formatting.SIMPLEDATEFORMAT;
+    private final SimpleDateFormat SIMPLEDATEFORMAT = Formatting.SIMPLEDATEFORMAT;
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
     @ManyToOne()

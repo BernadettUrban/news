@@ -1,7 +1,7 @@
 package com.mjc.school.repository;
 
 import com.mjc.school.domain.Author;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AuthorRepository extends PagingAndSortingRepository<Author, Long> {
+public interface AuthorRepository extends JpaRepository<Author, Long> {
 }
