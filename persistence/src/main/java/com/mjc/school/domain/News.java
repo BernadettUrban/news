@@ -14,7 +14,7 @@ public class News {
     SimpleDateFormat SIMPLEDATEFORMAT = Formatting.SIMPLEDATEFORMAT;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
     @Column(unique = true)
     private String title;
