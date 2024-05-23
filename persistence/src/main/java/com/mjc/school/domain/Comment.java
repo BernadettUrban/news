@@ -17,7 +17,8 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String content;
+    @Column(name = "content")
+    private String commentContent;
     @ManyToOne()
     @JoinColumn(name = "news_id")
     private News news;
@@ -29,14 +30,14 @@ public class Comment {
 
     public Comment(Long id, String content, News news) {
         this.id = id;
-        this.content = content;
+        this.commentContent = content;
         this.news = news;
         setCreated();
         setModified();
     }
 
     public Comment(String content, News news) {
-        this.content = content;
+        this.commentContent = content;
         this.news = news;
         setCreated();
         setModified();
@@ -51,11 +52,11 @@ public class Comment {
     }
 
     public String getContent() {
-        return content;
+        return commentContent;
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.commentContent = content;
     }
 
     public News getNews() {
@@ -80,19 +81,19 @@ public class Comment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id) && Objects.equals(content, comment.content) && Objects.equals(news, comment.news) && Objects.equals(created, comment.created) && Objects.equals(modified, comment.modified);
+        return Objects.equals(id, comment.id) && Objects.equals(commentContent, comment.commentContent) && Objects.equals(news, comment.news) && Objects.equals(created, comment.created) && Objects.equals(modified, comment.modified);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, content, news, created, modified);
+        return Objects.hash(id, commentContent, news, created, modified);
     }
 
     @Override
     public String toString() {
         return "Comment{" +
                 "id=" + id +
-                ", content='" + content + '\'' +
+                ", content='" + commentContent + '\'' +
                 ", news=" + news +
                 ", created=" + created +
                 ", modified=" + modified +

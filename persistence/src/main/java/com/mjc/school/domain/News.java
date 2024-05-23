@@ -18,7 +18,8 @@ public class News {
     private Long id;
     @Column(unique = true)
     private String title;
-    private String content;
+    @Column(name = "content")
+    private String newsContent;
     @ManyToOne()
     @JoinColumn(name = "author_id")
     private Author author;
@@ -35,7 +36,7 @@ public class News {
     public News(Long id, String title, String content, Author author) {
         this.id = id;
         this.title = title;
-        this.content = content;
+        this.newsContent = content;
         this.author = author;
         setCreated();
         setModified();
@@ -43,7 +44,7 @@ public class News {
 
     public News(String title, String content, Author author) {
         this.title = title;
-        this.content = content;
+        this.newsContent = content;
         this.author = author;
         setCreated();
         setModified();
@@ -52,7 +53,7 @@ public class News {
     public News(Long id, String title, String content, Author author, String created, String modified, Set<NewsTag> tags, List<Comment> comments) {
         this.id = id;
         this.title = title;
-        this.content = content;
+        this.newsContent = content;
         this.author = author;
         this.created = created;
         this.modified = modified;
@@ -106,11 +107,11 @@ public class News {
     }
 
     public String getContent() {
-        return content;
+        return newsContent;
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.newsContent = content;
     }
 
     public Author getAuthor() {
@@ -127,12 +128,12 @@ public class News {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         News news = (News) o;
-        return Objects.equals(id, news.id) && Objects.equals(title, news.title) && Objects.equals(content, news.content) && Objects.equals(author, news.author) && Objects.equals(created, news.created) && Objects.equals(modified, news.modified);
+        return Objects.equals(id, news.id) && Objects.equals(title, news.title) && Objects.equals(newsContent, news.newsContent) && Objects.equals(author, news.author) && Objects.equals(created, news.created) && Objects.equals(modified, news.modified);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, author, created, modified);
+        return Objects.hash(id, title, newsContent, author, created, modified);
     }
 
     @Override
@@ -140,7 +141,7 @@ public class News {
         return "News{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
+                ", content='" + newsContent + '\'' +
                 ", author=" + author +
                 ", created=" + created +
                 ", modified=" + modified +
