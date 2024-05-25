@@ -1,17 +1,24 @@
 package com.mjc.school.news.model;
 
+import java.net.URI;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.openapitools.jackson.nullable.JsonNullable;
+import java.time.OffsetDateTime;
+import javax.validation.Valid;
+import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
+
+import java.util.*;
 import javax.annotation.Generated;
-import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
 /**
  * AuthorModel
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-23T18:16:03.571046500+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-25T14:21:33.421975600+02:00[Europe/Budapest]")
 public class AuthorModel {
 
   private Long id;

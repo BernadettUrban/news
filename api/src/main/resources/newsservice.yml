@@ -19,44 +19,90 @@ paths:
                 type: "array"
                 items:
                   $ref: '#/components/schemas/AuthorModel'
-
-  /api/news:
-    get:
+    post:
       tags:
-        - NewsService
-      summary: List all news articles
-      operationId: getAllNews
+        - AuthorService
+      summary: Create a new author
+      operationId: createAuthor
+      requestBody:
+        description: Author object to be created
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorModel'
       responses:
-        '200':
-          description: List of news articles
+        '201':
+          description: Created author
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: '#/components/schemas/NewsModel'
+                $ref: '#/components/schemas/AuthorModel'
 
-  /api/news/{newsId}:
+  /api/authors/{authorId}:
     get:
       tags:
-        - NewsService
-      summary: Get news article by ID
-      operationId: getNewsById
+        - AuthorService
+      summary: Get author by ID
+      operationId: getAuthorById
       parameters:
-        - name: "newsId"
+        - name: "authorId"
           in: "path"
-          description: "ID of the news article to retrieve"
+          description: "ID of the author to retrieve"
           required: true
           schema:
             type: integer
             format: int64
       responses:
         '200':
-          description: Retrieved news article
+          description: Retrieved author
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NewsModel'
+                $ref: '#/components/schemas/AuthorModel'
+    put:
+      tags:
+        - AuthorService
+      summary: Update an author by ID
+      operationId: updateAuthor
+      parameters:
+        - name: "authorId"
+          in: "path"
+          description: "ID of the author to update"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Author object with updated information
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthorModel'
+      responses:
+        '200':
+          description: Updated author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthorModel'
+    delete:
+      tags:
+        - AuthorService
+      summary: Delete an author by ID
+      operationId: deleteAuthor
+      parameters:
+        - name: "authorId"
+          in: "path"
+          description: "ID of the author to delete"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Author deleted successfully
 
 components:
   schemas:
@@ -70,28 +116,4 @@ components:
           type: integer
           format: int64
         name:
-          type: string
-
-    NewsModel:
-      type: object
-      required:
-        - id
-        - title
-        - newsContent
-        - author
-        - created
-        - modified
-      properties:
-        id:
-          type: integer
-          format: int64
-        title:
-          type: string
-        newsContent:
-          type: string
-        author:
-          $ref: '#/components/schemas/AuthorModel'
-        created:
-          type: string
-        modified:
           type: string
