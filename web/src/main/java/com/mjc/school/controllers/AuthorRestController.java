@@ -57,6 +57,13 @@ public class AuthorRestController implements AuthorServiceApi {
     }
 
     @Override
+    public ResponseEntity<List<AuthorModel>> searchAuthorsByName(String name) {
+        List<Author> authors = newsService.searchAuthorsByName(name);
+        List<AuthorModel> authorModels = authorConverter.createListOfAuthorModels(authors);
+        return new ResponseEntity<>(authorModels, HttpStatus.OK);
+    }
+
+    @Override
     public ResponseEntity<AuthorModel> updateAuthor(Long authorId, AuthorModel authorModel) {
         Optional<Author> optionalAuthor = newsService.getAuthorById(authorId);
         if (!optionalAuthor.isPresent()) {

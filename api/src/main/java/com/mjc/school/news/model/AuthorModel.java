@@ -18,7 +18,7 @@ import javax.annotation.Generated;
  * AuthorModel
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-25T14:21:33.421975600+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-28T16:54:57.811425700+02:00[Europe/Budapest]")
 public class AuthorModel {
 
   private Long id;

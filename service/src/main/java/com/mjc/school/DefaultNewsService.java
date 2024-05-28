@@ -38,7 +38,8 @@ public class DefaultNewsService implements NewsService {
     }
 
     @Override
-    public Long maxId() {
-        return authorRepository.count();
+    public List<Author> searchAuthorsByName(String name) {
+        return authorRepository.findByNameContainingIgnoreCase(name);
     }
+
 }

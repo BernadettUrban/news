@@ -13,6 +13,5 @@ public interface NewsService {
     Optional<Author> getAuthorById(Long id);
 
     void saveAuthor(Author author);
-
-    Long maxId();
+    List<Author> searchAuthorsByName(String name);
 }

@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-25T14:21:33.421975600+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-28T16:54:57.811425700+02:00[Europe/Budapest]")
 @Validated
 @Tag(name = "AuthorService", description = "the AuthorService API")
 public interface AuthorServiceApi {
@@ -139,6 +139,33 @@ public interface AuthorServiceApi {
     
     ResponseEntity<List<AuthorModel>> getAuthors(
         
+    );
+
+
+    /**
+     * GET /api/authors/search : Search authors by part of their name
+     *
+     * @param name Part of the name of the authors to search for (required)
+     * @return List of authors matching the search criteria (status code 200)
+     */
+    @Operation(
+        operationId = "searchAuthorsByName",
+        summary = "Search authors by part of their name",
+        tags = { "AuthorService" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "List of authors matching the search criteria", content = {
+                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = AuthorModel.class)))
+            })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/api/authors/search",
+        produces = { "application/json" }
+    )
+    
+    ResponseEntity<List<AuthorModel>> searchAuthorsByName(
+        @NotNull @Parameter(name = "name", description = "Part of the name of the authors to search for", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "name", required = true) String name
     );
 
 

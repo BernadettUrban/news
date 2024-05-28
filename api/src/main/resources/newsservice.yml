@@ -38,7 +38,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AuthorModel'
-
   /api/authors/{authorId}:
     get:
       tags:
@@ -103,7 +102,28 @@ paths:
       responses:
         '204':
           description: Author deleted successfully
-
+  /api/authors/search:
+    get:
+      tags:
+        - AuthorService
+      summary: Search authors by part of their name
+      operationId: searchAuthorsByName
+      parameters:
+        - name: name
+          in: query
+          description: Part of the name of the authors to search for
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of authors matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthorModel'
 components:
   schemas:
     AuthorModel:
