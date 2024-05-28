@@ -1,7 +1,9 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.domain.Tag;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,9 +14,11 @@ import java.util.Optional;
 @Transactional
 public class DefaultNewsService implements NewsService {
     private final AuthorRepository authorRepository;
+    private final TagRepository tagRepository;
 
-    public DefaultNewsService(AuthorRepository authorRepository) {
+    public DefaultNewsService(AuthorRepository authorRepository, TagRepository tagRepository) {
         this.authorRepository = authorRepository;
+        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -40,6 +44,31 @@ public class DefaultNewsService implements NewsService {
     @Override
     public List<Author> searchAuthorsByName(String name) {
         return authorRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    @Override
+    public List<Tag> listAllTags() {
+        return tagRepository.findAll();
+    }
+
+    @Override
+    public void deleteTagById(Long id) {
+        tagRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Tag> getTagById(Long id) {
+        return tagRepository.findById(id);
+    }
+
+    @Override
+    public void saveTag(Tag tag) {
+        tagRepository.save(tag);
+    }
+
+    @Override
+    public List<Tag> searchTagsByName(String name) {
+        return tagRepository.findByNameContainingIgnoreCase(name);
     }
 
 }

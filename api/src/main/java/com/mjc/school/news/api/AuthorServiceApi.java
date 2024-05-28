@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-28T16:54:57.811425700+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-28T17:30:38.266519300+02:00[Europe/Budapest]")
 @Validated
 @Tag(name = "AuthorService", description = "the AuthorService API")
 public interface AuthorServiceApi {

@@ -15,29 +15,29 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
- * AuthorModel
+ * TagModel
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-28T17:30:38.266519300+02:00[Europe/Budapest]")
-public class AuthorModel {
+public class TagModel {
 
   private Long id;
 
   private String name;
 
-  public AuthorModel() {
+  public TagModel() {
     super();
   }
 
   /**
    * Constructor with only required parameters
    */
-  public AuthorModel(Long id, String name) {
+  public TagModel(Long id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public AuthorModel id(Long id) {
+  public TagModel id(Long id) {
     this.id = id;
     return this;
   }
@@ -57,7 +57,7 @@ public class AuthorModel {
     this.id = id;
   }
 
-  public AuthorModel name(String name) {
+  public TagModel name(String name) {
     this.name = name;
     return this;
   }
@@ -85,9 +85,9 @@ public class AuthorModel {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AuthorModel authorModel = (AuthorModel) o;
-    return Objects.equals(this.id, authorModel.id) &&
-        Objects.equals(this.name, authorModel.name);
+    TagModel tagModel = (TagModel) o;
+    return Objects.equals(this.id, tagModel.id) &&
+        Objects.equals(this.name, tagModel.name);
   }
 
   @Override
@@ -98,7 +98,7 @@ public class AuthorModel {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AuthorModel {\n");
+    sb.append("class TagModel {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("}");
