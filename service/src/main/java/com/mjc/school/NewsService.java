@@ -14,6 +14,7 @@ public interface NewsService {
     Optional<Author> getAuthorById(Long id);
 
     void saveAuthor(Author author);
+
     List<Author> searchAuthorsByName(String name);
 
     List<Tag> listAllTags();
@@ -23,5 +24,6 @@ public interface NewsService {
     Optional<Tag> getTagById(Long id);
 
     void saveTag(Tag tag);
+
     List<Tag> searchTagsByName(String name);
 }

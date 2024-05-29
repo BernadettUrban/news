@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class TagRestController implements TagServiceApi {
@@ -31,26 +32,44 @@ public class TagRestController implements TagServiceApi {
 
     @Override
     public ResponseEntity<Void> deleteTag(Long tagId) {
-        return null;
+        defaultNewsService.deleteAuthorById(tagId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
     public ResponseEntity<TagModel> getTagById(Long tagId) {
-        return null;
+        Tag tag = defaultNewsService.getTagById(tagId).orElse(null);
+        if (tag == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        TagModel tagModel = tagConverter.createTagModelFromTag(tag);
+        return new ResponseEntity<>(tagModel, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<TagModel>> getTags() {
-        return null;
+        List<Tag> tags = defaultNewsService.listAllTags();
+        List<TagModel> tagModelList = tagConverter.createListOfTagModels(tags);
+        return new ResponseEntity<>(tagModelList, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<List<TagModel>> searchTagsByName(String name) {
-        return null;
+        List<Tag> tags = defaultNewsService.searchTagsByName(name);
+        List<TagModel> tagModelList = tagConverter.createListOfTagModels(tags);
+        return new ResponseEntity<>(tagModelList, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<TagModel> updateTag(Long tagId, TagModel tagModel) {
-        return null;
+        Optional<Tag> optionalTag = defaultNewsService.getTagById(tagId);
+        if (!optionalTag.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Tag tag = optionalTag.get();
+        tagConverter.updateTagFromTagModel(tag, tagModel);
+        defaultNewsService.saveTag(tag);
+        return new ResponseEntity<>(tagModel, HttpStatus.OK);
     }
 }

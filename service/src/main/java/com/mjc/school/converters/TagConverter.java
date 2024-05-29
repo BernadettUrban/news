@@ -10,19 +10,19 @@ import java.util.stream.Collectors;
 @Component
 public class TagConverter {
 
-    public TagModel createTagModelFromTag(Tag tag){
+    public TagModel createTagModelFromTag(Tag tag) {
         TagModel tagModel = new TagModel(tag.getId(), tag.getName());
         return tagModel;
     }
 
-    public List<TagModel> createListOfTagModels(List<Tag> tags){
+    public List<TagModel> createListOfTagModels(List<Tag> tags) {
         List<TagModel> tagModelList =
                 tags.stream().map(t -> createTagModelFromTag(t))
                         .collect(Collectors.toList());
         return tagModelList;
     }
 
-    public void updateTagFromTagModel(Tag tag, TagModel tagModel){
+    public void updateTagFromTagModel(Tag tag, TagModel tagModel) {
         tag.setName(tagModel.getName());
     }
 
