@@ -23,7 +23,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-28T17:30:38.266519300+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-29T17:15:24.135300400+02:00[Europe/Budapest]")
 @Validated
 @Tag(name = "TagService", description = "the TagService API")
 public interface TagServiceApi {

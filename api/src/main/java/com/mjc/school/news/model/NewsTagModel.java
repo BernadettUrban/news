@@ -4,33 +4,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import javax.annotation.Generated;
-import javax.validation.constraints.NotNull;
+import javax.validation.Valid;
 import java.util.Objects;
 
 /**
- * TagModel
+ * NewsTagModel
  */
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-05-29T17:15:24.135300400+02:00[Europe/Budapest]")
-public class TagModel {
+public class NewsTagModel {
 
     private Long id;
 
-    private String name;
+    private NewsModel news;
 
-    public TagModel() {
-        super();
-    }
+    private TagModel tag;
 
-    /**
-     * Constructor with only required parameters
-     */
-    public TagModel(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public TagModel id(Long id) {
+    public NewsTagModel id(Long id) {
         this.id = id;
         return this;
     }
@@ -40,8 +30,8 @@ public class TagModel {
      *
      * @return id
      */
-    @NotNull
-    @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
+
+    @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @JsonProperty("id")
     public Long getId() {
         return id;
@@ -51,25 +41,46 @@ public class TagModel {
         this.id = id;
     }
 
-    public TagModel name(String name) {
-        this.name = name;
+    public NewsTagModel news(NewsModel news) {
+        this.news = news;
         return this;
     }
 
     /**
-     * Get name
+     * Get news
      *
-     * @return name
+     * @return news
      */
-    @NotNull
-    @Schema(name = "name", requiredMode = Schema.RequiredMode.REQUIRED)
-    @JsonProperty("name")
-    public String getName() {
-        return name;
+    @Valid
+    @Schema(name = "news", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @JsonProperty("news")
+    public NewsModel getNews() {
+        return news;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNews(NewsModel news) {
+        this.news = news;
+    }
+
+    public NewsTagModel tag(TagModel tag) {
+        this.tag = tag;
+        return this;
+    }
+
+    /**
+     * Get tag
+     *
+     * @return tag
+     */
+    @Valid
+    @Schema(name = "tag", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    @JsonProperty("tag")
+    public TagModel getTag() {
+        return tag;
+    }
+
+    public void setTag(TagModel tag) {
+        this.tag = tag;
     }
 
     @Override
@@ -80,22 +91,24 @@ public class TagModel {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        TagModel tagModel = (TagModel) o;
-        return Objects.equals(this.id, tagModel.id) &&
-                Objects.equals(this.name, tagModel.name);
+        NewsTagModel newsTagModel = (NewsTagModel) o;
+        return Objects.equals(this.id, newsTagModel.id) &&
+                Objects.equals(this.news, newsTagModel.news) &&
+                Objects.equals(this.tag, newsTagModel.tag);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id, news, tag);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("class TagModel {\n");
+        sb.append("class NewsTagModel {\n");
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
-        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    news: ").append(toIndentedString(news)).append("\n");
+        sb.append("    tag: ").append(toIndentedString(tag)).append("\n");
         sb.append("}");
         return sb.toString();
     }

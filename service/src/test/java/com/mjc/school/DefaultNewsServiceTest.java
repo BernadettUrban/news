@@ -96,12 +96,12 @@ class DefaultNewsServiceTest {
         author.setName("John Doe");
         List<Author> authors = Arrays.asList(author);
 
-        when(authorRepository.findByNameContainingIgnoreCase(name)).thenReturn(authors);
+        when(authorRepository.findAuthorsByNameOrderedByNewsCount(name)).thenReturn(authors);
 
         List<Author> result = newsService.searchAuthorsByName(name);
 
         assertEquals(authors, result);
-        verify(authorRepository, times(1)).findByNameContainingIgnoreCase(name);
+        verify(authorRepository, times(1)).findAuthorsByNameOrderedByNewsCount(name);
     }
 
     @Test

@@ -17,6 +17,8 @@ public interface NewsService {
 
     List<Author> searchAuthorsByName(String name);
 
+    List<Author> getAuthorsOrderedByNewsCount();
+
     List<Tag> listAllTags();
 
     void deleteTagById(Long id);

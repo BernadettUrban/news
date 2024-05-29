@@ -4,6 +4,56 @@ info:
   version: 1.0.0
   title: News Service API
 paths:
+  /api/news:
+    get:
+      tags:
+        - NewsService
+      summary: Get all news
+      operationId: getNews
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NewsModel'
+  /api/news/{id}:
+    get:
+      tags:
+        - NewsService
+      summary: Get news by ID
+      operationId: getNewsById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewsModel'
+
+    delete:
+      tags:
+        - NewsService
+      summary: Delete news by ID
+      operationId: deleteNewsById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Deleted news
+
   /api/authors:
     get:
       tags:
@@ -269,4 +319,57 @@ components:
           format: int64
         name:
           type: string
+    NewsTagModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        news:
+          $ref: '#/components/schemas/NewsModel'
+        tag:
+          $ref: '#/components/schemas/TagModel'
+    NewsModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        newsContent:
+          type: string
+        author:
+          $ref: '#/components/schemas/AuthorModel'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        newstags:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewsTagModel'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentModel'
+    CommentModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        commentContent:
+          type: string
+        news:
+          $ref: '#/components/schemas/NewsModel'
+        created:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+
 

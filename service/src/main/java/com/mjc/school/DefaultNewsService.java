@@ -43,7 +43,12 @@ public class DefaultNewsService implements NewsService {
 
     @Override
     public List<Author> searchAuthorsByName(String name) {
-        return authorRepository.findByNameContainingIgnoreCase(name);
+        return authorRepository.findAuthorsByNameOrderedByNewsCount(name);
+    }
+
+    @Override
+    public List<Author> getAuthorsOrderedByNewsCount() {
+        return authorRepository.findAuthorsOrderedByNewsCount();
     }
 
     @Override

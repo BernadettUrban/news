@@ -43,6 +43,14 @@ public class Comment {
         setModified();
     }
 
+    public Comment(Long id, String commentContent, News news, String created, String modified) {
+        this.id = id;
+        this.commentContent = commentContent;
+        this.news = news;
+        this.created = created;
+        this.modified = modified;
+    }
+
     public Long getId() {
         return id;
     }
@@ -70,6 +78,18 @@ public class Comment {
     public void setCreated() {
         this.created = SIMPLEDATEFORMAT.format(new Date());
 
+    }
+
+    public String getCommentContent() {
+        return commentContent;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public String getModified() {
+        return modified;
     }
 
     public void setModified() {
