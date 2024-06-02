@@ -2,19 +2,26 @@ package com.mjc.school.controllers;
 
 import com.mjc.school.news.model.AuthorModel;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthorRestControllerTest {
 
+    @LocalServerPort
+    private int port;
 
-    private static final String BASE_URL = "http://localhost:8888/api/authors";
+    private String getBaseUrl() {
+        return "http://localhost:" + port + "/api/authors";
+    }
 
     @Test
     public void createAuthor() {
-        String endpoint = BASE_URL;
+        String endpoint = getBaseUrl();
         String body = """
                 {
                     "name": "John Doe"
@@ -26,14 +33,14 @@ class AuthorRestControllerTest {
 
     @Test
     public void deleteAuthor() {
-        String endpoint = BASE_URL + "/{id}";
+        String endpoint = getBaseUrl() + "/{id}";
         var response = given().pathParam("id", 1).when().delete(endpoint).then();
         response.log().body();
     }
 
     @Test
     public void getAuthorById() {
-        String endpoint = BASE_URL + "/{id}";
+        String endpoint = getBaseUrl() + "/{id}";
         given().
                 pathParam("id", 1).
                 when().
@@ -47,7 +54,7 @@ class AuthorRestControllerTest {
 
     @Test
     public void getAuthors() {
-        String endpoint = BASE_URL;
+        String endpoint = getBaseUrl();
         given().
                 when().
                 get(endpoint).
@@ -56,7 +63,7 @@ class AuthorRestControllerTest {
                 headers().
                 assertThat().
                 statusCode(200).
-                header("Content-Type", equalTo("application/json; charset=UTF-8")).
+                header("Content-Type", equalTo("application/json")).
                 body("size()", greaterThan(0)).
                 body("id", everyItem(notNullValue())).
                 body("name", everyItem(notNullValue()));
@@ -64,7 +71,7 @@ class AuthorRestControllerTest {
 
     @Test
     public void searchAuthorsByName() {
-        String endpoint = BASE_URL + "/search";
+        String endpoint = getBaseUrl() + "/search";
         given().
                 queryParam("name", "John").
                 when().
@@ -79,7 +86,7 @@ class AuthorRestControllerTest {
 
     @Test
     public void updateAuthor() {
-        String endpoint = BASE_URL + "/{id}";
+        String endpoint = getBaseUrl() + "/{id}";
         String body = """
                 {
                     "name": "Jane Doe"
@@ -91,7 +98,7 @@ class AuthorRestControllerTest {
 
     @Test
     public void createSerializedAuthor() {
-        String endpoint = BASE_URL;
+        String endpoint = getBaseUrl();
         AuthorModel author = new AuthorModel();
         author.setName("Serialized Author");
 
@@ -101,7 +108,7 @@ class AuthorRestControllerTest {
 
     @Test
     public void getDeserializedAuthor() {
-        String endpoint = BASE_URL + "/{id}";
+        String endpoint = getBaseUrl() + "/{id}";
         AuthorModel expectedAuthor = new AuthorModel();
         expectedAuthor.setId(1L);
         expectedAuthor.setName("John Doe");
