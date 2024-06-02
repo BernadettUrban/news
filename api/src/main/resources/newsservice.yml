@@ -19,18 +19,20 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/NewsModel'
-  /api/news/{id}:
+  /api/news/{newsId}:
     get:
       tags:
         - NewsService
       summary: Get news by ID
       operationId: getNewsById
       parameters:
-        - name: id
-          in: path
+        - name: "newsId"
+          in: "path"
+          description: "ID of the news item to find"
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         '200':
           description: OK
@@ -42,17 +44,19 @@ paths:
     delete:
       tags:
         - NewsService
-      summary: Delete news by ID
-      operationId: deleteNewsById
+      summary: Delete a news item by ID
+      operationId: deleteNews
       parameters:
-        - name: id
-          in: path
+        - name: "newsId"
+          in: "path"
+          description: "ID of the news item to delete"
           required: true
           schema:
             type: integer
+            format: int64
       responses:
         '204':
-          description: Deleted news
+          description: News item deleted successfully
 
   /api/authors:
     get:
