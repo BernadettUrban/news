@@ -58,6 +58,44 @@ paths:
         '204':
           description: News item deleted successfully
 
+  /api/comments/{commentId}:
+    get:
+      tags:
+        - CommentService
+      summary: Get comment by ID
+      operationId: getCommentById
+      parameters:
+        - name: "commentId"
+          in: "path"
+          description: "ID of the comment item to find"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentModel'
+    delete:
+      tags:
+        - CommentService
+      summary: Delete a comment item by ID
+      operationId: deleteComments
+      parameters:
+        - name: "commentId"
+          in: "path"
+          description: "ID of the comment item to delete"
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Comment deleted successfully
+
   /api/authors:
     get:
       tags:

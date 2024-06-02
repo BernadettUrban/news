@@ -1,9 +1,12 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.domain.Comment;
 import com.mjc.school.domain.News;
 import com.mjc.school.domain.Tag;
+import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
 import org.springframework.stereotype.Service;
@@ -18,11 +21,13 @@ public class DefaultNewsService implements NewsService {
     private final AuthorRepository authorRepository;
     private final TagRepository tagRepository;
     private final NewsRepository newsRepository;
+    private final CommentRepository commentRepository;
 
-    public DefaultNewsService(AuthorRepository authorRepository, TagRepository tagRepository, NewsRepository newsRepository) {
+    public DefaultNewsService(AuthorRepository authorRepository, TagRepository tagRepository, NewsRepository newsRepository, CommentRepository commentRepository) {
         this.authorRepository = authorRepository;
         this.tagRepository = tagRepository;
         this.newsRepository = newsRepository;
+        this.commentRepository = commentRepository;
     }
 
     @Override
@@ -93,6 +98,17 @@ public class DefaultNewsService implements NewsService {
     @Override
     public Optional<News> getNewsById(Long id) {
         return newsRepository.findById(id);
+    }
+
+    @Override
+    public void deleteCommentById(Long id) {
+        commentRepository.deleteById(id);
+    }
+
+    @Override
+    public Comment getCommentById(Long id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Comment not found with id: " + id));
     }
 
 }

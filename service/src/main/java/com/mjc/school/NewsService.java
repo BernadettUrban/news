@@ -1,6 +1,7 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.domain.Comment;
 import com.mjc.school.domain.News;
 import com.mjc.school.domain.Tag;
 
@@ -32,4 +33,7 @@ public interface NewsService {
     List<News> listAllNews();
     void deleteNewsById(Long id);
     Optional<News> getNewsById(Long id);
+
+    void deleteCommentById(Long id);
+    Comment getCommentById(Long id);
 }
