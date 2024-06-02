@@ -2,6 +2,7 @@ package com.mjc.school.converters;
 
 import com.mjc.school.domain.Comment;
 import com.mjc.school.news.model.CommentModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.OffsetDateTime;
@@ -10,9 +11,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class CommentConverter {
-    private final NewsConverter newsConverter;
+    private NewsConverter newsConverter;
 
-    public CommentConverter(NewsConverter newsConverter) {
+    @Autowired
+    public void setNewsConverter(NewsConverter newsConverter) {
         this.newsConverter = newsConverter;
     }
 
@@ -20,7 +22,7 @@ public class CommentConverter {
         CommentModel commentModel = new CommentModel();
         commentModel.setId(comment.getId());
         commentModel.setCommentContent(comment.getContent());
-        commentModel.setNews(newsConverter.createNewsModel(comment.getNews()));
+        // commentModel.setNews(newsConverter.createNewsModel(comment.getNews()));
         commentModel.setCreated(OffsetDateTime.parse(comment.getCreated()));
         commentModel.setModified(OffsetDateTime.parse(comment.getModified()));
 

@@ -30,10 +30,14 @@ public interface NewsService {
     void saveTag(Tag tag);
 
     List<Tag> searchTagsByName(String name);
+
     List<News> listAllNews();
+
     void deleteNewsById(Long id);
+
     Optional<News> getNewsById(Long id);
 
     void deleteCommentById(Long id);
+
     Comment getCommentById(Long id);
 }

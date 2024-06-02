@@ -2,6 +2,7 @@ package com.mjc.school.converters;
 
 import com.mjc.school.domain.NewsTag;
 import com.mjc.school.news.model.NewsTagModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -9,13 +10,19 @@ import java.util.stream.Collectors;
 
 @Component
 public class NewsTagConverter {
-    private final NewsConverter newsConverter;
-    private final TagConverter tagConverter;
+    private NewsConverter newsConverter;
+    private TagConverter tagConverter;
 
-    public NewsTagConverter(NewsConverter newsConverter, TagConverter tagConverter) {
+    @Autowired
+    public void setNewsConverter(NewsConverter newsConverter) {
         this.newsConverter = newsConverter;
+    }
+
+    @Autowired
+    public void setTagConverter(TagConverter tagConverter) {
         this.tagConverter = tagConverter;
     }
+
 
     public NewsTagModel createNewsTagModel(NewsTag newsTag) {
         NewsTagModel newsTagModel = new NewsTagModel();

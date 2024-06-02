@@ -6,33 +6,24 @@
 package com.mjc.school.news.api;
 
 import com.mjc.school.news.model.TagModel;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.annotation.Generated;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-02T11:56:20.122431200+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-02T15:18:14.683930200+02:00[Europe/Budapest]")
 @Validated
 @Tag(name = "TagService", description = "the TagService API")
 public interface TagServiceApi {
@@ -44,24 +35,23 @@ public interface TagServiceApi {
      * @return Created tag (status code 201)
      */
     @Operation(
-        operationId = "createTag",
-        summary = "Create a new tag",
-        tags = { "TagService" },
-        responses = {
-            @ApiResponse(responseCode = "201", description = "Created tag", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = TagModel.class))
-            })
-        }
+            operationId = "createTag",
+            summary = "Create a new tag",
+            tags = {"TagService"},
+            responses = {
+                    @ApiResponse(responseCode = "201", description = "Created tag", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = TagModel.class))
+                    })
+            }
     )
     @RequestMapping(
-        method = RequestMethod.POST,
-        value = "/api/tags",
-        produces = { "application/json" },
-        consumes = { "application/json" }
+            method = RequestMethod.POST,
+            value = "/api/tags",
+            produces = {"application/json"},
+            consumes = {"application/json"}
     )
-    
     ResponseEntity<TagModel> createTag(
-        @Parameter(name = "TagModel", description = "Tag object to be created", required = true) @Valid @RequestBody TagModel tagModel
+            @Parameter(name = "TagModel", description = "Tag object to be created", required = true) @Valid @RequestBody TagModel tagModel
     );
 
 
@@ -72,20 +62,19 @@ public interface TagServiceApi {
      * @return Tag deleted successfully (status code 204)
      */
     @Operation(
-        operationId = "deleteTag",
-        summary = "Delete a tag by ID",
-        tags = { "TagService" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "Tag deleted successfully")
-        }
+            operationId = "deleteTag",
+            summary = "Delete a tag by ID",
+            tags = {"TagService"},
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Tag deleted successfully")
+            }
     )
     @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = "/api/tags/{tagId}"
+            method = RequestMethod.DELETE,
+            value = "/api/tags/{tagId}"
     )
-    
     ResponseEntity<Void> deleteTag(
-        @Parameter(name = "tagId", description = "ID of the tag to delete", required = true, in = ParameterIn.PATH) @PathVariable("tagId") Long tagId
+            @Parameter(name = "tagId", description = "ID of the tag to delete", required = true, in = ParameterIn.PATH) @PathVariable("tagId") Long tagId
     );
 
 
@@ -96,23 +85,22 @@ public interface TagServiceApi {
      * @return Retrieved tag (status code 200)
      */
     @Operation(
-        operationId = "getTagById",
-        summary = "Get tag by ID",
-        tags = { "TagService" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Retrieved tag", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = TagModel.class))
-            })
-        }
+            operationId = "getTagById",
+            summary = "Get tag by ID",
+            tags = {"TagService"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Retrieved tag", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = TagModel.class))
+                    })
+            }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/api/tags/{tagId}",
-        produces = { "application/json" }
+            method = RequestMethod.GET,
+            value = "/api/tags/{tagId}",
+            produces = {"application/json"}
     )
-    
     ResponseEntity<TagModel> getTagById(
-        @Parameter(name = "tagId", description = "ID of the tag to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("tagId") Long tagId
+            @Parameter(name = "tagId", description = "ID of the tag to retrieve", required = true, in = ParameterIn.PATH) @PathVariable("tagId") Long tagId
     );
 
 
@@ -122,23 +110,22 @@ public interface TagServiceApi {
      * @return List of tags (status code 200)
      */
     @Operation(
-        operationId = "getTags",
-        summary = "List all tags",
-        tags = { "TagService" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "List of tags", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TagModel.class)))
-            })
-        }
+            operationId = "getTags",
+            summary = "List all tags",
+            tags = {"TagService"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of tags", content = {
+                            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TagModel.class)))
+                    })
+            }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/api/tags",
-        produces = { "application/json" }
+            method = RequestMethod.GET,
+            value = "/api/tags",
+            produces = {"application/json"}
     )
-    
     ResponseEntity<List<TagModel>> getTags(
-        
+
     );
 
 
@@ -149,53 +136,51 @@ public interface TagServiceApi {
      * @return List of tags matching the search criteria (status code 200)
      */
     @Operation(
-        operationId = "searchTagsByName",
-        summary = "Search tags by part of their name",
-        tags = { "TagService" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "List of tags matching the search criteria", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TagModel.class)))
-            })
-        }
+            operationId = "searchTagsByName",
+            summary = "Search tags by part of their name",
+            tags = {"TagService"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "List of tags matching the search criteria", content = {
+                            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = TagModel.class)))
+                    })
+            }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/api/tags/search",
-        produces = { "application/json" }
+            method = RequestMethod.GET,
+            value = "/api/tags/search",
+            produces = {"application/json"}
     )
-    
     ResponseEntity<List<TagModel>> searchTagsByName(
-        @NotNull @Parameter(name = "name", description = "Part of the name of the tags to search for", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "name", required = true) String name
+            @NotNull @Parameter(name = "name", description = "Part of the name of the tags to search for", required = true, in = ParameterIn.QUERY) @Valid @RequestParam(value = "name", required = true) String name
     );
 
 
     /**
      * PUT /api/tags/{tagId} : Update a tag by ID
      *
-     * @param tagId ID of the tag to update (required)
+     * @param tagId    ID of the tag to update (required)
      * @param tagModel Tag object with updated information (required)
      * @return Updated tag (status code 200)
      */
     @Operation(
-        operationId = "updateTag",
-        summary = "Update a tag by ID",
-        tags = { "TagService" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Updated tag", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = TagModel.class))
-            })
-        }
+            operationId = "updateTag",
+            summary = "Update a tag by ID",
+            tags = {"TagService"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Updated tag", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = TagModel.class))
+                    })
+            }
     )
     @RequestMapping(
-        method = RequestMethod.PUT,
-        value = "/api/tags/{tagId}",
-        produces = { "application/json" },
-        consumes = { "application/json" }
+            method = RequestMethod.PUT,
+            value = "/api/tags/{tagId}",
+            produces = {"application/json"},
+            consumes = {"application/json"}
     )
-    
     ResponseEntity<TagModel> updateTag(
-        @Parameter(name = "tagId", description = "ID of the tag to update", required = true, in = ParameterIn.PATH) @PathVariable("tagId") Long tagId,
-        @Parameter(name = "TagModel", description = "Tag object with updated information", required = true) @Valid @RequestBody TagModel tagModel
+            @Parameter(name = "tagId", description = "ID of the tag to update", required = true, in = ParameterIn.PATH) @PathVariable("tagId") Long tagId,
+            @Parameter(name = "TagModel", description = "Tag object with updated information", required = true) @Valid @RequestBody TagModel tagModel
     );
 
 }

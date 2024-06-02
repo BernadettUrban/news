@@ -13,7 +13,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ResponseEntity<CustomError> handleCustomException(CustomException ex){
+    public ResponseEntity<CustomError> handleCustomException(CustomException ex) {
         CustomError error = new CustomError(ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }

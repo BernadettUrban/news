@@ -6,33 +6,24 @@
 package com.mjc.school.news.api;
 
 import com.mjc.school.news.model.NewsModel;
-import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.validation.Valid;
-import javax.validation.constraints.*;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import javax.annotation.Generated;
+import java.util.List;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-02T11:56:20.122431200+02:00[Europe/Budapest]")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-06-02T15:18:14.683930200+02:00[Europe/Budapest]")
 @Validated
 @Tag(name = "NewsService", description = "the NewsService API")
 public interface NewsServiceApi {
@@ -44,20 +35,19 @@ public interface NewsServiceApi {
      * @return News item deleted successfully (status code 204)
      */
     @Operation(
-        operationId = "deleteNews",
-        summary = "Delete a news item by ID",
-        tags = { "NewsService" },
-        responses = {
-            @ApiResponse(responseCode = "204", description = "News item deleted successfully")
-        }
+            operationId = "deleteNews",
+            summary = "Delete a news item by ID",
+            tags = {"NewsService"},
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "News item deleted successfully")
+            }
     )
     @RequestMapping(
-        method = RequestMethod.DELETE,
-        value = "/api/news/{newsId}"
+            method = RequestMethod.DELETE,
+            value = "/api/news/{newsId}"
     )
-    
     ResponseEntity<Void> deleteNews(
-        @Parameter(name = "newsId", description = "ID of the news item to delete", required = true, in = ParameterIn.PATH) @PathVariable("newsId") Long newsId
+            @Parameter(name = "newsId", description = "ID of the news item to delete", required = true, in = ParameterIn.PATH) @PathVariable("newsId") Long newsId
     );
 
 
@@ -67,23 +57,22 @@ public interface NewsServiceApi {
      * @return OK (status code 200)
      */
     @Operation(
-        operationId = "getNews",
-        summary = "Get all news",
-        tags = { "NewsService" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = NewsModel.class)))
-            })
-        }
+            operationId = "getNews",
+            summary = "Get all news",
+            tags = {"NewsService"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = {
+                            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = NewsModel.class)))
+                    })
+            }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/api/news",
-        produces = { "application/json" }
+            method = RequestMethod.GET,
+            value = "/api/news",
+            produces = {"application/json"}
     )
-    
     ResponseEntity<List<NewsModel>> getNews(
-        
+
     );
 
 
@@ -94,23 +83,22 @@ public interface NewsServiceApi {
      * @return OK (status code 200)
      */
     @Operation(
-        operationId = "getNewsById",
-        summary = "Get news by ID",
-        tags = { "NewsService" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "OK", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = NewsModel.class))
-            })
-        }
+            operationId = "getNewsById",
+            summary = "Get news by ID",
+            tags = {"NewsService"},
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK", content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = NewsModel.class))
+                    })
+            }
     )
     @RequestMapping(
-        method = RequestMethod.GET,
-        value = "/api/news/{newsId}",
-        produces = { "application/json" }
+            method = RequestMethod.GET,
+            value = "/api/news/{newsId}",
+            produces = {"application/json"}
     )
-    
     ResponseEntity<NewsModel> getNewsById(
-        @Parameter(name = "newsId", description = "ID of the news item to find", required = true, in = ParameterIn.PATH) @PathVariable("newsId") Long newsId
+            @Parameter(name = "newsId", description = "ID of the news item to find", required = true, in = ParameterIn.PATH) @PathVariable("newsId") Long newsId
     );
 
 }

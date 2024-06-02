@@ -1,5 +1,6 @@
 package com.mjc.school.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mjc.school.util.Formatting;
 
 import javax.persistence.*;
@@ -26,8 +27,10 @@ public class News {
     private Author author;
     private String created;
     private String modified;
+
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<NewsTag> newstags = new HashSet<>();
+    @JsonManagedReference
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
