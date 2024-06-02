@@ -26,9 +26,9 @@ public class News {
     private Author author;
     private String created;
     private String modified;
-    @OneToMany(mappedBy = "news")
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<NewsTag> newstags = new HashSet<>();
-    @OneToMany(mappedBy = "news")
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     public News() {

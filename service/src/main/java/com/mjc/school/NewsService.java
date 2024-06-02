@@ -1,6 +1,7 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.domain.News;
 import com.mjc.school.domain.Tag;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface NewsService {
     void saveTag(Tag tag);
 
     List<Tag> searchTagsByName(String name);
+    List<News> listAllNews();
+    void deleteNewsById(Long id);
+    Optional<News> getNewsById(Long id);
 }

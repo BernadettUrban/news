@@ -1,8 +1,10 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.domain.News;
 import com.mjc.school.domain.Tag;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,12 @@ import java.util.Optional;
 public class DefaultNewsService implements NewsService {
     private final AuthorRepository authorRepository;
     private final TagRepository tagRepository;
+    private final NewsRepository newsRepository;
 
-    public DefaultNewsService(AuthorRepository authorRepository, TagRepository tagRepository) {
+    public DefaultNewsService(AuthorRepository authorRepository, TagRepository tagRepository, NewsRepository newsRepository) {
         this.authorRepository = authorRepository;
         this.tagRepository = tagRepository;
+        this.newsRepository = newsRepository;
     }
 
     @Override
@@ -74,6 +78,21 @@ public class DefaultNewsService implements NewsService {
     @Override
     public List<Tag> searchTagsByName(String name) {
         return tagRepository.findByNameContainingIgnoreCase(name);
+    }
+
+    @Override
+    public List<News> listAllNews() {
+        return newsRepository.findAll();
+    }
+
+    @Override
+    public void deleteNewsById(Long id) {
+        newsRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<News> getNewsById(Long id) {
+        return newsRepository.findById(id);
     }
 
 }
