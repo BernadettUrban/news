@@ -1,30 +1,47 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.NewsService;
-import com.mjc.school.converters.AuthorConverter;
+
 import com.mjc.school.domain.Author;
-import com.mjc.school.news.api.AuthorServiceApi;
-import com.mjc.school.news.model.AuthorModel;
+import com.mjc.school.dtos.AuthorDTO;
+import com.mjc.school.mappers.AuthorServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-
-public class AuthorRestController implements AuthorServiceApi {
+public class AuthorRestController  {
 
     private final NewsService newsService;
-    private final AuthorConverter authorConverter;
 
-    public AuthorRestController(NewsService newsService, AuthorConverter authorConverter) {
+    private final AuthorServiceImpl authorService;
+
+    public AuthorRestController(NewsService newsService, AuthorServiceImpl authorService) {
         this.newsService = newsService;
-        this.authorConverter = authorConverter;
+
+        this.authorService = authorService;
     }
 
 
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/authors",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<List<AuthorDTO>> getAuthors() {
+        List<Author> authors = newsService.getAuthorsOrderedByNewsCount();
+        //.listAllAuthors();
+        List<AuthorDTO> authorDTOS =authorService.getAuthorDTOsFromAuthors(authors);
+        return new ResponseEntity<>(authorDTOS, HttpStatus.OK);
+    }
+
+
+/*
     @Override
     public ResponseEntity<AuthorModel> createAuthor(AuthorModel authorModel) {
         Author author = new Author();
@@ -77,6 +94,7 @@ public class AuthorRestController implements AuthorServiceApi {
         newsService.saveAuthor(author);
         return new ResponseEntity<>(authorModel, HttpStatus.OK);
     }
+    */
 
 
 }

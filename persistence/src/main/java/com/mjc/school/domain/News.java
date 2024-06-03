@@ -1,5 +1,6 @@
 package com.mjc.school.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mjc.school.util.Formatting;
 
@@ -22,15 +23,16 @@ public class News {
     private String title;
     @Column(name = "content")
     private String newsContent;
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "author_id")
     private Author author;
     private String created;
     private String modified;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<NewsTag> newstags = new HashSet<>();
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 

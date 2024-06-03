@@ -1,7 +1,7 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.DefaultNewsService;
-import com.mjc.school.converters.TagConverter;
+
 import com.mjc.school.domain.Tag;
 import com.mjc.school.news.api.TagServiceApi;
 import com.mjc.school.news.model.TagModel;
@@ -13,15 +13,16 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-public class TagRestController implements TagServiceApi {
+public class TagRestController  {
     private final DefaultNewsService defaultNewsService;
-    private final TagConverter tagConverter;
 
-    public TagRestController(DefaultNewsService defaultNewsService, TagConverter tagConverter) {
+
+    public TagRestController(DefaultNewsService defaultNewsService) {
         this.defaultNewsService = defaultNewsService;
-        this.tagConverter = tagConverter;
+
     }
 
+    /*
     @Override
     public ResponseEntity<TagModel> createTag(TagModel tagModel) {
         Tag tag = new Tag();
@@ -72,4 +73,5 @@ public class TagRestController implements TagServiceApi {
         defaultNewsService.saveTag(tag);
         return new ResponseEntity<>(tagModel, HttpStatus.OK);
     }
+    */
 }

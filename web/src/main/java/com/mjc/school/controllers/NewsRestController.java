@@ -1,7 +1,7 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.NewsService;
-import com.mjc.school.converters.NewsConverter;
+
 import com.mjc.school.domain.News;
 import com.mjc.school.news.api.NewsServiceApi;
 import com.mjc.school.news.model.NewsModel;
@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class NewsRestController implements NewsServiceApi {
+public class NewsRestController  {
     private final NewsService newsService;
-    private final NewsConverter newsConverter;
 
-    public NewsRestController(NewsService newsService, NewsConverter newsConverter) {
+
+    public NewsRestController(NewsService newsService) {
         this.newsService = newsService;
-        this.newsConverter = newsConverter;
+
     }
 
-
+/*
     @Override
     public ResponseEntity<Void> deleteNews(Long newsId) {
         newsService.deleteNewsById(newsId);
@@ -40,5 +40,5 @@ public class NewsRestController implements NewsServiceApi {
         News news = newsService.getNewsById(newsId).get();
         NewsModel newsModel = newsConverter.createNewsModel(news);
         return new ResponseEntity<>(newsModel, HttpStatus.OK);
-    }
+    }*/
 }

@@ -1,6 +1,7 @@
 package com.mjc.school.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.util.Formatting;
 
 import javax.persistence.*;
@@ -20,7 +21,8 @@ public class Comment {
     private Long id;
     @Column(name = "content")
     private String commentContent;
-    @JsonBackReference
+
+    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "news_id")
     private News news;

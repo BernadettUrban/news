@@ -1,5 +1,7 @@
 package com.mjc.school.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,7 @@ public class Author {
     private Long id;
     @Column(unique = true)
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<News> news = new ArrayList<>();
 

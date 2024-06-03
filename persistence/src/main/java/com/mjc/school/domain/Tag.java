@@ -1,5 +1,7 @@
 package com.mjc.school.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
@@ -13,6 +15,7 @@ public class Tag {
     private Long id;
     @Column(unique = true)
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "tag")
     private Set<NewsTag> newstags = new HashSet<>();
 

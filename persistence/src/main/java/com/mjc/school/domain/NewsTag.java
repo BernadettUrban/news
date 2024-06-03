@@ -1,5 +1,7 @@
 package com.mjc.school.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -10,10 +12,11 @@ public class NewsTag {
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "news_id")
     private News news;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "tag_id")
     private Tag tag;
