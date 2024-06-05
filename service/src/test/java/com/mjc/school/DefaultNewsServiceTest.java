@@ -1,7 +1,6 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
-import com.mjc.school.domain.Tag;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +44,7 @@ class DefaultNewsServiceTest {
 
         when(authorRepository.findAll()).thenReturn(authors);
 
-       // List<Author> result = newsService.listAllAuthors();
+        // List<Author> result = newsService.listAllAuthors();
 
         //assertEquals(authors, result);
         verify(authorRepository, times(1)).findAll();

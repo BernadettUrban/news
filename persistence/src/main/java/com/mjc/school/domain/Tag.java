@@ -1,8 +1,9 @@
 package com.mjc.school.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -14,6 +15,7 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
+    @Size(min = 3 , max = 15)
     private String name;
     @JsonIgnore
     @OneToMany(mappedBy = "tag")

@@ -1,19 +1,10 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.DefaultNewsService;
-
-import com.mjc.school.domain.Tag;
-import com.mjc.school.news.api.TagServiceApi;
-import com.mjc.school.news.model.TagModel;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
-public class TagRestController  {
+public class TagRestController {
     private final DefaultNewsService defaultNewsService;
 
 

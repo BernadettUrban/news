@@ -1,8 +1,9 @@
 package com.mjc.school.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +15,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
+    @Size(min = 3 , max = 15)
     private String name;
     @JsonIgnore
     @OneToMany(mappedBy = "author")

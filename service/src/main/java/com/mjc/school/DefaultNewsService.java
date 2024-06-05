@@ -1,24 +1,20 @@
 package com.mjc.school;
 
-import com.mjc.school.domain.Author;
 import com.mjc.school.domain.Comment;
 import com.mjc.school.domain.News;
 import com.mjc.school.domain.Tag;
-import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.NewsDTO;
 import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.mappers.AuthorMapper;
-import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

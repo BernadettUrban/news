@@ -21,8 +21,8 @@ public class NewsServiceImpl implements NewsServiceOne {
     }
 
     public List<NewsDTO> listAllNews() {
-       return newsRepository.findAll()
-                .stream().map(n-> newsMapper.entityToDTO(n))
+        return newsRepository.findAll()
+                .stream().map(n -> newsMapper.entityToDTO(n))
                 .collect(Collectors.toList());
     }
 }

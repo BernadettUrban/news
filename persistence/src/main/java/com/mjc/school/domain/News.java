@@ -1,10 +1,10 @@
 package com.mjc.school.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mjc.school.util.Formatting;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
-import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -20,8 +20,10 @@ public class News {
     @Column(name = "ID")
     private Long id;
     @Column(unique = true)
+    @Size(min = 5 , max = 30)
     private String title;
     @Column(name = "content")
+    @Size(min = 5 , max = 255)
     private String newsContent;
     @ManyToOne()
     @JoinColumn(name = "author_id")

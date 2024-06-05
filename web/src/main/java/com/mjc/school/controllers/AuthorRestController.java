@@ -1,8 +1,6 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.AuthorServiceImpl;
-import com.mjc.school.NewsService;
-
 import com.mjc.school.dtos.AuthorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class AuthorRestController  {
-
+public class AuthorRestController {
 
 
     private final AuthorServiceImpl authorService;

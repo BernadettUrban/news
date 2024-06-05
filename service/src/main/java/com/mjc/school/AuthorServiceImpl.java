@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class AuthorServiceImpl implements AuthorService{
+public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
 
@@ -23,7 +23,7 @@ public class AuthorServiceImpl implements AuthorService{
     @Override
     public List<AuthorDTO> listAllAuthors() {
         return authorRepository.findAll().stream()
-                .map(a-> authorMapper.entityToDTO(a))
+                .map(a -> authorMapper.entityToDTO(a))
                 .collect(Collectors.toList());
     }
 

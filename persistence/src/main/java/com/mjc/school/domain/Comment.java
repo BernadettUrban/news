@@ -1,10 +1,10 @@
 package com.mjc.school.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mjc.school.util.Formatting;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
-import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -20,6 +20,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "content")
+    @Size(min = 3 , max = 255)
     private String commentContent;
 
     @JsonIgnore

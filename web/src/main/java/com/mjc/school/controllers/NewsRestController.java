@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class NewsRestController  {
+public class NewsRestController {
     private final NewsServiceImpl newsService;
 
     public NewsRestController(NewsServiceImpl newsService) {
