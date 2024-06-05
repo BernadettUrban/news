@@ -1,17 +1,18 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.DefaultNewsService;
+import com.mjc.school.TagService;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class TagRestController {
-    private final DefaultNewsService defaultNewsService;
+    private final TagService tagService;
 
-
-    public TagRestController(DefaultNewsService defaultNewsService) {
-        this.defaultNewsService = defaultNewsService;
-
+    public TagRestController(TagService tagService) {
+        this.tagService = tagService;
     }
+
+
+
 
     /*
     @Override

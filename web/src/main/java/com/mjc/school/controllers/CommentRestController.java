@@ -1,19 +1,17 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.NewsService;
+import com.mjc.school.CommentService;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CommentRestController {
 
-    private final NewsService newsService;
+    private final CommentService commentService;
 
-
-    public CommentRestController(NewsService newsService) {
-        this.newsService = newsService;
-
+    public CommentRestController(CommentService commentService) {
+        this.commentService = commentService;
     }
-/*
+    /*
     @Override
     public ResponseEntity<Void> deleteComments(Long commentId) {
         newsService.deleteCommentById(commentId);

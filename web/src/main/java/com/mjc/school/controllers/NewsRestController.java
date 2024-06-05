@@ -1,5 +1,6 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.NewsService;
 import com.mjc.school.NewsServiceImpl;
 import com.mjc.school.dtos.NewsDTO;
 import org.springframework.http.HttpStatus;
@@ -12,9 +13,9 @@ import java.util.List;
 
 @RestController
 public class NewsRestController {
-    private final NewsServiceImpl newsService;
+    private final NewsService newsService;
 
-    public NewsRestController(NewsServiceImpl newsService) {
+    public NewsRestController(NewsService newsService) {
         this.newsService = newsService;
     }
 

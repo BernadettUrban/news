@@ -1,5 +1,6 @@
 package com.mjc.school;
 
+import com.mjc.school.domain.News;
 import com.mjc.school.dtos.NewsDTO;
 import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.NewsRepository;
@@ -7,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class NewsServiceImpl implements NewsServiceOne {
+public class NewsServiceImpl implements NewsService {
     private final NewsMapper newsMapper;
     private final NewsRepository newsRepository;
 
@@ -25,4 +27,16 @@ public class NewsServiceImpl implements NewsServiceOne {
                 .stream().map(n -> newsMapper.entityToDTO(n))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteNewsById(Long id) {
+        newsRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<NewsDTO> getNewsById(Long id) {
+
+        return Optional.ofNullable(newsMapper.entityToDTO(newsRepository.findById(id).get()));
+    }
+
 }
