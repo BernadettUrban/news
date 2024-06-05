@@ -4,22 +4,14 @@ import com.mjc.school.domain.Author;
 import com.mjc.school.domain.Comment;
 import com.mjc.school.domain.News;
 import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.AuthorDTO;
+import com.mjc.school.dtos.NewsDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface NewsService {
-    List<Author> listAllAuthors();
 
-    void deleteAuthorById(Long id);
-
-    Optional<Author> getAuthorById(Long id);
-
-    void saveAuthor(Author author);
-
-    List<Author> searchAuthorsByName(String name);
-
-    List<Author> getAuthorsOrderedByNewsCount();
 
     List<Tag> listAllTags();
 
@@ -31,7 +23,7 @@ public interface NewsService {
 
     List<Tag> searchTagsByName(String name);
 
-    List<News> listAllNews();
+    List<NewsDTO> listAllNews();
 
     void deleteNewsById(Long id);
 

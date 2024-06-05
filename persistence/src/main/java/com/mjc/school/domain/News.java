@@ -23,7 +23,6 @@ public class News {
     private String title;
     @Column(name = "content")
     private String newsContent;
-    @JsonIgnore
     @ManyToOne()
     @JoinColumn(name = "author_id")
     private Author author;

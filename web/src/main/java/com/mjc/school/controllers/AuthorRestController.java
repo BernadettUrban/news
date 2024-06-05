@@ -1,13 +1,11 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.AuthorServiceImpl;
 import com.mjc.school.NewsService;
 
-import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;
-import com.mjc.school.mappers.AuthorServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,12 +15,12 @@ import java.util.List;
 @RestController
 public class AuthorRestController  {
 
-    private final NewsService newsService;
+
 
     private final AuthorServiceImpl authorService;
 
-    public AuthorRestController(NewsService newsService, AuthorServiceImpl authorService) {
-        this.newsService = newsService;
+    public AuthorRestController(AuthorServiceImpl authorService) {
+
 
         this.authorService = authorService;
     }
@@ -34,9 +32,7 @@ public class AuthorRestController  {
             produces = {"application/json"}
     )
     public ResponseEntity<List<AuthorDTO>> getAuthors() {
-        List<Author> authors = newsService.getAuthorsOrderedByNewsCount();
-        //.listAllAuthors();
-        List<AuthorDTO> authorDTOS =authorService.getAuthorDTOsFromAuthors(authors);
+        List<AuthorDTO> authorDTOS = authorService.listAllAuthors();
         return new ResponseEntity<>(authorDTOS, HttpStatus.OK);
     }
 

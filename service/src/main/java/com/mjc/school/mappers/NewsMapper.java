@@ -4,8 +4,10 @@ import com.mjc.school.domain.News;
 import com.mjc.school.dtos.NewsDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
-@Mapper
+@Mapper(componentModel = "spring")
+@Component
 public interface NewsMapper {
     NewsMapper INSTANCE = Mappers.getMapper(NewsMapper.class);
 

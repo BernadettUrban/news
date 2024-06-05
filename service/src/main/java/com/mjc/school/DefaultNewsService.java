@@ -4,7 +4,11 @@ import com.mjc.school.domain.Author;
 import com.mjc.school.domain.Comment;
 import com.mjc.school.domain.News;
 import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.AuthorDTO;
+import com.mjc.school.dtos.NewsDTO;
 import com.mjc.school.exceptions.CustomException;
+import com.mjc.school.mappers.AuthorMapper;
+import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.repository.NewsRepository;
@@ -14,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -22,43 +27,18 @@ public class DefaultNewsService implements NewsService {
     private final TagRepository tagRepository;
     private final NewsRepository newsRepository;
     private final CommentRepository commentRepository;
+    private final AuthorMapper authorMapper;
 
-    public DefaultNewsService(AuthorRepository authorRepository, TagRepository tagRepository, NewsRepository newsRepository, CommentRepository commentRepository) {
+
+    public DefaultNewsService(AuthorRepository authorRepository, TagRepository tagRepository, NewsRepository newsRepository, CommentRepository commentRepository, AuthorMapper authorMapper) {
         this.authorRepository = authorRepository;
         this.tagRepository = tagRepository;
         this.newsRepository = newsRepository;
         this.commentRepository = commentRepository;
+        this.authorMapper = authorMapper;
+
     }
 
-    @Override
-    public List<Author> listAllAuthors() {
-        return authorRepository.findAll();
-    }
-
-    @Override
-    public void deleteAuthorById(Long id) {
-        authorRepository.deleteById(id);
-    }
-
-    @Override
-    public Optional<Author> getAuthorById(Long id) {
-        return authorRepository.findById(id);
-    }
-
-    @Override
-    public void saveAuthor(Author author) {
-        authorRepository.save(author);
-    }
-
-    @Override
-    public List<Author> searchAuthorsByName(String name) {
-        return authorRepository.findAuthorsByNameOrderedByNewsCount(name);
-    }
-
-    @Override
-    public List<Author> getAuthorsOrderedByNewsCount() {
-        return authorRepository.findAuthorsOrderedByNewsCount();
-    }
 
     @Override
     public List<Tag> listAllTags() {
@@ -86,8 +66,11 @@ public class DefaultNewsService implements NewsService {
     }
 
     @Override
-    public List<News> listAllNews() {
-        return newsRepository.findAll();
+    public List<NewsDTO> listAllNews() {
+      /*  return newsRepository.findAll()
+                .stream().map(n-> newsMapper.entityToDTO(n))
+                .collect(Collectors.toList());*/
+        return null;
     }
 
     @Override

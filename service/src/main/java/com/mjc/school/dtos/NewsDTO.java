@@ -13,9 +13,7 @@ public record NewsDTO(
         String newsContent,
         Author author,
         String created,
-        String modified,
-        Set<NewsTag> newstags,
+        String modified
 
-        List<Comment> comments
 ) {
 }
