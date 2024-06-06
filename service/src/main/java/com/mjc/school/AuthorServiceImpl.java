@@ -7,7 +7,6 @@ import com.mjc.school.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,8 +32,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Optional<Author> getAuthorById(Long id) {
-        return authorRepository.findById(id);
+    public AuthorDTO getAuthorById(Long id) {
+        return authorMapper.entityToDTO(authorRepository.findById(id).get());
     }
 
     @Override
@@ -43,13 +42,26 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> searchAuthorsByName(String name) {
-        return authorRepository.findAuthorsByNameOrderedByNewsCount(name);
+    public Author convertDtoToAuthor(AuthorDTO authorDTO) {
+        return authorMapper.dtoToEntity(authorDTO);
+    }
+
+
+    @Override
+    public List<AuthorDTO> searchAuthorsByName(String name) {
+        return authorRepository.findAuthorsByNameOrderedByNewsCount(name)
+                .stream()
+                .map(a -> authorMapper.entityToDTO(a))
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Author> getAuthorsOrderedByNewsCount() {
-        return authorRepository.findAuthorsOrderedByNewsCount();
+    public List<AuthorDTO> getAuthorsOrderedByNewsCount() {
+
+        return authorRepository.findAuthorsOrderedByNewsCount()
+                .stream()
+                .map(a -> authorMapper.entityToDTO(a))
+                .collect(Collectors.toList());
     }
 
 }

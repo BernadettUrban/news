@@ -1,6 +1,5 @@
 package com.mjc.school;
 
-import com.mjc.school.domain.News;
 import com.mjc.school.dtos.NewsDTO;
 import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.NewsRepository;

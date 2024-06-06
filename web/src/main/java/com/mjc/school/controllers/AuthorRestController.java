@@ -1,12 +1,12 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.AuthorServiceImpl;
+import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,61 +33,66 @@ public class AuthorRestController {
         return new ResponseEntity<>(authorDTOS, HttpStatus.OK);
     }
 
-
-/*
-    @Override
-    public ResponseEntity<AuthorModel> createAuthor(AuthorModel authorModel) {
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/api/authors",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
+    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorDTO authorDTO) {
         Author author = new Author();
-        author.setName(authorModel.getName());
-        newsService.saveAuthor(author);
-        return new ResponseEntity<>(authorModel, HttpStatus.CREATED);
+        author.setName(authorDTO.name());
+        authorService.saveAuthor(author);
+        return new ResponseEntity<>(authorDTO, HttpStatus.CREATED);
     }
 
-    @Override
-    public ResponseEntity<Void> deleteAuthor(Long authorId) {
-        newsService.deleteAuthorById(authorId);
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/api/authors/{authorId}"
+    )
+    public ResponseEntity<Void> deleteAuthor(
+            @PathVariable("authorId") Long authorId
+    ) {
+        authorService.deleteAuthorById(authorId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Override
-    public ResponseEntity<AuthorModel> getAuthorById(Long authorId) {
-        Author author = newsService.getAuthorById(authorId).orElse(null);
-        if (author == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        AuthorModel authorModel = authorConverter.createAuthorModel(author);
-        return new ResponseEntity<>(authorModel, HttpStatus.OK);
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/authors/{authorId}",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<AuthorDTO> getAuthorById(@Valid @PathVariable("authorId") Long authorId) {
+        AuthorDTO authorDTO = authorService.getAuthorById(authorId);
+        return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<List<AuthorModel>> getAuthors() {
-        List<Author> authors = newsService.getAuthorsOrderedByNewsCount();
-        //.listAllAuthors();
-        List<AuthorModel> authorModels = authorConverter.createListOfAuthorModels(authors);
-        return new ResponseEntity<>(authorModels, HttpStatus.OK);
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/authors/search",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<List<AuthorDTO>> searchAuthorsByName(@Valid @RequestParam String name) {
+
+        List<AuthorDTO> authorDTOs = authorService.searchAuthorsByName(name);
+        return new ResponseEntity<>(authorDTOs, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<List<AuthorModel>> searchAuthorsByName(String name) {
-        List<Author> authors = newsService.searchAuthorsByName(name);
-        List<AuthorModel> authorModels = authorConverter.createListOfAuthorModels(authors);
-        return new ResponseEntity<>(authorModels, HttpStatus.OK);
+
+   /* @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/api/authors/{authorId}",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
+    public ResponseEntity<AuthorDTO> updateAuthor(@Valid @PathVariable Long authorId, @Valid @RequestBody AuthorDTO authorDTO) {
+
+        authorDTO = authorService.getAuthorById(authorId);
+        Author author = authorService.convertDtoToAuthor(authorDTO);
+        authorService.saveAuthor(author);
+        return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<AuthorModel> updateAuthor(Long authorId, AuthorModel authorModel) {
-        Optional<Author> optionalAuthor = newsService.getAuthorById(authorId);
-        if (!optionalAuthor.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-
-        Author author = optionalAuthor.get();
-        authorConverter.updateAuthorFromUpdateAuthorModel(author, authorModel);
-        newsService.saveAuthor(author);
-        return new ResponseEntity<>(authorModel, HttpStatus.OK);
-    }
     */
-
 
 }

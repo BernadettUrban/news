@@ -1,7 +1,6 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.NewsService;
-import com.mjc.school.NewsServiceImpl;
 import com.mjc.school.dtos.NewsDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

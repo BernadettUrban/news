@@ -4,18 +4,19 @@ import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface AuthorService {
     List<AuthorDTO> listAllAuthors();
 
     void deleteAuthorById(Long id);
 
-    Optional<Author> getAuthorById(Long id);
+    AuthorDTO getAuthorById(Long id);
 
     void saveAuthor(Author author);
 
-    List<Author> searchAuthorsByName(String name);
+    Author convertDtoToAuthor(AuthorDTO authorDTO);
 
-    List<Author> getAuthorsOrderedByNewsCount();
+    List<AuthorDTO> searchAuthorsByName(String name);
+
+    List<AuthorDTO> getAuthorsOrderedByNewsCount();
 }
