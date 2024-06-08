@@ -2,11 +2,11 @@ package com.mjc.school.controllers;
 
 import com.mjc.school.NewsService;
 import com.mjc.school.dtos.NewsDTO;
+import com.mjc.school.dtos.TagDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,24 +31,41 @@ public class NewsRestController {
         return new ResponseEntity<>(newsModels, HttpStatus.OK);
     }
 
-/*
-    @Override
-    public ResponseEntity<Void> deleteNews(Long newsId) {
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/api/news/{newsId}"
+    )
+    public ResponseEntity<Void> deleteNews(@Valid @PathVariable("newsId") Long newsId) {
         newsService.deleteNewsById(newsId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Override
-    public ResponseEntity<List<NewsModel>> getNews() {
-        List<News> news = newsService.listAllNews();
-        List<NewsModel> newsModels = newsConverter.createListOfNewsModels(news);
-        return new ResponseEntity<>(newsModels, HttpStatus.OK);
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/news/{newsId}",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<NewsDTO> getNewsById(@Valid @PathVariable("newsId")Long newsId) {
+       NewsDTO newsDTO = newsService.getNewsById(newsId).get();
+        return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<NewsModel> getNewsById(Long newsId) {
-        News news = newsService.getNewsById(newsId).get();
-        NewsModel newsModel = newsConverter.createNewsModel(news);
-        return new ResponseEntity<>(newsModel, HttpStatus.OK);
-    }*/
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/news/search",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<List<NewsDTO>> searchNewsByParameters
+            (@Valid @RequestParam(value = "tagnames", required = false)  List<String> tagnames,
+             @Valid @RequestParam(value = "tagids", required = false)  List<String> tagids,
+             @Valid @RequestParam(value = "author", required = false) String author,
+             @Valid @RequestParam(value = "title", required = false) String title,
+             @Valid @RequestParam(value = "content", required = false) String content
+            ) {
+        List<NewsDTO> result = newsService.searchNewsByParameters(tagnames, tagids, author, title, content);
+
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

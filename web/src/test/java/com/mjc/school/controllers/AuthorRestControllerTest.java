@@ -1,6 +1,6 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.news.model.AuthorModel;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -96,32 +96,7 @@ class AuthorRestControllerTest {
         response.log().body();
     }
 
-    @Test
-    public void createSerializedAuthor() {
-        String endpoint = getBaseUrl();
-        AuthorModel author = new AuthorModel();
-        author.setName("Serialized Author");
 
-        var response = given().body(author).when().post(endpoint).then();
-        response.log().body();
-    }
-
-    @Test
-    public void getDeserializedAuthor() {
-        String endpoint = getBaseUrl() + "/{id}";
-        AuthorModel expectedAuthor = new AuthorModel();
-        expectedAuthor.setId(1L);
-        expectedAuthor.setName("John Doe");
-
-        AuthorModel actualAuthor =
-                given().
-                        pathParam("id", 1).
-                        when().
-                        get(endpoint).
-                        as(AuthorModel.class);
-
-        assertThat(actualAuthor, samePropertyValuesAs(expectedAuthor));
-    }
 }
 
 

@@ -12,4 +12,12 @@ public interface NewsService {
     void deleteNewsById(Long id);
 
     Optional<NewsDTO> getNewsById(Long id);
+
+    List<NewsDTO> searchNewsByParameters(
+            List<String> tagnames,
+            List<String> tagids,
+            String author,
+            String title,
+            String content);
+
 }

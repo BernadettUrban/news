@@ -1,5 +1,6 @@
 package com.mjc.school;
 
+import com.mjc.school.domain.News;
 import com.mjc.school.dtos.NewsDTO;
 import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.NewsRepository;
@@ -36,6 +37,12 @@ public class NewsServiceImpl implements NewsService {
     public Optional<NewsDTO> getNewsById(Long id) {
 
         return Optional.ofNullable(newsMapper.entityToDTO(newsRepository.findById(id).get()));
+    }
+
+    @Override
+    public List<NewsDTO> searchNewsByParameters(List<String> tagnames, List<String> tagids, String author, String title, String content) {
+        List<News> newsList = newsRepository.searchNewsByParameters(tagnames, tagids, author, title, content);
+        return newsList.stream().map(n -> newsMapper.entityToDTO(n)).collect(Collectors.toList());
     }
 
 }
