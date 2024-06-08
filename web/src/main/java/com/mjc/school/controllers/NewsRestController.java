@@ -56,8 +56,8 @@ public class NewsRestController {
             value = "/api/news/{newsId}",
             produces = {"application/json"}
     )
-    public ResponseEntity<NewsDTO> getNewsById(@Valid @PathVariable("newsId")Long newsId) {
-       NewsDTO newsDTO = newsService.getNewsById(newsId).get();
+    public ResponseEntity<NewsDTO> getNewsById(@Valid @PathVariable("newsId") Long newsId) {
+        NewsDTO newsDTO = newsService.getNewsById(newsId).get();
         return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
 
@@ -67,7 +67,7 @@ public class NewsRestController {
             produces = {"application/json"}
     )
 
-    public ResponseEntity<List<CommentDTO>> getCommentsByNewsId(@Valid @PathVariable("newsId")Long newsId) {
+    public ResponseEntity<List<CommentDTO>> getCommentsByNewsId(@Valid @PathVariable("newsId") Long newsId) {
         List<CommentDTO> commentDTOList = commentService.getCommentsByNewsId(newsId);
         return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
     }
@@ -78,7 +78,7 @@ public class NewsRestController {
             produces = {"application/json"}
     )
 
-    public ResponseEntity<List<TagDTO>> getTagsByNewsId(@Valid @PathVariable("newsId")Long newsId){
+    public ResponseEntity<List<TagDTO>> getTagsByNewsId(@Valid @PathVariable("newsId") Long newsId) {
         List<TagDTO> tagDTOList = tagService.getTagsByNewsId(newsId);
         return new ResponseEntity<>(tagDTOList, HttpStatus.OK);
     }
@@ -89,7 +89,7 @@ public class NewsRestController {
             value = "/api/news/{newsId}/author",
             produces = {"application/json"}
     )
-    public ResponseEntity<AuthorDTO> getAuthorByNewsId(@Valid @PathVariable("newsId")Long newsId){
+    public ResponseEntity<AuthorDTO> getAuthorByNewsId(@Valid @PathVariable("newsId") Long newsId) {
         AuthorDTO authorDTO = authorService.getAuthorByNewsId(newsId);
         return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
@@ -100,8 +100,8 @@ public class NewsRestController {
             produces = {"application/json"}
     )
     public ResponseEntity<List<NewsDTO>> searchNewsByParameters
-            (@Valid @RequestParam(value = "tagnames", required = false)  List<String> tagnames,
-             @Valid @RequestParam(value = "tagids", required = false)  List<String> tagids,
+            (@Valid @RequestParam(value = "tagnames", required = false) List<String> tagnames,
+             @Valid @RequestParam(value = "tagids", required = false) List<String> tagids,
              @Valid @RequestParam(value = "author", required = false) String author,
              @Valid @RequestParam(value = "title", required = false) String title,
              @Valid @RequestParam(value = "content", required = false) String content

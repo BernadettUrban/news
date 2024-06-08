@@ -4,7 +4,6 @@ import com.mjc.school.domain.Tag;
 import com.mjc.school.dtos.TagDTO;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TagService {
     List<TagDTO> listAllTags();
@@ -14,9 +13,11 @@ public interface TagService {
     TagDTO getTagById(Long id);
 
     void saveTag(Tag tag);
+
     Tag convertDtoToTag(TagDTO tagDTO);
 
     List<TagDTO> searchTagsByName(String name);
+
     List<TagDTO> getTagsByNewsId(Long newsId);
 
 }

@@ -1,14 +1,9 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.domain.Author;
 import com.mjc.school.domain.News;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
-public interface NewsRepository extends JpaRepository<News, Long>  {
+public interface NewsRepository extends JpaRepository<News, Long> {
    /* @Query(value = "SELECT DISTINCT n.* FROM news n " +
             "LEFT JOIN author a ON n.author_id = a.id " +
             "LEFT JOIN newstag nt ON n.id = nt.news_id " +

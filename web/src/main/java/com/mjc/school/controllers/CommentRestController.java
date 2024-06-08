@@ -1,7 +1,6 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.CommentService;
-import com.mjc.school.domain.News;
 import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.CreateCommentDTO;
 import jakarta.validation.Valid;
@@ -22,7 +21,7 @@ public class CommentRestController {
             method = RequestMethod.DELETE,
             value = "/api/comments/{commentId}"
     )
-    public ResponseEntity<Void> deleteComments(@Valid @PathVariable("commentId")Long commentId) {
+    public ResponseEntity<Void> deleteComments(@Valid @PathVariable("commentId") Long commentId) {
         commentService.deleteCommentById(commentId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -33,7 +32,7 @@ public class CommentRestController {
             produces = {"application/json"}
     )
 
-    public ResponseEntity<CommentDTO> getCommentById(@Valid @PathVariable("commentId")Long commentId) {
+    public ResponseEntity<CommentDTO> getCommentById(@Valid @PathVariable("commentId") Long commentId) {
         CommentDTO commentDTO = commentService.getCommentById(commentId);
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
@@ -45,7 +44,7 @@ public class CommentRestController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CreateCommentDTO createCommentDTO){
+    public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CreateCommentDTO createCommentDTO) {
         CommentDTO commentDTOCreated = commentService.createComment(createCommentDTO);
         return new ResponseEntity<>(commentDTOCreated, HttpStatus.OK);
     }
@@ -57,9 +56,9 @@ public class CommentRestController {
             consumes = {"application/json"}
     )
     public ResponseEntity<CommentDTO> updateComment(
-            @Valid @PathVariable("commentId")Long commentId,
-            @Valid @RequestBody CreateCommentDTO createCommentDTO){
-        CommentDTO commentDTOCreated = commentService.updateComment(commentId,createCommentDTO);
+            @Valid @PathVariable("commentId") Long commentId,
+            @Valid @RequestBody CreateCommentDTO createCommentDTO) {
+        CommentDTO commentDTOCreated = commentService.updateComment(commentId, createCommentDTO);
         return new ResponseEntity<>(commentDTOCreated, HttpStatus.OK);
     }
 

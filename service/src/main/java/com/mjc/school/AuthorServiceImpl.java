@@ -1,11 +1,11 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
-import com.mjc.school.domain.News;
 import com.mjc.school.dtos.AuthorDTO;
+import com.mjc.school.dtos.CreateAuthorDTO;
+import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.repository.AuthorRepository;
-import com.mjc.school.repository.NewsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +26,14 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.findAll().stream()
                 .map(a -> authorMapper.entityToDTO(a))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public AuthorDTO createAuthor(CreateAuthorDTO createAuthorDTO) {
+        Author author = new Author();
+        author.setName(createAuthorDTO.name());
+        authorRepository.save(author);
+        return authorMapper.entityToDTO(author);
     }
 
     @Override
@@ -61,6 +69,17 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorDTO getAuthorByNewsId(Long newsId) {
         Author author = authorRepository.findByNewsId(newsId);
         return authorMapper.entityToDTO(author);
+    }
+
+    @Override
+    public AuthorDTO updateAuthor(Long authorId, CreateAuthorDTO createAuthorDTO) {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new CustomException("Comment not found with id: " + authorId));
+        ;
+        author.setName(createAuthorDTO.name());
+        authorRepository.save(author);
+        return authorMapper.entityToDTO(author);
+
     }
 
     @Override

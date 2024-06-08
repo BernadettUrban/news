@@ -1,8 +1,8 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.AuthorServiceImpl;
-import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;
+import com.mjc.school.dtos.CreateAuthorDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,10 +39,8 @@ public class AuthorRestController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody AuthorDTO authorDTO) {
-        Author author = new Author();
-        author.setName(authorDTO.name());
-        authorService.saveAuthor(author);
+    public ResponseEntity<AuthorDTO> createAuthor(@Valid @RequestBody CreateAuthorDTO createAuthorDTO) {
+        AuthorDTO authorDTO = authorService.createAuthor(createAuthorDTO);
         return new ResponseEntity<>(authorDTO, HttpStatus.CREATED);
     }
 
@@ -78,21 +76,17 @@ public class AuthorRestController {
         return new ResponseEntity<>(authorDTOs, HttpStatus.OK);
     }
 
-
-   /* @RequestMapping(
+    @RequestMapping(
             method = RequestMethod.PUT,
             value = "/api/authors/{authorId}",
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public ResponseEntity<AuthorDTO> updateAuthor(@Valid @PathVariable Long authorId, @Valid @RequestBody AuthorDTO authorDTO) {
+    public ResponseEntity<AuthorDTO> updateAuthor(@Valid @PathVariable Long authorId, @Valid @RequestBody CreateAuthorDTO createAuthorDTO) {
 
-        authorDTO = authorService.getAuthorById(authorId);
-        Author author = authorService.convertDtoToAuthor(authorDTO);
-        authorService.saveAuthor(author);
+        AuthorDTO authorDTO = authorService.updateAuthor(authorId, createAuthorDTO);
+
         return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
-
-    */
-
+    
 }

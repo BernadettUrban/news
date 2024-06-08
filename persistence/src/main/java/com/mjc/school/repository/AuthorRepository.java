@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findByNameContainingIgnoreCase(String name);
+
     Author findByNewsId(Long newsId);
 
     @Query("SELECT a FROM Author a JOIN a.news n WHERE a.name LIKE %:name% GROUP BY a ORDER BY COUNT(n) DESC")

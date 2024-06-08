@@ -26,15 +26,15 @@ public class TagRestController {
     )
     public ResponseEntity<TagDTO> createTag(@Valid @RequestBody TagDTO tagDTO) {
         Tag tag = tagService.convertDtoToTag(tagDTO);
-       tagService.saveTag(tag);
-       return new ResponseEntity<>(tagDTO, HttpStatus.CREATED);
+        tagService.saveTag(tag);
+        return new ResponseEntity<>(tagDTO, HttpStatus.CREATED);
     }
 
     @RequestMapping(
             method = RequestMethod.DELETE,
             value = "/api/tags/{tagId}"
     )
-    public ResponseEntity<Void> deleteTag(@Valid @PathVariable ("tagId")Long tagId) {
+    public ResponseEntity<Void> deleteTag(@Valid @PathVariable("tagId") Long tagId) {
         tagService.deleteTagById(tagId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -44,7 +44,7 @@ public class TagRestController {
             value = "/api/tags/{tagId}",
             produces = {"application/json"}
     )
-    public ResponseEntity<TagDTO> getTagById(@PathVariable ("tagId")Long tagId) {
+    public ResponseEntity<TagDTO> getTagById(@PathVariable("tagId") Long tagId) {
         TagDTO tagDTO = tagService.getTagById(tagId);
         return new ResponseEntity<>(tagDTO, HttpStatus.OK);
     }
@@ -64,7 +64,7 @@ public class TagRestController {
             value = "/api/tags/search",
             produces = {"application/json"}
     )
-    public ResponseEntity<List<TagDTO>> searchTagsByName(@Valid @RequestParam(value = "name", required = true)  String name) {
+    public ResponseEntity<List<TagDTO>> searchTagsByName(@Valid @RequestParam(value = "name", required = true) String name) {
         List<TagDTO> tagDTOs = tagService.searchTagsByName(name);
         return new ResponseEntity<>(tagDTOs, HttpStatus.OK);
     }
