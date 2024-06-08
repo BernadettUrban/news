@@ -1,5 +1,6 @@
 package com.mjc.school.repository;
 
+import com.mjc.school.domain.Author;
 import com.mjc.school.domain.News;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

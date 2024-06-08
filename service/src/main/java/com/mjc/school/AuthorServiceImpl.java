@@ -1,9 +1,11 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.domain.News;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.NewsRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,6 +55,12 @@ public class AuthorServiceImpl implements AuthorService {
                 .stream()
                 .map(a -> authorMapper.entityToDTO(a))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public AuthorDTO getAuthorByNewsId(Long newsId) {
+        Author author = authorRepository.findByNewsId(newsId);
+        return authorMapper.entityToDTO(author);
     }
 
     @Override

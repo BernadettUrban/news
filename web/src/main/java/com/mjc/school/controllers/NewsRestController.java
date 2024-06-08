@@ -1,9 +1,13 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.AuthorService;
 import com.mjc.school.CommentService;
 import com.mjc.school.NewsService;
+import com.mjc.school.TagService;
+import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.NewsDTO;
+import com.mjc.school.dtos.TagDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +19,14 @@ import java.util.List;
 public class NewsRestController {
     private final NewsService newsService;
     private final CommentService commentService;
+    private final AuthorService authorService;
+    private final TagService tagService;
 
-    public NewsRestController(NewsService newsService, CommentService commentService) {
+    public NewsRestController(NewsService newsService, CommentService commentService, AuthorService authorService, TagService tagService) {
         this.newsService = newsService;
         this.commentService = commentService;
+        this.authorService = authorService;
+        this.tagService = tagService;
     }
 
 
@@ -64,6 +72,27 @@ public class NewsRestController {
         return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
     }
 
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/news/{newsId}/tags",
+            produces = {"application/json"}
+    )
+
+    public ResponseEntity<List<TagDTO>> getTagsByNewsId(@Valid @PathVariable("newsId")Long newsId){
+        List<TagDTO> tagDTOList = tagService.getTagsByNewsId(newsId);
+        return new ResponseEntity<>(tagDTOList, HttpStatus.OK);
+    }
+
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/news/{newsId}/author",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<AuthorDTO> getAuthorByNewsId(@Valid @PathVariable("newsId")Long newsId){
+        AuthorDTO authorDTO = authorService.getAuthorByNewsId(newsId);
+        return new ResponseEntity<>(authorDTO, HttpStatus.OK);
+    }
 
     @RequestMapping(
             method = RequestMethod.GET,

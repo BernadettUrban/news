@@ -16,16 +16,17 @@ import java.util.stream.Collectors;
 @Service
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    private final NewsRepository newsRepository;
     private final NewsService newsService;
     private final CommentMapper commentMapper;
+    private final NewsRepository newsRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, NewsRepository newsRepository, NewsRepository newsRepository1, NewsService newsService, CommentMapper commentMapper) {
+    public CommentServiceImpl(CommentRepository commentRepository, NewsService newsService, CommentMapper commentMapper, NewsRepository newsRepository) {
         this.commentRepository = commentRepository;
-        this.newsRepository = newsRepository1;
+
         this.newsService = newsService;
 
         this.commentMapper = commentMapper;
+        this.newsRepository = newsRepository;
     }
 
     @Override
@@ -68,9 +69,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentDTO> getCommentsByNewsId(Long newsId) {
-        News news = newsRepository.findById(newsId).get();
-        List<Comment> comments = news.getComments();
-        System.out.println(comments);
+        List<Comment> comments = commentRepository.findByNewsId(newsId);
         return comments.stream()
                 .map(c -> commentMapper.entityToDTO(c))
                 .collect(Collectors.toList());

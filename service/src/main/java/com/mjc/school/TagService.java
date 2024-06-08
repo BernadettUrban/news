@@ -17,5 +17,6 @@ public interface TagService {
     Tag convertDtoToTag(TagDTO tagDTO);
 
     List<TagDTO> searchTagsByName(String name);
+    List<TagDTO> getTagsByNewsId(Long newsId);
 
 }
