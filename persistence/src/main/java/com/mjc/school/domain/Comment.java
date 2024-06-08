@@ -20,7 +20,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "content")
-    @Size(min = 3, max = 255)
+    @Size(min = 3, max = 255, message ="Content must be between 3 and 255")
     private String commentContent;
 
     @JsonIgnore
