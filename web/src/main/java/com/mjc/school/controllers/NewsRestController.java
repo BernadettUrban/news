@@ -4,10 +4,7 @@ import com.mjc.school.AuthorService;
 import com.mjc.school.CommentService;
 import com.mjc.school.NewsService;
 import com.mjc.school.TagService;
-import com.mjc.school.dtos.AuthorDTO;
-import com.mjc.school.dtos.CommentDTO;
-import com.mjc.school.dtos.NewsDTO;
-import com.mjc.school.dtos.TagDTO;
+import com.mjc.school.dtos.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +37,31 @@ public class NewsRestController {
         List<NewsDTO> newsModels = newsService.listAllNews();
 
         return new ResponseEntity<>(newsModels, HttpStatus.OK);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/api/news",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
+    public ResponseEntity<NewsDTO> createNews(@Valid @RequestBody CreateNewsDTO createNewsDTO) {
+        NewsDTO newsDTO = newsService.createNews(createNewsDTO);
+        return new ResponseEntity<>(newsDTO, HttpStatus.OK);
+
+    }
+
+    @RequestMapping(
+            method = RequestMethod.PATCH,
+            value = "/api/news/{newsId}",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
+
+    public ResponseEntity<NewsDTO> updateNews(@Valid @PathVariable("newsId") Long newsId, @Valid @RequestBody CreateNewsDTO createNewsDTO) {
+        NewsDTO newsDTO = newsService.updateNews(newsId, createNewsDTO);
+        return new ResponseEntity<>(newsDTO, HttpStatus.OK);
+
     }
 
     @RequestMapping(

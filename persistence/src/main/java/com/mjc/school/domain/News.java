@@ -38,6 +38,8 @@ public class News {
     private List<Comment> comments = new ArrayList<>();
 
     public News() {
+        setCreated();
+        setModified();
     }
 
     public News(Long id, String title, String content, Author author) {
