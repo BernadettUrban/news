@@ -1,14 +1,13 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.CommentService;
+import com.mjc.school.domain.News;
 import com.mjc.school.dtos.CommentDTO;
+import com.mjc.school.dtos.CreateCommentDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CommentRestController {
@@ -37,6 +36,17 @@ public class CommentRestController {
     public ResponseEntity<CommentDTO> getCommentById(@Valid @PathVariable("commentId")Long commentId) {
         CommentDTO commentDTO = commentService.getCommentById(commentId);
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/api/comments",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
+    public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CreateCommentDTO createCommentDTO){
+        CommentDTO commentDTOCreated = commentService.createComment(createCommentDTO);
+        return new ResponseEntity<>(commentDTOCreated, HttpStatus.OK);
     }
 
 }
