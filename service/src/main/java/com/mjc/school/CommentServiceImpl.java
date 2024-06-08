@@ -1,6 +1,7 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Comment;
+import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.mappers.CommentMapper;
 import com.mjc.school.repository.CommentRepository;
@@ -22,8 +23,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment getCommentById(Long id) {
-        return commentRepository.findById(id)
-                .orElseThrow(() -> new CustomException("Comment not found with id: " + id));
+    public CommentDTO getCommentById(Long id) {
+        return commentMapper.entityToDTO(
+        commentRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Comment not found with id: " + id)));
     }
 }
