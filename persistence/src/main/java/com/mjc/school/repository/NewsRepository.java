@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface NewsRepository extends JpaRepository<News, Long> , CustomNewsRepository {
+public interface NewsRepository extends JpaRepository<News, Long>  {
    /* @Query(value = "SELECT DISTINCT n.* FROM news n " +
             "LEFT JOIN author a ON n.author_id = a.id " +
             "LEFT JOIN newstag nt ON n.id = nt.news_id " +

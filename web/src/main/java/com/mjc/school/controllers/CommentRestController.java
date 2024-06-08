@@ -38,6 +38,7 @@ public class CommentRestController {
         return new ResponseEntity<>(commentDTO, HttpStatus.OK);
     }
 
+
     @RequestMapping(
             method = RequestMethod.POST,
             value = "/api/comments",
@@ -46,6 +47,19 @@ public class CommentRestController {
     )
     public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CreateCommentDTO createCommentDTO){
         CommentDTO commentDTOCreated = commentService.createComment(createCommentDTO);
+        return new ResponseEntity<>(commentDTOCreated, HttpStatus.OK);
+    }
+
+    @RequestMapping(
+            method = RequestMethod.PUT,
+            value = "/api/comments/{commentId}",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
+    public ResponseEntity<CommentDTO> updateComment(
+            @Valid @PathVariable("commentId")Long commentId,
+            @Valid @RequestBody CreateCommentDTO createCommentDTO){
+        CommentDTO commentDTOCreated = commentService.updateComment(commentId,createCommentDTO);
         return new ResponseEntity<>(commentDTOCreated, HttpStatus.OK);
     }
 

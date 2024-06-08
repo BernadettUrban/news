@@ -9,6 +9,5 @@ public record NewsDTO(
         Author author,
         String created,
         String modified
-
 ) {
 }

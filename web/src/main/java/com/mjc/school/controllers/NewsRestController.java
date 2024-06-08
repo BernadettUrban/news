@@ -1,8 +1,9 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.CommentService;
 import com.mjc.school.NewsService;
+import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.NewsDTO;
-import com.mjc.school.dtos.TagDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +14,11 @@ import java.util.List;
 @RestController
 public class NewsRestController {
     private final NewsService newsService;
+    private final CommentService commentService;
 
-    public NewsRestController(NewsService newsService) {
+    public NewsRestController(NewsService newsService, CommentService commentService) {
         this.newsService = newsService;
+        this.commentService = commentService;
     }
 
 
@@ -49,6 +52,18 @@ public class NewsRestController {
        NewsDTO newsDTO = newsService.getNewsById(newsId).get();
         return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
+
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/news/{newsId}/comments",
+            produces = {"application/json"}
+    )
+
+    public ResponseEntity<List<CommentDTO>> getCommentsByNewsId(@Valid @PathVariable("newsId")Long newsId) {
+        List<CommentDTO> commentDTOList = commentService.getCommentsByNewsId(newsId);
+        return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
+    }
+
 
     @RequestMapping(
             method = RequestMethod.GET,

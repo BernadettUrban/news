@@ -41,8 +41,9 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public List<NewsDTO> searchNewsByParameters(List<String> tagnames, List<String> tagids, String author, String title, String content) {
-        List<News> newsList = newsRepository.searchNewsByParameters(tagnames, tagids, author, title, content);
-        return newsList.stream().map(n -> newsMapper.entityToDTO(n)).collect(Collectors.toList());
+        //List<News> newsList = newsRepository.searchNewsByParameters(tagnames, tagids, author, title, content);
+        return null;
+                //newsList.stream().map(n -> newsMapper.entityToDTO(n)).collect(Collectors.toList());
     }
 
 }
