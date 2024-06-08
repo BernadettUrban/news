@@ -7,7 +7,6 @@ import java.util.List;
 
 public record AuthorDTO(
         Long id,
-        String name,
-        List<News> news
+        String name
 ) {
 }

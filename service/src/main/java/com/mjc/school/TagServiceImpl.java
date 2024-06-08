@@ -1,12 +1,14 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.TagDTO;
 import com.mjc.school.mappers.TagMapper;
 import com.mjc.school.repository.TagRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -20,8 +22,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> listAllTags() {
-        return tagRepository.findAll();
+    public List<TagDTO> listAllTags() {
+
+        return tagRepository.findAll()
+                .stream()
+                .map(t -> tagMapper.entityToDTO(t))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -30,8 +36,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Optional<Tag> getTagById(Long id) {
-        return tagRepository.findById(id);
+    public TagDTO getTagById(Long id) {
+        return tagMapper.entityToDTO(tagRepository.findById(id).get());
     }
 
     @Override
@@ -40,8 +46,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> searchTagsByName(String name) {
-        return tagRepository.findByNameContainingIgnoreCase(name);
+    public Tag convertDtoToTag(TagDTO tagDTO) {
+        return tagMapper.dtoToEntity(tagDTO);
+    }
+
+    @Override
+    public List<TagDTO> searchTagsByName(String name) {
+
+        return tagRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(t -> tagMapper.entityToDTO(t))
+                .collect(Collectors.toList());
     }
 
 }

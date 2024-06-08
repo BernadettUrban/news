@@ -1,7 +1,14 @@
 package com.mjc.school.controllers;
 
 import com.mjc.school.TagService;
-import org.springframework.web.bind.annotation.RestController;
+import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.TagDTO;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class TagRestController {
@@ -11,48 +18,68 @@ public class TagRestController {
         this.tagService = tagService;
     }
 
-
-
-
-    /*
-    @Override
-    public ResponseEntity<TagModel> createTag(TagModel tagModel) {
-        Tag tag = new Tag();
-        tag.setName(tagModel.getName());
-        defaultNewsService.saveTag(tag);
-        return new ResponseEntity<>(tagModel, HttpStatus.CREATED);
+    @RequestMapping(
+            method = RequestMethod.POST,
+            value = "/api/tags",
+            produces = {"application/json"},
+            consumes = {"application/json"}
+    )
+    public ResponseEntity<TagDTO> createTag(@Valid @RequestBody TagDTO tagDTO) {
+        Tag tag = tagService.convertDtoToTag(tagDTO);
+       tagService.saveTag(tag);
+       return new ResponseEntity<>(tagDTO, HttpStatus.CREATED);
     }
 
-    @Override
-    public ResponseEntity<Void> deleteTag(Long tagId) {
-        defaultNewsService.deleteAuthorById(tagId);
+    @RequestMapping(
+            method = RequestMethod.DELETE,
+            value = "/api/tags/{tagId}"
+    )
+    public ResponseEntity<Void> deleteTag(@Valid @PathVariable ("tagId")Long tagId) {
+        tagService.deleteTagById(tagId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @Override
-    public ResponseEntity<TagModel> getTagById(Long tagId) {
-        Tag tag = defaultNewsService.getTagById(tagId).orElse(null);
-        if (tag == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        TagModel tagModel = tagConverter.createTagModelFromTag(tag);
-        return new ResponseEntity<>(tagModel, HttpStatus.OK);
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/tags/{tagId}",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<TagDTO> getTagById(@PathVariable ("tagId")Long tagId) {
+        TagDTO tagDTO = tagService.getTagById(tagId);
+        return new ResponseEntity<>(tagDTO, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<List<TagModel>> getTags() {
-        List<Tag> tags = defaultNewsService.listAllTags();
-        List<TagModel> tagModelList = tagConverter.createListOfTagModels(tags);
-        return new ResponseEntity<>(tagModelList, HttpStatus.OK);
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/tags",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<List<TagDTO>> getTags() {
+        List<TagDTO> tagDTOs = tagService.listAllTags();
+        return new ResponseEntity<>(tagDTOs, HttpStatus.OK);
     }
 
-    @Override
-    public ResponseEntity<List<TagModel>> searchTagsByName(String name) {
-        List<Tag> tags = defaultNewsService.searchTagsByName(name);
-        List<TagModel> tagModelList = tagConverter.createListOfTagModels(tags);
-        return new ResponseEntity<>(tagModelList, HttpStatus.OK);
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/tags/search",
+            produces = {"application/json"}
+    )
+    public ResponseEntity<List<TagDTO>> searchTagsByName(@Valid @RequestParam(value = "name", required = true)  String name) {
+        List<TagDTO> tagDTOs = tagService.searchTagsByName(name);
+        return new ResponseEntity<>(tagDTOs, HttpStatus.OK);
     }
+
+    /*
+    @Override
+
+    @Override
+
+
+    @Override
+
+
+    @Override
+
 
     @Override
     public ResponseEntity<TagModel> updateTag(Long tagId, TagModel tagModel) {

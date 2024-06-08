@@ -6,7 +6,6 @@ import java.util.Set;
 
 public record TagDTO(
         Long id,
-        String name,
-        Set<NewsTag> newstags
+        String name
 ) {
 }

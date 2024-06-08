@@ -18,7 +18,7 @@ public class Tag {
     @Size(min = 3 , max = 15)
     private String name;
     @JsonIgnore
-    @OneToMany(mappedBy = "tag")
+    @OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<NewsTag> newstags = new HashSet<>();
 
     public Tag() {

@@ -1,19 +1,21 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.TagDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TagService {
-    List<Tag> listAllTags();
+    List<TagDTO> listAllTags();
 
     void deleteTagById(Long id);
 
-    Optional<Tag> getTagById(Long id);
+    TagDTO getTagById(Long id);
 
     void saveTag(Tag tag);
+    Tag convertDtoToTag(TagDTO tagDTO);
 
-    List<Tag> searchTagsByName(String name);
+    List<TagDTO> searchTagsByName(String name);
 
 }
