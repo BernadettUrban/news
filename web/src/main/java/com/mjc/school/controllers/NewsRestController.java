@@ -123,7 +123,7 @@ public class NewsRestController {
     )
     public ResponseEntity<List<NewsDTO>> searchNewsByParameters
             (@Valid @RequestParam(value = "tagnames", required = false) List<String> tagnames,
-             @Valid @RequestParam(value = "tagids", required = false) List<String> tagids,
+             @Valid @RequestParam(value = "tagids", required = false) List<Long> tagids,
              @Valid @RequestParam(value = "author", required = false) String author,
              @Valid @RequestParam(value = "title", required = false) String title,
              @Valid @RequestParam(value = "content", required = false) String content

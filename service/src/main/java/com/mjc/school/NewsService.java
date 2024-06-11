@@ -17,11 +17,10 @@ public interface NewsService {
 
     Optional<NewsDTO> getNewsById(Long id);
 
-    List<NewsDTO> searchNewsByParameters(
-            List<String> tagnames,
-            List<String> tagids,
-            String author,
-            String title,
-            String content);
 
+    List<NewsDTO> searchNewsByParameters(List<String> tagNames,
+                                         List<Long> tagIds,
+                                         String authorName,
+                                         String title,
+                                         String content);
 }

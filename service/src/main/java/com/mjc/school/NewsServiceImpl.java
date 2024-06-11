@@ -8,7 +8,9 @@ import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
+import com.mjc.school.specification.NewsSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -91,10 +93,16 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> searchNewsByParameters(List<String> tagnames, List<String> tagids, String author, String title, String content) {
-        //List<News> newsList = newsRepository.searchNewsByParameters(tagnames, tagids, author, title, content);
-        return null;
-        //newsList.stream().map(n -> newsMapper.entityToDTO(n)).collect(Collectors.toList());
+    public List<NewsDTO> searchNewsByParameters(List<String> tagNames, List<Long> tagIds, String authorName, String title, String content) {
+        Specification<News> specification = Specification.where(NewsSpecification.hasAuthorName(authorName))
+                .and(NewsSpecification.hasTitle(title))
+                .and(NewsSpecification.hasContent(content))
+                .and(NewsSpecification.hasTagNames(tagNames))
+                .and(NewsSpecification.hasTagIds(tagIds));
+        return newsRepository.findAll(specification).stream()
+                .map(n-> newsMapper.entityToDTO(n))
+                .collect(Collectors.toList());
     }
+
 
 }
