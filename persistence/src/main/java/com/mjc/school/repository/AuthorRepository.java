@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findByNameContainingIgnoreCase(String name);
+    Optional<Author> findByName(String name);
 
     @Query("SELECT a FROM Author a WHERE a.name = :name")
     Author findAuthorByName(@Param("name") String name);

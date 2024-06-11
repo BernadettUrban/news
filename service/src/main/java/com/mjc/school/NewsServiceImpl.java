@@ -2,32 +2,40 @@ package com.mjc.school;
 
 import com.mjc.school.domain.Author;
 import com.mjc.school.domain.News;
+import com.mjc.school.domain.NewsTag;
+import com.mjc.school.domain.Tag;
 import com.mjc.school.dtos.CreateNewsDTO;
 import com.mjc.school.dtos.NewsDTO;
 import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
+import com.mjc.school.repository.TagRepository;
 import com.mjc.school.specification.NewsSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.mjc.school.util.Formatting.SIMPLEDATEFORMAT;
 
 @Service
 public class NewsServiceImpl implements NewsService {
     private final NewsMapper newsMapper;
     private final NewsRepository newsRepository;
     private final AuthorRepository authorRepository;
+    private final TagRepository tagRepository;
 
     @Autowired
-    public NewsServiceImpl(NewsMapper newsMapper, NewsRepository newsRepository, AuthorRepository authorRepository) {
+    public NewsServiceImpl(NewsMapper newsMapper, NewsRepository newsRepository, AuthorRepository authorRepository, TagRepository tagRepository) {
         this.newsMapper = newsMapper;
         this.newsRepository = newsRepository;
         this.authorRepository = authorRepository;
+        this.tagRepository = tagRepository;
     }
 
     public List<NewsDTO> listAllNews() {
@@ -38,19 +46,21 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsDTO createNews(CreateNewsDTO createNewsDTO) {
+        Author author = authorRepository.findByName(createNewsDTO.authorName())
+                .orElseGet(() -> authorRepository.save(new Author(createNewsDTO.authorName())));
+
         News news = new News();
         news.setTitle(createNewsDTO.title());
         news.setContent(createNewsDTO.newsContent());
-        String authorName = createNewsDTO.authorName();
-        if(!authorRepository.findAuthorByName(authorName).equals(null)){
-            news.setAuthor(authorRepository.findAuthorByName(authorName));
+        news.setAuthor(author);
+        news.setCreated();
+        news.setModified();
 
-
+        for (String tagName : createNewsDTO.tagNames()) {
+            Tag tag = tagRepository.findByName(tagName)
+                    .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+            news.getTags().add(new NewsTag(news, tag));
         }
-        Author author = new Author(authorName);
-        authorRepository.save(author);
-        news.setAuthor(authorRepository.findAuthorByName(authorName));
-
         newsRepository.save(news);
         return newsMapper.entityToDTO(news);
     }
@@ -59,24 +69,31 @@ public class NewsServiceImpl implements NewsService {
     public NewsDTO updateNews(Long newsId, CreateNewsDTO createNewsDTO) {
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new CustomException("Comment not found with id: " + newsId));
-        if(createNewsDTO.title()!=null){
+
+        if (createNewsDTO.title() != null) {
             news.setTitle(createNewsDTO.title());
-
         }
-        if(createNewsDTO.newsContent()!=null){
+
+        if (createNewsDTO.newsContent() != null) {
             news.setContent(createNewsDTO.newsContent());
-
         }
-        String authorName = createNewsDTO.authorName();
-        if(authorName!=null){
-            if(!authorRepository.findAuthorByName(authorName).equals(null)){
-                news.setAuthor(authorRepository.findAuthorByName(authorName));
+
+        if (createNewsDTO.authorName() != null) {
+            Author author = authorRepository.findByName(createNewsDTO.authorName())
+                    .orElseGet(() -> authorRepository.save(new Author(createNewsDTO.authorName())));
+            news.setAuthor(author);
+        }
+
+        if (createNewsDTO.tagNames() != null) {
+            news.getTags().clear();
+            for (String tagName : createNewsDTO.tagNames()) {
+                Tag tag = tagRepository.findByName(tagName)
+                        .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+                news.getTags().add(new NewsTag(news, tag));
             }
-            Author author = new Author(authorName);
-            authorRepository.save(author);
-            news.setAuthor(authorRepository.findAuthorByName(authorName));
         }
 
+        news.setModified();
         newsRepository.save(news);
         return newsMapper.entityToDTO(news);
     }
