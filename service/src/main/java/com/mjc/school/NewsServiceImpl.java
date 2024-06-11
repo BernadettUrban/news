@@ -13,6 +13,7 @@ import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
 import com.mjc.school.specification.NewsSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -38,10 +39,26 @@ public class NewsServiceImpl implements NewsService {
         this.tagRepository = tagRepository;
     }
 
-    public List<NewsDTO> listAllNews() {
-        return newsRepository.findAll()
-                .stream().map(n -> newsMapper.entityToDTO(n))
+    public Page<NewsDTO> listAllNews(int page, int size, SortField sortField, Sort.Direction sortDirection) {
+        if (sortField == null) {
+            sortField = SortField.CREATED;
+        }
+        if (sortDirection == null) {
+            sortDirection = Sort.Direction.DESC;
+        }
+
+        Sort sort = Sort.by(sortDirection, sortField.getDatabaseFieldName());
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Page<News> newsPage = newsRepository.findAll(pageable);
+
+        List<NewsDTO> newsDTOs = newsPage.getContent()
+                .stream()
+                .map(n -> newsMapper.entityToDTO(n))
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(newsDTOs, pageable, newsPage.getTotalElements());
     }
 
     @Override
@@ -110,15 +127,21 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public List<NewsDTO> searchNewsByParameters(List<String> tagNames, List<Long> tagIds, String authorName, String title, String content) {
+    public Page<NewsDTO> searchNewsByParameters(List<String> tagNames,
+                                                List<Long> tagIds, String authorName,
+                                                String title, String content,
+                                                Pageable pageable) {
         Specification<News> specification = Specification.where(NewsSpecification.hasAuthorName(authorName))
                 .and(NewsSpecification.hasTitle(title))
                 .and(NewsSpecification.hasContent(content))
                 .and(NewsSpecification.hasTagNames(tagNames))
                 .and(NewsSpecification.hasTagIds(tagIds));
-        return newsRepository.findAll(specification).stream()
-                .map(n-> newsMapper.entityToDTO(n))
+        Page<News> newsPage = newsRepository.findAll(specification, pageable);
+        List<NewsDTO> newsDTOList = newsPage.getContent().stream()
+                .map(newsMapper::entityToDTO)
                 .collect(Collectors.toList());
+
+        return new PageImpl<>(newsDTOList, pageable, newsPage.getTotalElements());
     }
 
 

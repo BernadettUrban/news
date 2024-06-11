@@ -1,11 +1,13 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.AuthorService;
-import com.mjc.school.CommentService;
-import com.mjc.school.NewsService;
-import com.mjc.school.TagService;
+import com.mjc.school.*;
 import com.mjc.school.dtos.*;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,11 +34,12 @@ public class NewsRestController {
             value = "/api/news",
             produces = {"application/json"}
     )
-    public ResponseEntity<List<NewsDTO>> getNews() {
-
-        List<NewsDTO> newsModels = newsService.listAllNews();
-
-        return new ResponseEntity<>(newsModels, HttpStatus.OK);
+    public Page<NewsDTO> getNews(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "CREATED") SortField sortField,
+            @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection) {
+        return newsService.listAllNews(page, size, sortField, sortDirection);
     }
 
     @RequestMapping(
@@ -116,19 +119,22 @@ public class NewsRestController {
         return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
 
+
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/api/news/search",
             produces = {"application/json"}
     )
-    public ResponseEntity<List<NewsDTO>> searchNewsByParameters
+    public ResponseEntity<Page<NewsDTO>> searchNewsByParameters
             (@Valid @RequestParam(value = "tagnames", required = false) List<String> tagnames,
              @Valid @RequestParam(value = "tagids", required = false) List<Long> tagids,
              @Valid @RequestParam(value = "author", required = false) String author,
              @Valid @RequestParam(value = "title", required = false) String title,
-             @Valid @RequestParam(value = "content", required = false) String content
+             @Valid @RequestParam(value = "content", required = false) String content,
+             @PageableDefault @SortDefault(sort = "created", direction = Sort.Direction.DESC) Pageable pageable
             ) {
-        List<NewsDTO> result = newsService.searchNewsByParameters(tagnames, tagids, author, title, content);
+        Page<NewsDTO> result = newsService.searchNewsByParameters(
+                tagnames, tagids, author, title, content, pageable);
 
 
         return new ResponseEntity<>(result, HttpStatus.OK);
