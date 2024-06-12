@@ -92,8 +92,12 @@ public class NewsRestController {
             produces = {"application/json"}
     )
 
-    public ResponseEntity<List<CommentDTO>> getCommentsByNewsId(@Valid @PathVariable("newsId") Long newsId) {
-        List<CommentDTO> commentDTOList = commentService.getCommentsByNewsId(newsId);
+    public ResponseEntity< Page<CommentDTO>> getCommentsByNewsId(
+            @Valid @PathVariable("newsId") Long newsId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<CommentDTO> commentDTOList = commentService.getCommentsByNewsId(newsId, page,size);
         return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
     }
 
@@ -103,8 +107,11 @@ public class NewsRestController {
             produces = {"application/json"}
     )
 
-    public ResponseEntity<List<TagDTO>> getTagsByNewsId(@Valid @PathVariable("newsId") Long newsId) {
-        List<TagDTO> tagDTOList = tagService.getTagsByNewsId(newsId);
+    public ResponseEntity<Page<TagDTO>> getTagsByNewsId(
+            @Valid @PathVariable("newsId") Long newsId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<TagDTO> tagDTOList = tagService.getTagsByNewsId(newsId, page, size);
         return new ResponseEntity<>(tagDTOList, HttpStatus.OK);
     }
 

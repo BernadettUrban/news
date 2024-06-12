@@ -5,9 +5,14 @@ import com.mjc.school.domain.News;
 import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.CreateCommentDTO;
 import com.mjc.school.exceptions.CustomException;
+import com.mjc.school.exceptions.PaginationException;
 import com.mjc.school.mappers.CommentMapper;
 import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.repository.NewsRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -68,10 +73,18 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDTO> getCommentsByNewsId(Long newsId) {
-        List<Comment> comments = commentRepository.findByNewsId(newsId);
-        return comments.stream()
-                .map(c -> commentMapper.entityToDTO(c))
+    public Page<CommentDTO> getCommentsByNewsId(Long newsId, int page, int size) {
+        if(page<0){
+            throw new PaginationException("Page index must be not negative");
+        }if(size<0){
+            throw new CustomException("Size must be not negative");
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Comment> commentsPage = commentRepository.findAll(pageable);
+        List<CommentDTO> commentDTOList = commentsPage.getContent()
+                .stream()
+                .map(comment -> commentMapper.entityToDTO(comment))
                 .collect(Collectors.toList());
+        return new PageImpl<>(commentDTOList, pageable, commentsPage.getTotalElements());
     }
 }

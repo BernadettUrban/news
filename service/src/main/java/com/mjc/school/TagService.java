@@ -2,6 +2,7 @@ package com.mjc.school;
 
 import com.mjc.school.domain.Tag;
 import com.mjc.school.dtos.TagDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,6 +19,6 @@ public interface TagService {
 
     List<TagDTO> searchTagsByName(String name);
 
-    List<TagDTO> getTagsByNewsId(Long newsId);
+    Page<TagDTO> getTagsByNewsId(Long newsId, int page, int size);
 
 }

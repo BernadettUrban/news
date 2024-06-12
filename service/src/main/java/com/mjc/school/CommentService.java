@@ -2,6 +2,7 @@ package com.mjc.school;
 
 import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.CreateCommentDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface CommentService {
 
     CommentDTO updateComment(Long commentId, CreateCommentDTO createCommentDTO);
 
-    List<CommentDTO> getCommentsByNewsId(Long newsId);
+    Page<CommentDTO> getCommentsByNewsId(Long newsId, int page, int size);
 }

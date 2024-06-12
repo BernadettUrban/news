@@ -2,9 +2,15 @@ package com.mjc.school;
 
 import com.mjc.school.domain.Tag;
 import com.mjc.school.dtos.TagDTO;
+import com.mjc.school.exceptions.CustomException;
+import com.mjc.school.exceptions.PaginationException;
 import com.mjc.school.mappers.TagMapper;
 import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.repository.TagRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,18 +68,18 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> getTagsByNewsId(Long newsId) {
-       /* News news = newsRepository.findById(newsId).get();
-        Set<NewsTag> newsTags = news.getTags();
-        NewsTag currentTag = newsTags.stream()
-                .filter(n-> news.getId().equals(newsId))
-                .collect(Collectors.toList()).get(0);
-        Tag tag = currentTag.getTag();*/
-        List<Tag> tags = newsTagRepository.findTagsByNewsId(newsId);
-        //var tag = null;
-        return tags.stream()
-                .map(t -> tagMapper.entityToDTO(t))
+    public Page<TagDTO> getTagsByNewsId(Long newsId, int page, int size) {
+        if(page<0){
+            throw new PaginationException("Page index must be not negative");
+        }if(size<0){
+            throw new CustomException("Size must be not negative");
+        }
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Tag> tagsPage = tagRepository.findAll(pageable);
+        List<TagDTO> tagDTOList = tagsPage.stream()
+                .map(tag -> tagMapper.entityToDTO(tag))
                 .collect(Collectors.toList());
+        return new PageImpl<>(tagDTOList, pageable, tagsPage.getTotalElements());
     }
 
 }
