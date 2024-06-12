@@ -1,6 +1,10 @@
 package com.mjc.school.dtos;
 
-public record CreateCommentDTO(String commentContent,
-                               Long newsId) {
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record CreateCommentDTO(
+        @Schema(description = "Content of the comment", additionalProperties = Schema.AdditionalPropertiesValue.FALSE)
+        String commentContent,
+        Long newsId) {
 
 }
