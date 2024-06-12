@@ -115,12 +115,12 @@ public class News {
         this.title = title;
     }
 
-    public String getContent() {
+    public String getNewsContent() {
         return newsContent;
     }
 
-    public void setContent(String content) {
-        this.newsContent = content;
+    public void setNewsContent(String newsContent) {
+        this.newsContent = newsContent;
     }
 
     public Author getAuthor() {

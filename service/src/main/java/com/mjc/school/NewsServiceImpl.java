@@ -68,7 +68,7 @@ public class NewsServiceImpl implements NewsService {
 
         News news = new News();
         news.setTitle(createNewsDTO.title());
-        news.setContent(createNewsDTO.newsContent());
+        news.setNewsContent(createNewsDTO.newsContent());
         news.setAuthor(author);
         news.setCreated();
         news.setModified();
@@ -92,7 +92,7 @@ public class NewsServiceImpl implements NewsService {
         }
 
         if (createNewsDTO.newsContent() != null) {
-            news.setContent(createNewsDTO.newsContent());
+            news.setNewsContent(createNewsDTO.newsContent());
         }
 
         if (createNewsDTO.authorName() != null) {
