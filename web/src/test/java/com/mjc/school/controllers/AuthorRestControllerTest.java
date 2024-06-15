@@ -1,6 +1,7 @@
 package com.mjc.school.controllers;
 
 
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -23,18 +24,28 @@ class AuthorRestControllerTest {
         String endpoint = getBaseUrl();
         String body = """
                 {
-                    "name": "John Doe"
+                    "name": "Jane Doe"
                 }
                 """;
-        var response = given().body(body).when().post(endpoint).then();
-        response.log().body();
+        given()
+                .contentType("application/json")
+                .body(body)
+                .when()
+                .post(endpoint)
+                .then()
+                .log().body() // This will log the response body
+                .statusCode(201) // Asserting the status code is 201 (Created)
+                .body("name", equalTo("Jane Doe"));
     }
 
     @Test
     public void deleteAuthor() {
         String endpoint = getBaseUrl() + "/{id}";
-        var response = given().pathParam("id", 1).when().delete(endpoint).then();
-        response.log().body();
+                given().pathParam("id", 1)
+                        .when().delete(endpoint)
+                        .then()
+                        .log().body()
+                        .statusCode(204);
     }
 
     @Test
@@ -91,8 +102,36 @@ class AuthorRestControllerTest {
                     "name": "Jane Doe"
                 }
                 """;
-        var response = given().pathParam("id", 1).body(body).when().put(endpoint).then();
-        response.log().body();
+        given()
+                .contentType(ContentType.JSON)
+                .pathParam("id", 1)
+                .body(body)
+                .when().put(endpoint)
+                .then()
+                .log().
+                headers().
+                assertThat().
+                statusCode(200).
+                body("id", equalTo(1)).
+                body("name", equalTo("Jane Doe"));
+    }
+
+    @Test
+    public void testGetAuthorsWithNewsCount() {
+        String endpoint = getBaseUrl() + "/newscount";
+        given()
+                .contentType(ContentType.JSON)
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .queryParam("sortField", "NEWS_COUNT_DESC")
+                .when()
+                .get(endpoint)
+                .then()
+                .statusCode(200)
+                //.body("content", hasSize(2)) // should be 10 after adding more entries to db
+                .body("content[0].id", notNullValue())
+                .body("content[0].name", notNullValue())
+                .body("content[0].newsCount", notNullValue());
     }
 
 

@@ -1,6 +1,7 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.domain.News;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.exceptions.CustomException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,7 +51,16 @@ public class AuthorServiceImpl implements AuthorService {
         if (id == null) {
             throw new IllegalArgumentException("Author ID cannot be null");
         }
-        authorRepository.deleteById(id);
+        Optional<Author> authorOptional = authorRepository.findById(id);
+        if (authorOptional.isPresent()) {
+            Author author = authorOptional.get();
+            for (News news : author.getNews()) {
+                news.setAuthor(null);
+            }
+            authorRepository.deleteById(id);
+        } else {
+            throw new NoSuchElementException("Author with id " + id + " not found");
+        }
     }
 
     @Override

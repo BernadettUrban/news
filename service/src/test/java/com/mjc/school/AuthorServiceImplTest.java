@@ -3,14 +3,9 @@ package com.mjc.school;
 import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
-import com.mjc.school.exceptions.CustomError;
-import com.mjc.school.exceptions.CustomException;
-import com.mjc.school.exceptions.PaginationException;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 
@@ -39,27 +32,34 @@ class AuthorServiceTest {
     @InjectMocks
     private AuthorServiceImpl authorService;
 
+    private Author author1;
+    private Author author2;
+    private List<Author> authors;
+
+    private AuthorDTO authorDTO1;
+    private AuthorDTO authorDTO2;
+    private List<AuthorDTO> authorDTOs;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        authorService = new AuthorServiceImpl(authorRepository, authorMapper);
+        author1 = new Author();
+        author1.setId(1L);
+        author1.setName("Author1");
+
+        author2 = new Author();
+        author2.setId(2L);
+        author2.setName("Author2");
+
+        authors = Arrays.asList(author1, author2);
+
+        authorDTO1 = new AuthorDTO(1L, "Author1", 5L);
+        authorDTO2 = new AuthorDTO(2L, "Author2", 10L);
+        authorDTOs = Arrays.asList(authorDTO1, authorDTO2);
     }
 
     @Test
     void testListAllAuthors() {
-        Author author1 = new Author();
-        author1.setId(1L);
-        author1.setName("Author1");
-
-        Author author2 = new Author();
-        author2.setId(2L);
-        author2.setName("Author2");
-
-        List<Author> authors = Arrays.asList(author1, author2);
-
-        AuthorDTO authorDTO1 = new AuthorDTO(1L, "Author1", 5L);
-        AuthorDTO authorDTO2 = new AuthorDTO(2L, "Author2", 10L);
-        List<AuthorDTO> authorDTOs = Arrays.asList(authorDTO1, authorDTO2);
 
         when(authorRepository.findAll()).thenReturn(authors);
         when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
@@ -74,7 +74,7 @@ class AuthorServiceTest {
     @Test
     void testDeleteAuthorById() {
         Long authorId = 1L;
-
+        when(authorRepository.findById(authorId)).thenReturn(Optional.of(author1));
         authorService.deleteAuthorById(authorId);
 
         verify(authorRepository, times(1)).deleteById(authorId);
@@ -83,18 +83,13 @@ class AuthorServiceTest {
     @Test
     void testGetAuthorById() {
         Long authorId = 1L;
-        Author author = new Author();
-        author.setId(authorId);
-        author.setName("John Doe");
 
-        AuthorDTO authorDTO = new AuthorDTO(authorId, "John Doe", 5L);
-
-        when(authorRepository.findById(authorId)).thenReturn(Optional.of(author));
-        when(authorMapper.entityToDTO(author)).thenReturn(authorDTO);
+        when(authorRepository.findById(authorId)).thenReturn(Optional.of(author1));
+        when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
 
         AuthorDTO result = authorService.getAuthorById(authorId);
 
-        assertEquals(authorDTO, result);
+        assertEquals(authorDTO1, result);
         verify(authorRepository, times(1)).findById(authorId);
     }
 
@@ -132,18 +127,13 @@ class AuthorServiceTest {
     @Test
     void testGetAuthorByNewsId() {
         Long newsId = 1L;
-        Author author = new Author();
-        author.setId(1L);
-        author.setName("John Doe");
 
-        AuthorDTO authorDTO = new AuthorDTO(1L, "John Doe", 5L);
-
-        when(authorRepository.findByNewsId(newsId)).thenReturn(author);
-        when(authorMapper.entityToDTO(author)).thenReturn(authorDTO);
+        when(authorRepository.findByNewsId(newsId)).thenReturn(author1);
+        when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
 
         AuthorDTO result = authorService.getAuthorByNewsId(newsId);
 
-        assertEquals(authorDTO, result);
+        assertEquals(authorDTO1, result);
         verify(authorRepository, times(1)).findByNewsId(newsId);
     }
 
@@ -171,19 +161,6 @@ class AuthorServiceTest {
 
     @Test
     void testGetAuthorsOrderedByNewsCount() {
-        Author author1 = new Author();
-        author1.setId(1L);
-        author1.setName("Author1");
-
-        Author author2 = new Author();
-        author2.setId(2L);
-        author2.setName("Author2");
-
-        List<Author> authors = Arrays.asList(author1, author2);
-
-        AuthorDTO authorDTO1 = new AuthorDTO(1L, "Author1", 5L);
-        AuthorDTO authorDTO2 = new AuthorDTO(2L, "Author2", 10L);
-        List<AuthorDTO> authorDTOs = Arrays.asList(authorDTO1, authorDTO2);
 
         when(authorRepository.findAuthorsOrderedByNewsCount()).thenReturn(authors);
         when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
@@ -233,10 +210,6 @@ class AuthorServiceTest {
         };
 
         List<AuthorNewsCountProjection> projections = Arrays.asList(projection1, projection2);
-
-        AuthorDTO authorDTO1 = new AuthorDTO(1L, "Author1", 5L);
-        AuthorDTO authorDTO2 = new AuthorDTO(2L, "Author2", 10L);
-        List<AuthorDTO> authorDTOs = Arrays.asList(authorDTO1, authorDTO2);
 
         Page<AuthorNewsCountProjection> projectionPage = new PageImpl<>(projections);
         Page<AuthorDTO> authorDTOPage = new PageImpl<>(authorDTOs);

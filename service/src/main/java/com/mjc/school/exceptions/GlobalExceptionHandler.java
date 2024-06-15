@@ -62,12 +62,5 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(NoSuchElementException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public ResponseEntity<CustomError> handleCustomException(NoSuchElementException ex) {
-        CustomError error = new CustomError(ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
 
 }
