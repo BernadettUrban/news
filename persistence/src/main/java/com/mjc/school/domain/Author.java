@@ -15,7 +15,7 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
-    @Size(min = 3, max = 15, message ="Name must be between 3 and 15")
+    @Size(min = 3, max = 15, message = "Name must be between 3 and 15")
     private String name;
     @JsonIgnore
     @OneToMany(mappedBy = "author")

@@ -16,6 +16,7 @@ public interface NewsService {
                               Sort.Direction sortDirection);
 
     NewsDTO createNews(CreateNewsDTO createNewsDTO);
+
     NewsDTO updateNews(Long newsId, CreateNewsDTO createNewsDTO);
 
     void deleteNewsById(Long id);

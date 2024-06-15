@@ -20,10 +20,10 @@ public class News {
     @Column(name = "ID")
     private Long id;
     @Column(unique = true)
-    @Size(min = 5, max = 30, message ="Title must be between 5 and 30")
+    @Size(min = 5, max = 30, message = "Title must be between 5 and 30")
     private String title;
     @Column(name = "content")
-    @Size(min = 5, max = 255, message ="Content must be between 5 and 255")
+    @Size(min = 5, max = 255, message = "Content must be between 5 and 255")
     private String newsContent;
     @ManyToOne()
     @JoinColumn(name = "author_id")

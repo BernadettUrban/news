@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class AuthorServiceTest {
@@ -65,6 +65,7 @@ class AuthorServiceTest {
         assertEquals(authorDTOs, result);
         verify(authorRepository, times(1)).findAll();
     }
+
     @Test
     void testDeleteAuthorById() {
         Long authorId = 1L;
@@ -73,6 +74,7 @@ class AuthorServiceTest {
 
         verify(authorRepository, times(1)).deleteById(authorId);
     }
+
     @Test
     void testGetAuthorById() {
         Long authorId = 1L;
@@ -90,6 +92,7 @@ class AuthorServiceTest {
         assertEquals(authorDTO, result);
         verify(authorRepository, times(1)).findById(authorId);
     }
+
     @Test
     void testSaveAuthor() {
         Author author = new Author();
@@ -101,6 +104,7 @@ class AuthorServiceTest {
 
         verify(authorRepository, times(1)).save(author);
     }
+
     @Test
     void testSearchAuthorsByName() {
         String name = "John";
@@ -119,6 +123,7 @@ class AuthorServiceTest {
         assertEquals(authorDTOs, result);
         verify(authorRepository, times(1)).findAuthorsByNameOrderedByNewsCount(name);
     }
+
     @Test
     void testGetAuthorByNewsId() {
         Long newsId = 1L;
@@ -158,6 +163,7 @@ class AuthorServiceTest {
         verify(authorRepository, times(1)).findById(authorId);
         verify(authorRepository, times(1)).save(author);
     }
+
     @Test
     void testGetAuthorsOrderedByNewsCount() {
         Author author1 = new Author();

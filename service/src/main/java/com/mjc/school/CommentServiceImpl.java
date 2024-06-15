@@ -74,9 +74,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Page<CommentDTO> getCommentsByNewsId(Long newsId, int page, int size) {
-        if(page<0){
+        if (page < 0) {
             throw new PaginationException("Page index must be not negative");
-        }if(size<0){
+        }
+        if (size < 0) {
             throw new CustomException("Size must be not negative");
         }
         Pageable pageable = PageRequest.of(page, size);

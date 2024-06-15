@@ -4,7 +4,6 @@ import com.mjc.school.AuthorServiceImpl;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.sortfield.AuthorSortField;
-import com.mjc.school.sortfield.SortField;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -94,6 +93,7 @@ public class AuthorRestController {
 
         return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
+
     @RequestMapping(
             method = RequestMethod.GET,
             value = "/api/authors/newscount",

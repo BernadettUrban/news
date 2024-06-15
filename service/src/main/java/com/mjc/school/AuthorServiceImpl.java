@@ -93,6 +93,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .map(a -> authorMapper.entityToDTO(a))
                 .collect(Collectors.toList());
     }
+
     public Page<AuthorDTO> getAuthorsWithNewsCount(Pageable pageable) {
         Page<AuthorNewsCountProjection> results = authorRepository.findAuthorsWithNewsCount(pageable);
         return results.map(authorMapper::toAuthorDTO);

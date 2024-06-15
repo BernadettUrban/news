@@ -1,6 +1,9 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.*;
+import com.mjc.school.AuthorService;
+import com.mjc.school.CommentService;
+import com.mjc.school.NewsService;
+import com.mjc.school.TagService;
 import com.mjc.school.dtos.*;
 import com.mjc.school.sortfield.SortField;
 import jakarta.validation.Valid;
@@ -93,12 +96,12 @@ public class NewsRestController {
             produces = {"application/json"}
     )
 
-    public ResponseEntity< Page<CommentDTO>> getCommentsByNewsId(
+    public ResponseEntity<Page<CommentDTO>> getCommentsByNewsId(
             @Valid @PathVariable("newsId") Long newsId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<CommentDTO> commentDTOList = commentService.getCommentsByNewsId(newsId, page,size);
+        Page<CommentDTO> commentDTOList = commentService.getCommentsByNewsId(newsId, page, size);
         return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
     }
 

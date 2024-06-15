@@ -1,6 +1,5 @@
 package com.mjc.school.dtos;
 
-import com.mjc.school.domain.Author;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;

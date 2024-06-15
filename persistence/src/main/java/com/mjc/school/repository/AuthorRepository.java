@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findByNameContainingIgnoreCase(String name);
+
     Optional<Author> findByName(String name);
 
     @Query("SELECT a FROM Author a WHERE a.name = :name")

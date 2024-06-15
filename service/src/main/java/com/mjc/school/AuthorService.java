@@ -28,5 +28,6 @@ public interface AuthorService {
     AuthorDTO updateAuthor(Long authorId, CreateAuthorDTO createAuthorDTO);
 
     List<AuthorDTO> getAuthorsOrderedByNewsCount();
+
     Page<AuthorDTO> getAuthorsWithNewsCount(Pageable pageable);
 }

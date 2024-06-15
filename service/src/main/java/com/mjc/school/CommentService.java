@@ -4,8 +4,6 @@ import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.CreateCommentDTO;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
-
 public interface CommentService {
     void deleteCommentById(Long id);
 

@@ -4,11 +4,13 @@ import com.mjc.school.domain.News;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
+
 import java.util.List;
 
 public class NewsSpecification {
 
-    private NewsSpecification() {}
+    private NewsSpecification() {
+    }
 
     public static Specification<News> hasAuthorName(String authorName) {
         return (root, query, builder) -> {
