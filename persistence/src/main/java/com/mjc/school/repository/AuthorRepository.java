@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     List<Author> findByNameContainingIgnoreCase(String name);
+    Page<Author> findByNameContaining(String name, Pageable pageable);
 
     Optional<Author> findByName(String name);
 

@@ -8,6 +8,7 @@ import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -157,4 +158,26 @@ public class AuthorServiceImpl implements AuthorService {
         return results.map(authorMapper::toAuthorDTO);
     }
 
+    @Override
+    public Page<AuthorDTO> getAuthorsByName(String name, Pageable pageable) {
+
+        if (pageable == null) {
+            throw new IllegalArgumentException("Pageable object cannot be null");
+        }
+        if (pageable.getPageNumber() < 0) {
+            throw new IllegalArgumentException("Page index must be not negative");
+        }
+        if (pageable.getPageSize() < 0) {
+            throw new IllegalArgumentException("Size must be not negative");
+        }
+
+        Page<Author> authorsPage = authorRepository.findByNameContaining(name, pageable);
+        List<AuthorDTO> authorDTOList = authorsPage
+                .getContent()
+                .stream()
+                .map(author -> authorMapper.entityToDTO(author))
+                .collect(Collectors.toList());
+        return new PageImpl<>(authorDTOList, pageable, authorsPage.getTotalElements());
+    }
 }
+

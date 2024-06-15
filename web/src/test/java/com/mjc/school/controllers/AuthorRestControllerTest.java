@@ -79,7 +79,7 @@ class AuthorRestControllerTest {
                 body("name", everyItem(notNullValue()));
     }
 
-    @Test
+    //@Test
     public void searchAuthorsByName() {
         String endpoint = getBaseUrl() + "/search";
         given().
@@ -92,6 +92,23 @@ class AuthorRestControllerTest {
                 body("size()", greaterThan(0)).
                 body("id", everyItem(notNullValue())).
                 body("name", everyItem(containsString("John")));
+    }
+    @Test
+    public void testGetAuthorsByName() {
+        String endpoint = getBaseUrl() + "/search";
+        given()
+                .contentType(ContentType.JSON)
+                .param("name", "John")
+                .param("page", 0)
+                .param("size", 10)
+                .when()
+                .get(endpoint)
+                .then()
+                .statusCode(200)
+                .body("content", not(empty()))
+                .body("content.name", everyItem(containsStringIgnoringCase("John")))
+                .extract().response();
+
     }
 
     @Test

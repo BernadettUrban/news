@@ -75,10 +75,12 @@ public class AuthorRestController {
             value = "/api/authors/search",
             produces = {"application/json"}
     )
-    public ResponseEntity<List<AuthorDTO>> searchAuthorsByName(@Valid @RequestParam String name) {
 
-        List<AuthorDTO> authorDTOs = authorService.searchAuthorsByName(name);
-        return new ResponseEntity<>(authorDTOs, HttpStatus.OK);
+    public ResponseEntity<Page<AuthorDTO>> getAuthorsByName(
+            @RequestParam String name,
+            Pageable pageable) {
+        Page<AuthorDTO> authors = authorService.getAuthorsByName(name, pageable);
+        return ResponseEntity.ok(authors);
     }
 
     @RequestMapping(

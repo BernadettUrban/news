@@ -126,6 +126,27 @@ class AuthorServiceTest {
     }
 
     @Test
+    void testGetAuthorsByName() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Author> authorPage = new PageImpl<>(authors, pageable, authors.size());
+        when(authorRepository.findByNameContaining("Author", pageable)).thenReturn(authorPage);
+        when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
+        when(authorMapper.entityToDTO(author2)).thenReturn(authorDTO2);
+
+        Page<AuthorDTO> result = authorService.getAuthorsByName("Author", pageable);
+
+        assertNotNull(result);
+        assertEquals(2, result.getTotalElements());
+        assertEquals(2, result.getContent().size());
+        assertEquals(authorDTO1, result.getContent().get(0));
+        assertEquals(authorDTO2, result.getContent().get(1));
+
+        verify(authorRepository, times(1)).findByNameContaining("Author", pageable);
+        verify(authorMapper, times(1)).entityToDTO(author1);
+        verify(authorMapper, times(1)).entityToDTO(author2);
+    }
+
+    @Test
     void testGetAuthorByNewsId() {
         Long newsId = 1L;
 
