@@ -1,4 +1,4 @@
-package com.mjc.school;
+package com.mjc.school.services;
 
 import com.mjc.school.dtos.CreateNewsDTO;
 import com.mjc.school.dtos.NewsDTO;

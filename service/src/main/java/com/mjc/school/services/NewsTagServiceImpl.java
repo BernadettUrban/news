@@ -1,4 +1,4 @@
-package com.mjc.school;
+package com.mjc.school.services;
 
 import org.springframework.stereotype.Service;
 

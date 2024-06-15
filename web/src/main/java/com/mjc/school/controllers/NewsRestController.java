@@ -1,9 +1,9 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.AuthorService;
-import com.mjc.school.CommentService;
-import com.mjc.school.NewsService;
-import com.mjc.school.TagService;
+import com.mjc.school.services.AuthorService;
+import com.mjc.school.services.CommentService;
+import com.mjc.school.services.NewsService;
+import com.mjc.school.services.TagService;
 import com.mjc.school.dtos.*;
 import com.mjc.school.sortfield.SortField;
 import jakarta.validation.Valid;

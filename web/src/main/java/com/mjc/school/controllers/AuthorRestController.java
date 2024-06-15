@@ -1,6 +1,6 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.AuthorServiceImpl;
+import com.mjc.school.services.AuthorServiceImpl;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.sortfield.AuthorSortField;

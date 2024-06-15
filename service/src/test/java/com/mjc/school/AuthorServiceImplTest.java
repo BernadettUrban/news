@@ -6,6 +6,7 @@ import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.services.AuthorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -1,6 +1,6 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.TagService;
+import com.mjc.school.services.TagService;
 import com.mjc.school.domain.Tag;
 import com.mjc.school.dtos.TagDTO;
 import jakarta.validation.Valid;

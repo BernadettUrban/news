@@ -1,11 +1,9 @@
-package com.mjc.school;
+package com.mjc.school.services;
 
 import com.mjc.school.domain.Author;
 import com.mjc.school.domain.News;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
-import com.mjc.school.exceptions.CustomException;
-import com.mjc.school.exceptions.PaginationException;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
@@ -13,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -96,9 +95,16 @@ public class AuthorServiceImpl implements AuthorService {
         if (name == null) {
             throw new IllegalArgumentException("Author name cannot be null");
         }
-        return authorRepository.findAuthorsByNameOrderedByNewsCount(name)
-                .stream()
-                .map(a -> authorMapper.entityToDTO(a))
+        List<Author> authors = authorRepository.findAuthorsByNameOrderedByNewsCount(name);
+
+        if (authors.isEmpty()) {
+            // Handle the case when no authors are found, if necessary
+            // For example, return an empty list or throw an exception
+            return Collections.emptyList();
+        }
+
+        return authors.stream()
+                .map(authorMapper::entityToDTO)
                 .collect(Collectors.toList());
     }
 

@@ -1,4 +1,4 @@
-package com.mjc.school;
+package com.mjc.school.services;
 
 import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;

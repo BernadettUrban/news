@@ -1,6 +1,6 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.CommentService;
+import com.mjc.school.services.CommentService;
 import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.CreateCommentDTO;
 import jakarta.validation.Valid;
