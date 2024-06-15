@@ -17,7 +17,7 @@ public interface AuthorService {
 
     AuthorDTO getAuthorById(Long id);
 
-    void saveAuthor(Author author);
+    AuthorDTO saveAuthor(Author author);
 
     Author convertDtoToAuthor(AuthorDTO authorDTO);
 

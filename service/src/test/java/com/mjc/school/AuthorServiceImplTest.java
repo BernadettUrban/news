@@ -3,9 +3,14 @@ package com.mjc.school;
 import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
+import com.mjc.school.exceptions.CustomError;
+import com.mjc.school.exceptions.CustomException;
+import com.mjc.school.exceptions.PaginationException;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,12 +20,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class AuthorServiceTest {
@@ -246,6 +251,126 @@ class AuthorServiceTest {
 
         assertEquals(authorDTOPage, result);
         verify(authorRepository, times(1)).findAuthorsWithNewsCount(pageable);
+    }
+
+    @Test
+    void testCreateAuthorWithNullValueNameInCreateAuthorDTOShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.createAuthor(new CreateAuthorDTO(null));
+        });
+
+        assertEquals("CreateAuthorDTO cannot be null and must have a name", exception.getMessage());
+    }
+
+    @Test
+    void testDeleteAuthorByIdWithNullIdShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.deleteAuthorById(null);
+        });
+
+        assertEquals("Author ID cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testGetAuthorByIdWithNullValueIdShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.getAuthorById(null);
+        });
+
+        assertEquals("Author ID cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testGetAuthorByIdWithNonexistentIdShouldThrowIllegalArgumentException() {
+        Long nonExistentId = 999L;
+        when(authorRepository.findById(nonExistentId)).thenReturn(java.util.Optional.empty());
+
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
+            authorService.getAuthorById(nonExistentId);
+        });
+
+        assertEquals("Author not found with id: " + nonExistentId, exception.getMessage());
+    }
+
+    @Test
+    void testSaveAuthorWithNullValueAuthorShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.saveAuthor(null);
+        });
+
+        assertEquals("Author entity cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testConvertDtoToAuthorWithNullValueAuthorDTOShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.convertDtoToAuthor(null);
+        });
+
+        assertEquals("AuthorDTO cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testSearchAuthorsByNameWithNullValueNameShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.searchAuthorsByName(null);
+        });
+
+        assertEquals("Author name cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testGetAuthorByNewsIdWithNullValueNewsIdShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.getAuthorByNewsId(null);
+        });
+
+        assertEquals("News ID cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testUpdateAuthorWithNullValueAuthorIdShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.updateAuthor(null, new CreateAuthorDTO("John Doe"));
+        });
+
+        assertEquals("Author ID cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testUpdateAuthorWithNullValueCreateAuthorDTOShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.updateAuthor(1L, null);
+        });
+
+        assertEquals("CreateAuthorDTO cannot be null and must have a name", exception.getMessage());
+    }
+
+    @Test
+    void testGetAuthorsWithNewsCountWithNullValuePageableShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.getAuthorsWithNewsCount(null);
+        });
+
+        assertEquals("Pageable object cannot be null", exception.getMessage());
+    }
+
+    @Test
+    void testGetAuthorsWithNewsCountWithNegativePageIndexShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.getAuthorsWithNewsCount(Pageable.ofSize(10).withPage(-1));
+        });
+
+        assertEquals("Page index must not be less than zero", exception.getMessage());
+    }
+
+    @Test
+    void testGetAuthorsWithNewsCountWithNegativePageSizeShouldThrowIllegalArgumentException() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            authorService.getAuthorsWithNewsCount(Pageable.ofSize(-10).withPage(0));
+        });
+
+        assertEquals("Page size must not be less than one", exception.getMessage());
     }
 
 }

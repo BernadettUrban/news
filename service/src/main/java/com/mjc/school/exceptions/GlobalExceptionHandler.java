@@ -24,6 +24,22 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ResponseEntity<CustomError> handleNoSuchElementException(NoSuchElementException ex) {
+        CustomError error = new CustomError(ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ResponseEntity<CustomError> handleIllegalArgumentException(IllegalArgumentException ex) {
+        CustomError error = new CustomError(ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(PaginationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
