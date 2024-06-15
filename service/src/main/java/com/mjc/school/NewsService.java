@@ -2,6 +2,7 @@ package com.mjc.school;
 
 import com.mjc.school.dtos.CreateNewsDTO;
 import com.mjc.school.dtos.NewsDTO;
+import com.mjc.school.sortfield.SortField;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

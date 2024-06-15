@@ -2,6 +2,7 @@ package com.mjc.school.mappers;
 
 import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;
+import com.mjc.school.projection.AuthorNewsCountProjection;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -18,4 +19,5 @@ public interface AuthorMapper {
     List<Author> authorDTOsToAuthors(List<AuthorDTO> authorDTOs);
 
     List<AuthorDTO> authorsToAuthorDTOs(List<Author> authors);
+    AuthorDTO toAuthorDTO(AuthorNewsCountProjection projection);
 }

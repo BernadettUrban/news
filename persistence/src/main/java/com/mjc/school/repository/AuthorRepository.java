@@ -1,6 +1,9 @@
 package com.mjc.school.repository;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.projection.AuthorNewsCountProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +25,11 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
 
     @Query("SELECT a FROM Author a JOIN a.news n GROUP BY a ORDER BY COUNT(n) DESC")
     List<Author> findAuthorsOrderedByNewsCount();
+
+    @Query(value = "SELECT a.id AS id, a.name AS name, COUNT(n.id) AS newsCount " +
+            "FROM Author a LEFT JOIN News n ON a.id = n.author_id " +
+            "GROUP BY a.id, a.name",
+            countQuery = "SELECT COUNT(DISTINCT a.id) FROM Author a LEFT JOIN News n ON a.id = n.author_id",
+            nativeQuery = true)
+    Page<AuthorNewsCountProjection> findAuthorsWithNewsCount(Pageable pageable);
 }

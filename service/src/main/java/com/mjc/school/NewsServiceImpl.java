@@ -11,18 +11,16 @@ import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
+import com.mjc.school.sortfield.SortField;
 import com.mjc.school.specification.NewsSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.mjc.school.util.Formatting.SIMPLEDATEFORMAT;
 
 @Service
 public class NewsServiceImpl implements NewsService {

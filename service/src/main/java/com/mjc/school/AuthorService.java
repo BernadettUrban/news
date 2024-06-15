@@ -3,6 +3,8 @@ package com.mjc.school;
 import com.mjc.school.domain.Author;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -26,4 +28,5 @@ public interface AuthorService {
     AuthorDTO updateAuthor(Long authorId, CreateAuthorDTO createAuthorDTO);
 
     List<AuthorDTO> getAuthorsOrderedByNewsCount();
+    Page<AuthorDTO> getAuthorsWithNewsCount(Pageable pageable);
 }

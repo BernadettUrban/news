@@ -5,7 +5,10 @@ import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.mappers.AuthorMapper;
+import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -89,6 +92,10 @@ public class AuthorServiceImpl implements AuthorService {
                 .stream()
                 .map(a -> authorMapper.entityToDTO(a))
                 .collect(Collectors.toList());
+    }
+    public Page<AuthorDTO> getAuthorsWithNewsCount(Pageable pageable) {
+        Page<AuthorNewsCountProjection> results = authorRepository.findAuthorsWithNewsCount(pageable);
+        return results.map(authorMapper::toAuthorDTO);
     }
 
 }

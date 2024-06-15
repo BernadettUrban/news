@@ -3,7 +3,13 @@ package com.mjc.school.controllers;
 import com.mjc.school.AuthorServiceImpl;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
+import com.mjc.school.sortfield.AuthorSortField;
+import com.mjc.school.sortfield.SortField;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -88,5 +94,18 @@ public class AuthorRestController {
 
         return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
-    
+    @RequestMapping(
+            method = RequestMethod.GET,
+            value = "/api/authors/newscount",
+            produces = {"application/json"}
+    )
+    public Page<AuthorDTO> getAuthorsWithNewsCount(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "NEWS_COUNT_DESC") AuthorSortField sortField) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortField.getDirection(), sortField.getField()));
+
+        return authorService.getAuthorsWithNewsCount(pageable);
+    }
 }
