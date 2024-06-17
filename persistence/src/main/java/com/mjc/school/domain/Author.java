@@ -18,7 +18,7 @@ public class Author {
     @Size(min = 3, max = 15, message = "Name must be between 3 and 15")
     private String name;
     @JsonIgnore
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<News> news = new ArrayList<>();
 
     public Author() {

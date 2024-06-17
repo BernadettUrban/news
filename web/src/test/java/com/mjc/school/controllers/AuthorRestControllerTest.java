@@ -41,11 +41,11 @@ class AuthorRestControllerTest {
     @Test
     public void deleteAuthor() {
         String endpoint = getBaseUrl() + "/{id}";
-                given().pathParam("id", 1)
-                        .when().delete(endpoint)
-                        .then()
-                        .log().body()
-                        .statusCode(204);
+        given().pathParam("id", 1)
+                .when().delete(endpoint)
+                .then()
+                .log().body()
+                .statusCode(204);
     }
 
     @Test
@@ -93,6 +93,7 @@ class AuthorRestControllerTest {
                 body("id", everyItem(notNullValue())).
                 body("name", everyItem(containsString("John")));
     }
+
     @Test
     public void testGetAuthorsByName() {
         String endpoint = getBaseUrl() + "/search";

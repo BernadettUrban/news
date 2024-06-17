@@ -25,7 +25,7 @@ public class News {
     @Column(name = "content")
     @Size(min = 5, max = 255, message = "Content must be between 5 and 255")
     private String newsContent;
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "author_id")
     private Author author;
     private String created;

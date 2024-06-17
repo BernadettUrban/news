@@ -12,13 +12,12 @@
         <module>persistence</module>
         <module>service</module>
         <module>web</module>
-        <module>persistence</module>
     </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.0</version>
+        <version>3.1.1</version>
     </parent>
 
     <dependencies>

@@ -7,6 +7,7 @@ import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -35,6 +36,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public AuthorDTO createAuthor(CreateAuthorDTO createAuthorDTO) {
         if (createAuthorDTO == null || createAuthorDTO.name() == null) {
@@ -46,6 +48,7 @@ public class AuthorServiceImpl implements AuthorService {
         return authorMapper.entityToDTO(author);
     }
 
+    @Transactional
     @Override
     public void deleteAuthorById(Long id) {
         if (id == null) {
@@ -72,6 +75,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .orElseThrow(() -> new NoSuchElementException("Author not found with id: " + id)));
     }
 
+    @Transactional
     @Override
     public AuthorDTO saveAuthor(Author author) {
         if (author == null) {
@@ -118,6 +122,7 @@ public class AuthorServiceImpl implements AuthorService {
         return authorMapper.entityToDTO(author);
     }
 
+    @Transactional
     @Override
     public AuthorDTO updateAuthor(Long authorId, CreateAuthorDTO createAuthorDTO) {
         if (authorId == null) {

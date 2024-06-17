@@ -6,6 +6,7 @@
         <artifactId>news-service</artifactId>
         <groupId>com.mjc.school</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
