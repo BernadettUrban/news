@@ -1,7 +1,11 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.domain.Comment;
+import com.mjc.school.repository.CommentRepository;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
@@ -10,17 +14,34 @@ import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CommentRestControllerTest {
+
     @LocalServerPort
     private int port;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     private String getBaseUrl() {
         return "http://localhost:" + port + "/api/comments";
     }
 
+    @BeforeEach
+    void setUp() {
+        commentRepository.deleteAll();
+
+        Comment commentToBeSaved = new Comment();
+        commentToBeSaved.setContent("Initial comment");
+        commentRepository.save(commentToBeSaved);
+    }
+
     @Test
     public void testDeleteComment() {
+        Long commentId = commentRepository.findAll().stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No comment found"))
+                .getId();
+
         String endpoint = getBaseUrl() + "/{commentId}";
-        Long commentId = 1L;
         given()
                 .pathParam("commentId", commentId)
                 .when()
@@ -32,7 +53,11 @@ class CommentRestControllerTest {
 
     @Test
     public void testGetCommentById() {
-        Long commentId = 1L;
+        Long commentId = commentRepository.findAll().stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No comment found"))
+                .getId();
+
         String endpoint = getBaseUrl() + "/{commentId}";
         given()
                 .contentType(ContentType.JSON)
@@ -40,8 +65,10 @@ class CommentRestControllerTest {
                 .when()
                 .get(endpoint)
                 .then()
+                .log().body()
                 .statusCode(200)
-                .body("news.id", equalTo(1));
+                .body("id", equalTo(commentId.intValue()))
+                .body("commentContent", equalTo("Initial comment"));
     }
 
     @Test
@@ -53,21 +80,27 @@ class CommentRestControllerTest {
                     "newsId": 1
                 }
                 """;
+
         given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
                 .post(endpoint)
                 .then()
-                .statusCode(200)
+                .log().body()
+                .statusCode(201)
                 .contentType(ContentType.JSON)
                 .body("commentContent", equalTo("This is a new comment"))
-                .body("news.id", equalTo(1));
+                .body("newsId", equalTo(1));
     }
 
     @Test
     public void testUpdateComment() {
-        Long commentId = 1L;
+        Long commentId = commentRepository.findAll().stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No comment found"))
+                .getId();
+
         String endpoint = getBaseUrl() + "/{commentId}";
         String requestBody = """
                 {
@@ -83,9 +116,11 @@ class CommentRestControllerTest {
                 .when()
                 .put(endpoint)
                 .then()
+                .log().body()
                 .statusCode(200)
                 .contentType(ContentType.JSON)
+                .body("id", equalTo(commentId.intValue()))
                 .body("commentContent", equalTo("This is an updated comment"))
-                .body("news.id", equalTo(1));
+                .body("newsId", equalTo(1));
     }
 }

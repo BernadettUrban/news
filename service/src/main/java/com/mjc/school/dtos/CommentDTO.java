@@ -7,7 +7,7 @@ public record CommentDTO(
         Long id,
         @Schema(description = "Content of the comment", additionalProperties = Schema.AdditionalPropertiesValue.FALSE)
         String commentContent,
-        News news,
+        Long newsId,  // Changed from News to Long for the ID
         String created,
         String modified
 ) {

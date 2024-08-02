@@ -64,9 +64,6 @@ public class Comment {
         this.id = id;
     }
 
-    public String getContent() {
-        return commentContent;
-    }
 
     public void setContent(String content) {
         this.commentContent = content;

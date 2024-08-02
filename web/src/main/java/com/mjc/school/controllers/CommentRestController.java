@@ -46,7 +46,7 @@ public class CommentRestController {
     )
     public ResponseEntity<CommentDTO> createComment(@Valid @RequestBody CreateCommentDTO createCommentDTO) {
         CommentDTO commentDTOCreated = commentService.createComment(createCommentDTO);
-        return new ResponseEntity<>(commentDTOCreated, HttpStatus.OK);
+        return new ResponseEntity<>(commentDTOCreated, HttpStatus.CREATED);
     }
 
     @RequestMapping(

@@ -41,35 +41,37 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO getCommentById(Long id) {
-        return commentMapper.entityToDTO(
-                commentRepository.findById(id)
-                        .orElseThrow(() -> new CustomException("Comment not found with id: " + id)));
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new CustomException("Comment not found with id: " + id));
+        return new CommentDTO(comment.getId(), comment.getCommentContent(),
+                comment.getNews() != null ? comment.getNews().getId() : null,
+                comment.getCreated(), comment.getModified());
     }
 
     @Override
     public CommentDTO createComment(CreateCommentDTO createCommentDTO) {
-        String content = createCommentDTO.commentContent();
         Long newsId = createCommentDTO.newsId();
         News news = newsRepository.findById(newsId).get();
-        Comment comment = new Comment(content, news);
-        commentRepository.save(comment);
-        return commentMapper.entityToDTO(comment);
+        Comment comment = new Comment(createCommentDTO.commentContent(), news);
+        comment.setCreated();
+        comment.setModified();
+        Comment savedComment = commentRepository.save(comment);
+        return new CommentDTO(savedComment.getId(), savedComment.getCommentContent(),
+                savedComment.getNews() != null ? savedComment.getNews().getId() : null,
+                savedComment.getCreated(), savedComment.getModified());
     }
 
     @Override
-    public CommentDTO updateComment(Long commentId, CreateCommentDTO createCommentDTO) {
-
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException("Comment not found with id: " + commentId));
-
-        String content = createCommentDTO.commentContent();
+    public CommentDTO updateComment(Long id, CreateCommentDTO createCommentDTO) {
+        Comment existingComment = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
+        existingComment.setContent(createCommentDTO.commentContent());
         Long newsId = createCommentDTO.newsId();
         News news = newsRepository.findById(newsId).get();
-        comment.setContent(content);
-        comment.setNews(news);
-        comment.setModified();
-        commentRepository.save(comment);
-        return commentMapper.entityToDTO(comment);
+        existingComment.setNews(news);
+        existingComment.setModified();
+        Comment updatedComment = commentRepository.save(existingComment);
+        return new CommentDTO(updatedComment.getId(), updatedComment.getCommentContent(),
+                updatedComment.getNews() != null ? updatedComment.getNews().getId() : null,
+                updatedComment.getCreated(), updatedComment.getModified());
     }
 
     @Override
