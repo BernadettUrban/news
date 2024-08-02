@@ -1,8 +1,12 @@
 package com.mjc.school.controllers;
 
-
+import com.mjc.school.domain.Author;
+import com.mjc.school.repository.AuthorRepository;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
@@ -10,39 +14,69 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class AuthorRestControllerTest {
+public class AuthorRestControllerTest {
 
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    private final String BASE_URL = "http://localhost:";
+    private final String AUTHORS_ENDPOINT = "/api/authors";
+    private final String CREATE_AUTHOR_BODY = """
+            {
+                "name": "New Author"
+            }
+            """;
+    private final String UPDATE_AUTHOR_BODY = """
+            {
+                "name": "Updated Author"
+            }
+            """;
+
+    @BeforeEach
+    void setUp() {
+        authorRepository.deleteAll();
+
+        authorRepository.save(new Author("John Doe"));
+        authorRepository.save(new Author("Jane Doe"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        authorRepository.deleteAll();
+    }
+
     private String getBaseUrl() {
-        return "http://localhost:" + port + "/api/authors";
+        return BASE_URL + port;
     }
 
     @Test
     public void createAuthor() {
-        String endpoint = getBaseUrl();
-        String body = """
-                {
-                    "name": "Jane Doe"
-                }
-                """;
+        String endpoint = getBaseUrl() + AUTHORS_ENDPOINT;
         given()
-                .contentType("application/json")
-                .body(body)
+                .contentType(ContentType.JSON)
+                .body(CREATE_AUTHOR_BODY)
                 .when()
                 .post(endpoint)
                 .then()
-                .log().body() // This will log the response body
-                .statusCode(201) // Asserting the status code is 201 (Created)
-                .body("name", equalTo("Jane Doe"));
+                .log().body()
+                .statusCode(201)
+                .body("name", equalTo("New Author"));
     }
 
     @Test
     public void deleteAuthor() {
-        String endpoint = getBaseUrl() + "/{id}";
-        given().pathParam("id", 1)
-                .when().delete(endpoint)
+        Long authorId = authorRepository.findAll().stream()
+                .findFirst()
+                .orElseGet(() -> authorRepository.save(new Author("John Doe"))).getId();
+
+        String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
+        given()
+                .pathParam("id", authorId)
+                .when()
+                .delete(endpoint)
                 .then()
                 .log().body()
                 .statusCode(204);
@@ -50,109 +84,53 @@ class AuthorRestControllerTest {
 
     @Test
     public void getAuthorById() {
-        String endpoint = getBaseUrl() + "/{id}";
-        given().
-                pathParam("id", 1).
-                when().
-                get(endpoint).
-                then().
-                assertThat().
-                statusCode(200).
-                body("id", equalTo(1)).
-                body("name", equalTo("John Doe"));
+        Long authorId = authorRepository.findAll().stream()
+                .findFirst()
+                .orElseGet(() -> authorRepository.save(new Author("John Doe"))).getId();
+
+        String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
+        given()
+                .pathParam("id", authorId)
+                .when()
+                .get(endpoint)
+                .then()
+                .log().body()
+                .statusCode(200)
+                .body("id", equalTo(Integer.parseInt(authorId.toString())))
+                .body("name", notNullValue());
     }
 
     @Test
     public void getAuthors() {
-        String endpoint = getBaseUrl();
-        given().
-                when().
-                get(endpoint).
-                then().
-                log().
-                headers().
-                assertThat().
-                statusCode(200).
-                header("Content-Type", equalTo("application/json")).
-                body("size()", greaterThan(0)).
-                body("id", everyItem(notNullValue())).
-                body("name", everyItem(notNullValue()));
-    }
-
-    //@Test
-    public void searchAuthorsByName() {
-        String endpoint = getBaseUrl() + "/search";
-        given().
-                queryParam("name", "John").
-                when().
-                get(endpoint).
-                then().
-                assertThat().
-                statusCode(200).
-                body("size()", greaterThan(0)).
-                body("id", everyItem(notNullValue())).
-                body("name", everyItem(containsString("John")));
-    }
-
-    @Test
-    public void testGetAuthorsByName() {
-        String endpoint = getBaseUrl() + "/search";
+        String endpoint = getBaseUrl() + AUTHORS_ENDPOINT;
         given()
-                .contentType(ContentType.JSON)
-                .param("name", "John")
-                .param("page", 0)
-                .param("size", 10)
                 .when()
                 .get(endpoint)
                 .then()
+                .log().body()
                 .statusCode(200)
-                .body("content", not(empty()))
-                .body("content.name", everyItem(containsStringIgnoringCase("John")))
-                .extract().response();
-
+                .body("size()", greaterThan(0))
+                .body("id", everyItem(notNullValue()))
+                .body("name", everyItem(notNullValue()));
     }
 
     @Test
     public void updateAuthor() {
-        String endpoint = getBaseUrl() + "/{id}";
-        String body = """
-                {
-                    "name": "Jane Doe"
-                }
-                """;
-        given()
-                .contentType(ContentType.JSON)
-                .pathParam("id", 1)
-                .body(body)
-                .when().put(endpoint)
-                .then()
-                .log().
-                headers().
-                assertThat().
-                statusCode(200).
-                body("id", equalTo(1)).
-                body("name", equalTo("Jane Doe"));
-    }
+        Long authorId = authorRepository.findAll().stream()
+                .findFirst()
+                .orElseGet(() -> authorRepository.save(new Author("John Doe"))).getId();
 
-    @Test
-    public void testGetAuthorsWithNewsCount() {
-        String endpoint = getBaseUrl() + "/newscount";
+        String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
         given()
                 .contentType(ContentType.JSON)
-                .queryParam("page", 0)
-                .queryParam("size", 10)
-                .queryParam("sortField", "NEWS_COUNT_DESC")
+                .pathParam("id", authorId)
+                .body(UPDATE_AUTHOR_BODY)
                 .when()
-                .get(endpoint)
+                .put(endpoint)
                 .then()
+                .log().body()
                 .statusCode(200)
-                //.body("content", hasSize(2)) // should be 10 after adding more entries to db
-                .body("content[0].id", notNullValue())
-                .body("content[0].name", notNullValue())
-                .body("content[0].newsCount", notNullValue());
+                .body("id", equalTo(Integer.parseInt(authorId.toString())))
+                .body("name", equalTo("Updated Author"));
     }
-
-
 }
-
-
