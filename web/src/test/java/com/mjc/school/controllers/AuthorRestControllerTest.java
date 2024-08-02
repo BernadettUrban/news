@@ -39,8 +39,13 @@ public class AuthorRestControllerTest {
     void setUp() {
         authorRepository.deleteAll();
 
-        authorRepository.save(new Author("John Doe"));
-        authorRepository.save(new Author("Jane Doe"));
+        authorRepository.save(new Author.Builder()
+                .name("John Doe")
+                .build());
+
+        authorRepository.save(new Author.Builder()
+                .name("Jane Doe")
+                .build());
     }
 
     @AfterEach
@@ -70,7 +75,9 @@ public class AuthorRestControllerTest {
     public void deleteAuthor() {
         Long authorId = authorRepository.findAll().stream()
                 .findFirst()
-                .orElseGet(() -> authorRepository.save(new Author("John Doe"))).getId();
+                .orElseGet(() -> authorRepository.save(new Author.Builder()
+                        .name("John Doe")
+                        .build())).getId();
 
         String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
         given()
@@ -86,7 +93,9 @@ public class AuthorRestControllerTest {
     public void getAuthorById() {
         Long authorId = authorRepository.findAll().stream()
                 .findFirst()
-                .orElseGet(() -> authorRepository.save(new Author("John Doe"))).getId();
+                .orElseGet(() -> authorRepository.save(new Author.Builder()
+                        .name("John Doe")
+                        .build())).getId();
 
         String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
         given()
@@ -118,7 +127,9 @@ public class AuthorRestControllerTest {
     public void updateAuthor() {
         Long authorId = authorRepository.findAll().stream()
                 .findFirst()
-                .orElseGet(() -> authorRepository.save(new Author("John Doe"))).getId();
+                .orElseGet(() -> authorRepository.save(new Author.Builder()
+                        .name("John Doe")
+                        .build())).getId();
 
         String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
         given()

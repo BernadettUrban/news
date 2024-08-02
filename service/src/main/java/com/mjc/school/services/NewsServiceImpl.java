@@ -62,7 +62,9 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public NewsDTO createNews(CreateNewsDTO createNewsDTO) {
         Author author = authorRepository.findByName(createNewsDTO.authorName())
-                .orElseGet(() -> authorRepository.save(new Author(createNewsDTO.authorName())));
+                .orElseGet(() -> authorRepository.save(new Author.Builder()
+                        .name(createNewsDTO.authorName())
+                        .build()));
 
         News news = new News();
         news.setTitle(createNewsDTO.title());
@@ -95,7 +97,9 @@ public class NewsServiceImpl implements NewsService {
 
         if (createNewsDTO.authorName() != null) {
             Author author = authorRepository.findByName(createNewsDTO.authorName())
-                    .orElseGet(() -> authorRepository.save(new Author(createNewsDTO.authorName())));
+                    .orElseGet(() -> authorRepository.save(new Author.Builder()
+                            .name(createNewsDTO.authorName())
+                            .build()));
             news.setAuthor(author);
         }
 

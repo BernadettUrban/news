@@ -18,41 +18,32 @@ public class Author {
     @Size(min = 3, max = 15, message = "Name must be between 3 and 15")
     private String name;
     @JsonIgnore
-    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<News> news = new ArrayList<>();
 
     public Author() {
     }
 
-    public Author(Long id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public Author(Long id, String name, List<News> news) {
-        this.id = id;
-        this.name = name;
-        this.news = news;
+    private Author(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.news = builder.news;
     }
 
     public List<News> getNews() {
         return news;
     }
 
-    public Author(String name) {
-        this.name = name;
-    }
-
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -78,5 +69,30 @@ public class Author {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public static class Builder {
+        private Long id;
+        private String name;
+        private List<News> news = new ArrayList<>();
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder news(List<News> news) {
+            this.news = news;
+            return this;
+        }
+
+        public Author build() {
+            return new Author(this);
+        }
     }
 }

@@ -42,8 +42,9 @@ public class AuthorServiceImpl implements AuthorService {
         if (createAuthorDTO == null || createAuthorDTO.name() == null) {
             throw new IllegalArgumentException("CreateAuthorDTO cannot be null and must have a name");
         }
-        Author author = new Author();
-        author.setName(createAuthorDTO.name());
+        Author author = new Author.Builder()
+                .name(createAuthorDTO.name())
+                .build();
         authorRepository.save(author);
         return authorMapper.entityToDTO(author);
     }

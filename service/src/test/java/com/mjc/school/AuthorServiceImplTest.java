@@ -44,13 +44,16 @@ class AuthorServiceTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        author1 = new Author();
-        author1.setId(1L);
-        author1.setName("Author1");
 
-        author2 = new Author();
-        author2.setId(2L);
-        author2.setName("Author2");
+        author1 = new Author.Builder()
+                .id(1L)
+                .name("Author1")
+                .build();
+
+        author2 = new Author.Builder()
+                .id(2L)
+                .name("Author2")
+                .build();
 
         authors = Arrays.asList(author1, author2);
 
@@ -61,7 +64,6 @@ class AuthorServiceTest {
 
     @Test
     void testListAllAuthors() {
-
         when(authorRepository.findAll()).thenReturn(authors);
         when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
         when(authorMapper.entityToDTO(author2)).thenReturn(authorDTO2);
@@ -96,8 +98,9 @@ class AuthorServiceTest {
 
     @Test
     void testSaveAuthor() {
-        Author author = new Author();
-        author.setName("John Doe");
+        Author author = new Author.Builder()
+                .name("John Doe")
+                .build();
 
         when(authorRepository.save(any(Author.class))).thenReturn(author);
 
@@ -109,8 +112,9 @@ class AuthorServiceTest {
     @Test
     void testSearchAuthorsByName() {
         String name = "John";
-        Author author = new Author();
-        author.setName("John Doe");
+        Author author = new Author.Builder()
+                .name("John Doe")
+                .build();
         List<Author> authors = Arrays.asList(author);
 
         AuthorDTO authorDTO = new AuthorDTO(1L, "John Doe", 5L);
@@ -164,9 +168,10 @@ class AuthorServiceTest {
         Long authorId = 1L;
         CreateAuthorDTO createAuthorDTO = new CreateAuthorDTO("Updated Name");
 
-        Author author = new Author();
-        author.setId(authorId);
-        author.setName("Old Name");
+        Author author = new Author.Builder()
+                .id(authorId)
+                .name("Old Name")
+                .build();
 
         AuthorDTO authorDTO = new AuthorDTO(authorId, "Updated Name", 5L);
 
@@ -183,7 +188,6 @@ class AuthorServiceTest {
 
     @Test
     void testGetAuthorsOrderedByNewsCount() {
-
         when(authorRepository.findAuthorsOrderedByNewsCount()).thenReturn(authors);
         when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
         when(authorMapper.entityToDTO(author2)).thenReturn(authorDTO2);
@@ -197,7 +201,6 @@ class AuthorServiceTest {
     @Test
     void testGetAuthorsWithNewsCount() {
         AuthorNewsCountProjection projection1 = new AuthorNewsCountProjection() {
-
             @Override
             public Long getId() {
                 return 1L;
@@ -278,7 +281,7 @@ class AuthorServiceTest {
     @Test
     void testGetAuthorByIdWithNonexistentIdShouldThrowIllegalArgumentException() {
         Long nonExistentId = 999L;
-        when(authorRepository.findById(nonExistentId)).thenReturn(java.util.Optional.empty());
+        when(authorRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
         NoSuchElementException exception = assertThrows(NoSuchElementException.class, () -> {
             authorService.getAuthorById(nonExistentId);
@@ -353,7 +356,7 @@ class AuthorServiceTest {
     @Test
     void testGetAuthorsWithNewsCountWithNegativePageIndexShouldThrowIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            authorService.getAuthorsWithNewsCount(Pageable.ofSize(10).withPage(-1));
+            authorService.getAuthorsWithNewsCount(PageRequest.of(-1, 10));
         });
 
         assertEquals("Page index must not be less than zero", exception.getMessage());
@@ -362,10 +365,9 @@ class AuthorServiceTest {
     @Test
     void testGetAuthorsWithNewsCountWithNegativePageSizeShouldThrowIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            authorService.getAuthorsWithNewsCount(Pageable.ofSize(-10).withPage(0));
+            authorService.getAuthorsWithNewsCount(PageRequest.of(0, -10));
         });
 
         assertEquals("Page size must not be less than one", exception.getMessage());
     }
-
 }
