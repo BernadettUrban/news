@@ -47,7 +47,7 @@ public class AuthorRestController {
     @Operation(summary = "Create a new author", description = "Add a new author to the system")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Successfully created a new author",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDTO.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = CreateAuthorDTO.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input provided"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
