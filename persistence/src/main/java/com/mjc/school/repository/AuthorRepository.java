@@ -12,9 +12,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 import java.util.Optional;
 
-@RepositoryRestResource(collectionResourceRel = "authors", path = "authors")
+//@RepositoryRestResource(collectionResourceRel = "authors", path = "authors")
+@RepositoryRestResource(exported = false)
 public interface AuthorRepository extends JpaRepository<Author, Long> {
-    List<Author> findByNameContainingIgnoreCase(String name);
+    //List<Author> findByNameContainingIgnoreCase(String name);
     Page<Author> findByNameContaining(String name, Pageable pageable);
 
     Optional<Author> findByName(String name);
