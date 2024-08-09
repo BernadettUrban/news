@@ -91,7 +91,13 @@ public class AuthorRestController {
     })
     public ResponseEntity<Page<AuthorDTO>> getAuthorsByName(
             @RequestParam String name,
-            Pageable pageable) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int size,
+            @RequestParam(defaultValue = "NEWS_COUNT_DESC") AuthorSortField sortField) {
+
+        // Create a Pageable object based on the extracted parameters
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortField.getDirection(), sortField.getField()));
+
         Page<AuthorDTO> authors = authorService.getAuthorsByName(name, pageable);
         return ResponseEntity.ok(authors);
     }
