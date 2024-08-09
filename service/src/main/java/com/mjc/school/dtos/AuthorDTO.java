@@ -5,4 +5,9 @@ public record AuthorDTO(
         String name,
         Long newsCount
 ) {
+    public AuthorDTO {
+        if (newsCount == null) {
+            newsCount = 0L;
+        }
+    }
 }
