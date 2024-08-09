@@ -41,37 +41,42 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO getCommentById(Long id) {
-        Comment comment = commentRepository.findById(id).orElseThrow(() -> new CustomException("Comment not found with id: " + id));
-        return new CommentDTO(comment.getId(), comment.getCommentContent(),
-                comment.getNews() != null ? comment.getNews().getId() : null,
-                comment.getCreated(), comment.getModified());
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Comment not found with id: " + id));
+        return commentMapper.entityToDTO(comment);
     }
 
     @Override
     public CommentDTO createComment(CreateCommentDTO createCommentDTO) {
         Long newsId = createCommentDTO.newsId();
-        News news = newsRepository.findById(newsId).get();
-        Comment comment = new Comment(createCommentDTO.commentContent(), news);
-        comment.setCreated();
-        comment.setModified();
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new CustomException("News not found with id: " + newsId));
+
+        Comment comment = new Comment.Builder()
+                .withCommentContent(createCommentDTO.commentContent())
+                .withNews(news)
+                .build();
+
+        // The `@PrePersist` method in Comment entity will handle setting timestamps
         Comment savedComment = commentRepository.save(comment);
-        return new CommentDTO(savedComment.getId(), savedComment.getCommentContent(),
-                savedComment.getNews() != null ? savedComment.getNews().getId() : null,
-                savedComment.getCreated(), savedComment.getModified());
+        return commentMapper.entityToDTO(savedComment);
     }
 
     @Override
     public CommentDTO updateComment(Long id, CreateCommentDTO createCommentDTO) {
-        Comment existingComment = commentRepository.findById(id).orElseThrow(() -> new RuntimeException("Comment not found"));
-        existingComment.setContent(createCommentDTO.commentContent());
+        Comment existingComment = commentRepository.findById(id)
+                .orElseThrow(() -> new CustomException("Comment not found with id: " + id));
+
+        existingComment.setCommentContent(createCommentDTO.commentContent());
         Long newsId = createCommentDTO.newsId();
-        News news = newsRepository.findById(newsId).get();
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new CustomException("News not found with id: " + newsId));
+
         existingComment.setNews(news);
-        existingComment.setModified();
+        // The `@PreUpdate` method in Comment entity will handle setting modified timestamp
+
         Comment updatedComment = commentRepository.save(existingComment);
-        return new CommentDTO(updatedComment.getId(), updatedComment.getCommentContent(),
-                updatedComment.getNews() != null ? updatedComment.getNews().getId() : null,
-                updatedComment.getCreated(), updatedComment.getModified());
+        return commentMapper.entityToDTO(updatedComment);
     }
 
     @Override

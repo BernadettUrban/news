@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,48 +14,36 @@ import java.util.Objects;
 @Table(name = "comment")
 public class Comment {
 
-    @Transient
-    private final SimpleDateFormat SIMPLEDATEFORMAT = Formatting.SIMPLEDATEFORMAT;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "content")
-    @Size(min = 3, max = 255, message = "Content must be between 3 and 255")
+
+    @Column(name = "content", nullable = false)
+    @Size(min = 3, max = 255, message = "Content must be between 3 and 255 characters")
     private String commentContent;
 
-    @JsonIgnore
-    @ManyToOne()
-    @JoinColumn(name = "news_id")
+    @ManyToOne
+    @JoinColumn(name = "news_id", nullable = false)
     private News news;
-    private String created;
-    private String modified;
 
-    public Comment() {
+    @Column(name = "created", nullable = false, updatable = false)
+    private LocalDateTime created;
+
+    @Column(name = "modified", nullable = false)
+    private LocalDateTime modified;
+
+    // Default constructor for JPA
+    public Comment() {}
+
+    private Comment(Builder builder) {
+        this.id = builder.id;
+        this.commentContent = builder.commentContent;
+        this.news = builder.news;
+        this.created = builder.created;
+        this.modified = builder.modified;
     }
 
-    public Comment(Long id, String content, News news) {
-        this.id = id;
-        this.commentContent = content;
-        this.news = news;
-        setCreated();
-        setModified();
-    }
-
-    public Comment(String content, News news) {
-        this.commentContent = content;
-        this.news = news;
-        setCreated();
-        setModified();
-    }
-
-    public Comment(Long id, String commentContent, News news, String created, String modified) {
-        this.id = id;
-        this.commentContent = commentContent;
-        this.news = news;
-        this.created = created;
-        this.modified = modified;
-    }
+    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -64,9 +53,12 @@ public class Comment {
         this.id = id;
     }
 
+    public String getCommentContent() {
+        return commentContent;
+    }
 
-    public void setContent(String content) {
-        this.commentContent = content;
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent;
     }
 
     public News getNews() {
@@ -77,25 +69,69 @@ public class Comment {
         this.news = news;
     }
 
-    public void setCreated() {
-        this.created = SIMPLEDATEFORMAT.format(new Date());
-
-    }
-
-    public String getCommentContent() {
-        return commentContent;
-    }
-
-    public String getCreated() {
+    public LocalDateTime getCreated() {
         return created;
     }
 
-    public String getModified() {
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() {
         return modified;
     }
 
-    public void setModified() {
-        this.modified = SIMPLEDATEFORMAT.format(new Date());
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.created = LocalDateTime.now(); // Set creation timestamp
+        this.modified = LocalDateTime.now(); // Set initial modification timestamp
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.modified = LocalDateTime.now(); // Update modification timestamp
+    }
+
+    // Builder Pattern
+    public static class Builder {
+        private Long id;
+        private String commentContent;
+        private News news;
+        private LocalDateTime created;
+        private LocalDateTime modified;
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withCommentContent(String commentContent) {
+            this.commentContent = commentContent;
+            return this;
+        }
+
+        public Builder withNews(News news) {
+            this.news = news;
+            return this;
+        }
+
+        public Builder withCreated(LocalDateTime created) {
+            this.created = created;
+            return this;
+        }
+
+        public Builder withModified(LocalDateTime modified) {
+            this.modified = modified;
+            return this;
+        }
+
+        public Comment build() {
+            return new Comment(this);
+        }
     }
 
     @Override
@@ -109,16 +145,5 @@ public class Comment {
     @Override
     public int hashCode() {
         return Objects.hash(id, commentContent, news, created, modified);
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", content='" + commentContent + '\'' +
-                ", news=" + news +
-                ", created=" + created +
-                ", modified=" + modified +
-                '}';
     }
 }

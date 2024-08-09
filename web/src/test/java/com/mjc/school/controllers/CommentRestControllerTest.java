@@ -32,7 +32,7 @@ class CommentRestControllerTest {
         commentRepository.deleteAll();
 
         Comment commentToBeSaved = new Comment();
-        commentToBeSaved.setContent("Initial comment");
+        commentToBeSaved.setCommentContent("Initial comment");
         commentRepository.save(commentToBeSaved);
     }
 
