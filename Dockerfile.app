@@ -9,15 +9,8 @@ WORKDIR /app
 # Copy the source code into the container
 COPY . .
 
-# List the contents of the /app directory to check what was copied
-RUN ls -al /app
-
 # Build the JAR file
 RUN mvn clean package -DskipTests
-
-# List the contents of the /app directory after building to verify the JAR file is created
-# List contents of the target directory after building
-RUN ls -al /app/web/target
 
 # List contents of the JAR file
 RUN jar tf /app/web/target/web-1.0-SNAPSHOT.jar
@@ -28,8 +21,6 @@ WORKDIR /app
 
 # Copy the JAR file from the build stage to the runtime stage
 COPY --from=build /app/web/target/web-1.0-SNAPSHOT.jar /app/web.jar
-
-
 
 # Run the application
 ENTRYPOINT ["java", "-jar", "/app/web.jar"]
