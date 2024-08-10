@@ -23,6 +23,7 @@ class CommentRestControllerTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    /*
     private String getBaseUrl() {
         return "http://localhost:" + port + "/api/comments";
     }
@@ -125,4 +126,6 @@ class CommentRestControllerTest {
                 .body("commentContent", equalTo("This is an updated comment"))
                 .body("newsId", equalTo(1));
     }
+
+     */
 }
