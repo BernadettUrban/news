@@ -42,6 +42,7 @@ public class News {
         setModified();
     }
 
+    /*
     public News(Long id, String title, String content, Author author) {
         this.id = id;
         this.title = title;
@@ -68,6 +69,73 @@ public class News {
         this.modified = modified;
         this.newstags = tags;
         this.comments = comments;
+    }
+    */
+
+    private News(Builder builder) {
+        this.id = builder.id;
+        this.title = builder.title;
+        this.newsContent = builder.newsContent;
+        this.author = builder.author;
+        this.created = builder.created != null ? builder.created : SIMPLEDATEFORMAT.format(new Date());
+        this.modified = builder.modified != null ? builder.modified : SIMPLEDATEFORMAT.format(new Date());
+        this.newstags = builder.newstags != null ? builder.newstags : new HashSet<>();
+        this.comments = builder.comments != null ? builder.comments : new ArrayList<>();
+    }
+
+    public static class Builder {
+        private Long id;
+        private String title;
+        private String newsContent;
+        private Author author;
+        private String created;
+        private String modified;
+        private Set<NewsTag> newstags;
+        private List<Comment> comments;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder newsContent(String newsContent) {
+            this.newsContent = newsContent;
+            return this;
+        }
+
+        public Builder author(Author author) {
+            this.author = author;
+            return this;
+        }
+
+        public Builder created(String created) {
+            this.created = created;
+            return this;
+        }
+
+        public Builder modified(String modified) {
+            this.modified = modified;
+            return this;
+        }
+
+        public Builder newstags(Set<NewsTag> newstags) {
+            this.newstags = newstags;
+            return this;
+        }
+
+        public Builder comments(List<Comment> comments) {
+            this.comments = comments;
+            return this;
+        }
+
+        public News build() {
+            return new News(this);
+        }
     }
 
     public List<Comment> getComments() {

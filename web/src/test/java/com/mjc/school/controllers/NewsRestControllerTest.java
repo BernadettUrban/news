@@ -21,7 +21,7 @@ class NewsRestControllerTest {
         return "http://localhost:" + port + "/api/news";
     }
 
-    /*
+
     @Test
     public void testGetNews() {
         String endpoint = getBaseUrl();
@@ -39,6 +39,7 @@ class NewsRestControllerTest {
                 .body("content", hasSize(2)); // Adjust later
     }
 
+
     @Test
     public void testGetNewsById() {
         Long newsId = 1L;
@@ -55,6 +56,7 @@ class NewsRestControllerTest {
                 .body("title", equalTo("Breaking News 1"))
                 .body("newsContent", equalTo("Content of breaking news 1"));
     }
+
 
     @Test
     void createNews() {
@@ -78,6 +80,7 @@ class NewsRestControllerTest {
                 .body("title", equalTo("Title"));
     }
 
+    /*
     @Test
     void updateNews() {
         Long newsId = 1L;
