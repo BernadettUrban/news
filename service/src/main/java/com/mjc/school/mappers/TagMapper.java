@@ -1,6 +1,7 @@
 package com.mjc.school.mappers;
 
 import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.CreateTagDTO;
 import com.mjc.school.dtos.TagDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -14,4 +15,6 @@ public interface TagMapper {
     Tag dtoToEntity(TagDTO dto);
 
     TagDTO entityToDTO(Tag tag);
+
+    Tag createTagDTOToEntity(CreateTagDTO createTagDTO);
 }

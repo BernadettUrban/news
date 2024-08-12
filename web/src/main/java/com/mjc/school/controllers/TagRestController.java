@@ -1,5 +1,6 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.dtos.CreateTagDTO;
 import com.mjc.school.services.TagService;
 import com.mjc.school.domain.Tag;
 import com.mjc.school.dtos.TagDTO;
@@ -24,10 +25,10 @@ public class TagRestController {
             produces = {"application/json"},
             consumes = {"application/json"}
     )
-    public ResponseEntity<TagDTO> createTag(@Valid @RequestBody TagDTO tagDTO) {
-        Tag tag = tagService.convertDtoToTag(tagDTO);
+    public ResponseEntity<CreateTagDTO> createTag(@Valid @RequestBody CreateTagDTO createTagDTO) {
+        Tag tag = tagService. createTagFromDTO(createTagDTO);
         tagService.saveTag(tag);
-        return new ResponseEntity<>(tagDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(createTagDTO, HttpStatus.CREATED);
     }
 
     @RequestMapping(

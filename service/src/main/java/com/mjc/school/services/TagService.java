@@ -1,6 +1,7 @@
 package com.mjc.school.services;
 
 import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.CreateTagDTO;
 import com.mjc.school.dtos.TagDTO;
 import org.springframework.data.domain.Page;
 
@@ -16,6 +17,7 @@ public interface TagService {
     void saveTag(Tag tag);
 
     Tag convertDtoToTag(TagDTO tagDTO);
+    Tag createTagFromDTO(CreateTagDTO createTagDTO);
 
     List<TagDTO> searchTagsByName(String name);
 

@@ -1,6 +1,7 @@
 package com.mjc.school.services;
 
 import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.CreateTagDTO;
 import com.mjc.school.dtos.TagDTO;
 import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.exceptions.PaginationException;
@@ -56,6 +57,11 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag convertDtoToTag(TagDTO tagDTO) {
         return tagMapper.dtoToEntity(tagDTO);
+    }
+
+    @Override
+    public Tag createTagFromDTO(CreateTagDTO createTagDTO) {
+        return tagMapper.createTagDTOToEntity(createTagDTO);
     }
 
     @Override

@@ -33,7 +33,10 @@ public class Comment {
     private LocalDateTime modified;
 
     // Default constructor for JPA
-    public Comment() {}
+    public Comment() {
+        onCreate();
+    }
+
     // New constructor to initialize Comment with content and news
     public Comment(String content, News news) {
         this.commentContent = content;
