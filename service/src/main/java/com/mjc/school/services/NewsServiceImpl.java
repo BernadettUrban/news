@@ -13,6 +13,9 @@ import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
 import com.mjc.school.sortfield.SortField;
 import com.mjc.school.specification.NewsSpecification;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,13 +32,15 @@ public class NewsServiceImpl implements NewsService {
     private final NewsRepository newsRepository;
     private final AuthorRepository authorRepository;
     private final TagRepository tagRepository;
+    private final Validator validator;
 
     @Autowired
-    public NewsServiceImpl(NewsMapper newsMapper, NewsRepository newsRepository, AuthorRepository authorRepository, TagRepository tagRepository) {
+    public NewsServiceImpl(NewsMapper newsMapper, NewsRepository newsRepository, AuthorRepository authorRepository, TagRepository tagRepository, Validator validator) {
         this.newsMapper = newsMapper;
         this.newsRepository = newsRepository;
         this.authorRepository = authorRepository;
         this.tagRepository = tagRepository;
+        this.validator = validator;
     }
 
     public Page<NewsDTO> listAllNews(int page, int size, SortField sortField, Sort.Direction sortDirection) {
@@ -78,6 +84,14 @@ public class NewsServiceImpl implements NewsService {
                     .orElseGet(() -> tagRepository.save(new Tag(tagName)));
             news.getTags().add(new NewsTag(news, tag));
         }
+
+        // Validate the news entity before saving
+        Set<ConstraintViolation<News>> violations = validator.validate(news);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException("Validation failed for news entity", violations);
+        }
+
+
         newsRepository.save(news);
         return newsMapper.entityToDTO(news);
     }
