@@ -1,7 +1,11 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.domain.Author;
 import com.mjc.school.domain.Comment;
+import com.mjc.school.domain.News;
 import com.mjc.school.repository.CommentRepository;
+import com.mjc.school.repository.NewsRepository;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +27,12 @@ class CommentRestControllerTest {
     @Autowired
     private CommentRepository commentRepository;
 
-    /*
+    @Autowired
+    private NewsRepository newsRepository;
+
+    private Long newsId;
+
+
     private String getBaseUrl() {
         return "http://localhost:" + port + "/api/comments";
     }
@@ -31,11 +40,25 @@ class CommentRestControllerTest {
     @BeforeEach
     void setUp() {
         commentRepository.deleteAll();
+        newsRepository.deleteAll();  // Clear existing news data
 
-        Comment commentToBeSaved = new Comment();
-        commentToBeSaved.setCommentContent("Initial comment");
+        // Create and save a News entity
+        News news = new News();
+        news.setTitle("Test title");
+        news.setNewsContent("Test content");
+
+        // Create and save an Author if required
+        Author author = new Author();
+        author.setName("Test author");
+        // news.setAuthor(author); // Set the author if it's required
+
+        newsRepository.save(news); // Save News to generate an ID
+
+        // Create and save a Comment entity associated with the saved News
+        Comment commentToBeSaved = new Comment("Initial comment", news);
         commentRepository.save(commentToBeSaved);
     }
+
 
     @Test
     public void testDeleteComment() {
@@ -53,6 +76,7 @@ class CommentRestControllerTest {
                 .log().body()
                 .statusCode(204);
     }
+
 
     @Test
     public void testGetCommentById() {
@@ -74,29 +98,34 @@ class CommentRestControllerTest {
                 .body("commentContent", equalTo("Initial comment"));
     }
 
+/*
     @Test
     public void testCreateComment() {
-        String endpoint = getBaseUrl();
-        String requestBody = """
-                {
-                    "commentContent": "This is a new comment",
-                    "newsId": 1
-                }
-                """;
+        String endpoint = getBaseUrl();  // Base URL for POST request
+        Long existingNewsId = 1L;  // This ID should be an ID of an existing News entity
 
-        given()
+        String requestBody = """
+            {
+                "commentContent": "This is a new comment",
+                "newsId": """ + existingNewsId + """
+            }
+            """;
+
+        // Make a POST request to the /api/comments endpoint
+        RestAssured.given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .post(endpoint)
+                .post(endpoint)  // POST request to create a new comment
                 .then()
                 .log().body()
                 .statusCode(201)
                 .contentType(ContentType.JSON)
                 .body("commentContent", equalTo("This is a new comment"))
-                .body("newsId", equalTo(1));
+                .body("newsId", equalTo(existingNewsId.intValue()));  // Verify the response
     }
 
+    
     @Test
     public void testUpdateComment() {
         Long commentId = commentRepository.findAll().stream()
@@ -126,6 +155,6 @@ class CommentRestControllerTest {
                 .body("commentContent", equalTo("This is an updated comment"))
                 .body("newsId", equalTo(1));
     }
+*/
 
-     */
 }

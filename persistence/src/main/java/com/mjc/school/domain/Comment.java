@@ -34,6 +34,12 @@ public class Comment {
 
     // Default constructor for JPA
     public Comment() {}
+    // New constructor to initialize Comment with content and news
+    public Comment(String content, News news) {
+        this.commentContent = content;
+        this.news = news;
+        onCreate();
+    }
 
     private Comment(Builder builder) {
         this.id = builder.id;

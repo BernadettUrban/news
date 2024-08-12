@@ -52,10 +52,8 @@ public class CommentServiceImpl implements CommentService {
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new CustomException("News not found with id: " + newsId));
 
-        Comment comment = new Comment.Builder()
-                .withCommentContent(createCommentDTO.commentContent())
-                .withNews(news)
-                .build();
+        // **Changed: Comment creation using the constructor**
+        Comment comment = new Comment(createCommentDTO.commentContent(), news);
 
         // The `@PrePersist` method in Comment entity will handle setting timestamps
         Comment savedComment = commentRepository.save(comment);

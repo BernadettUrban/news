@@ -7,8 +7,13 @@ public record CommentDTO(
         Long id,
         @Schema(description = "Content of the comment", additionalProperties = Schema.AdditionalPropertiesValue.FALSE)
         String commentContent,
-        Long newsId,  // Changed from News to Long for the ID
+        @Schema(description = "ID of the associated news", additionalProperties = Schema.AdditionalPropertiesValue.FALSE)
+        Long newsId,
+
+        @Schema(description = "Creation timestamp", additionalProperties = Schema.AdditionalPropertiesValue.FALSE)
         String created,
+
+        @Schema(description = "Last modified timestamp", additionalProperties = Schema.AdditionalPropertiesValue.FALSE)
         String modified
 ) {
 }
