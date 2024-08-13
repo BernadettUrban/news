@@ -44,25 +44,39 @@ public class NewsServiceImpl implements NewsService {
     }
 
     public Page<NewsDTO> listAllNews(int page, int size, SortField sortField, Sort.Direction sortDirection) {
-        if (sortField == null) {
-            sortField = SortField.CREATED;
-        }
-        if (sortDirection == null) {
-            sortDirection = Sort.Direction.DESC;
-        }
+        validatePagingAndSortingParameters(page, size, sortField, sortDirection);
 
-        Sort sort = Sort.by(sortDirection, sortField.getDatabaseFieldName());
-
+        Sort sort = createSort(sortField, sortDirection);
         Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<News> newsPage = newsRepository.findAll(pageable);
 
         List<NewsDTO> newsDTOs = newsPage.getContent()
                 .stream()
-                .map(n -> newsMapper.entityToDTO(n))
+                .map(newsMapper::entityToDTO)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(newsDTOs, pageable, newsPage.getTotalElements());
+    }
+    private void validatePagingAndSortingParameters(int page, int size, SortField sortField, Sort.Direction sortDirection) {
+        if (page < 0) {
+            throw new CustomException("Page number cannot be negative.");
+        }
+        if (size <= 0) {
+            throw new CustomException("Page size must be greater than zero.");
+        }
+        if (sortField == null) {
+            throw new CustomException("Sort field cannot be null.");
+        }
+        if (sortDirection == null) {
+            throw new CustomException("Sort direction cannot be null.");
+        }
+    }
+
+    private Sort createSort(SortField sortField, Sort.Direction sortDirection) {
+        SortField field = Optional.ofNullable(sortField).orElse(SortField.CREATED);
+        Sort.Direction direction = Optional.ofNullable(sortDirection).orElse(Sort.Direction.DESC);
+        return Sort.by(direction, field.getDatabaseFieldName());
     }
 
     @Override
