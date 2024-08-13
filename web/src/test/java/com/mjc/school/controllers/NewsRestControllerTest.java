@@ -42,7 +42,7 @@ class NewsRestControllerTest {
 
         jdbcTemplate.execute(dataSql);
     }
-    
+
     */
     @Test
     public void testGetNews() {

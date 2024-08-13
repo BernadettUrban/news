@@ -61,6 +61,13 @@ public class GlobalExceptionHandler {
         return errors;
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ResponseEntity<CustomError> handleUnexpectedException(Exception ex) {
+        CustomError error = new CustomError(ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
 }
