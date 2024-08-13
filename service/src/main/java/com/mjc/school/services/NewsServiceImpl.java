@@ -81,33 +81,50 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public NewsDTO createNews(CreateNewsDTO createNewsDTO) {
-        Author author = authorRepository.findByName(createNewsDTO.authorName())
-                .orElseGet(() -> authorRepository.save(new Author.Builder()
-                        .name(createNewsDTO.authorName())
-                        .build()));
+        Author author = findOrCreateAuthor(createNewsDTO.authorName());
+        News news = buildNewsFromDTO(createNewsDTO, author);
+        validateNews(news);
 
-        News news = new News();
-        news.setTitle(createNewsDTO.title());
-        news.setNewsContent(createNewsDTO.newsContent());
-        news.setAuthor(author);
+        newsRepository.save(news);
+        return newsMapper.entityToDTO(news);
+    }
+
+    private Author findOrCreateAuthor(String authorName) {
+        return authorRepository.findByName(authorName)
+                .orElseGet(() -> authorRepository.save(new Author.Builder()
+                        .name(authorName)
+                        .build()));
+    }
+
+    private News buildNewsFromDTO(CreateNewsDTO createNewsDTO, Author author) {
+        News news = new News.Builder()
+                .title(createNewsDTO.title())
+                .newsContent(createNewsDTO.newsContent())
+                .author(author)
+                .build();
+        addTagsToNews(news, createNewsDTO.tagNames());
         news.setCreated();
         news.setModified();
+        return news;
+    }
 
-        for (String tagName : createNewsDTO.tagNames()) {
-            Tag tag = tagRepository.findByName(tagName)
-                    .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+    private void addTagsToNews(News news, List<String> tagNames) {
+        tagNames.forEach(tagName -> {
+            Tag tag = findOrCreateTag(tagName);
             news.getTags().add(new NewsTag(news, tag));
-        }
+        });
+    }
 
-        // Validate the news entity before saving
+    private Tag findOrCreateTag(String tagName) {
+        return tagRepository.findByName(tagName)
+                .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+    }
+
+    private void validateNews(News news) {
         Set<ConstraintViolation<News>> violations = validator.validate(news);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException("Validation failed for news entity", violations);
         }
-
-
-        newsRepository.save(news);
-        return newsMapper.entityToDTO(news);
     }
 
     @Override
