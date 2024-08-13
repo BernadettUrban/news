@@ -82,7 +82,7 @@ class NewsRestControllerTest {
                 .body("title", equalTo("Title"));
     }
 
-    /*
+
     @Test
     void updateNews() {
         Long newsId = 1L;
@@ -107,6 +107,7 @@ class NewsRestControllerTest {
                 .body("title", equalTo("Updated Title"));
     }
 
+    /*
     @Test
     void testDeleteNews() {
         long newsId = 1;

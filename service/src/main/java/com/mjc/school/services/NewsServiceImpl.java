@@ -130,36 +130,28 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public NewsDTO updateNews(Long newsId, CreateNewsDTO createNewsDTO) {
         News news = newsRepository.findById(newsId)
-                .orElseThrow(() -> new CustomException("Comment not found with id: " + newsId));
+                .orElseThrow(() -> new CustomException("News not found with id: " + newsId));
 
-        if (createNewsDTO.title() != null) {
-            news.setTitle(createNewsDTO.title());
-        }
+        updateNewsDetails(news, createNewsDTO);
+        news.setModified();
+        newsRepository.save(news);
 
-        if (createNewsDTO.newsContent() != null) {
-            news.setNewsContent(createNewsDTO.newsContent());
-        }
+        return newsMapper.entityToDTO(news);
+    }
+
+    private void updateNewsDetails(News news, CreateNewsDTO createNewsDTO) {
+        Optional.ofNullable(createNewsDTO.title()).ifPresent(news::setTitle);
+        Optional.ofNullable(createNewsDTO.newsContent()).ifPresent(news::setNewsContent);
 
         if (createNewsDTO.authorName() != null) {
-            Author author = authorRepository.findByName(createNewsDTO.authorName())
-                    .orElseGet(() -> authorRepository.save(new Author.Builder()
-                            .name(createNewsDTO.authorName())
-                            .build()));
+            Author author = findOrCreateAuthor(createNewsDTO.authorName());
             news.setAuthor(author);
         }
 
         if (createNewsDTO.tagNames() != null) {
             news.getTags().clear();
-            for (String tagName : createNewsDTO.tagNames()) {
-                Tag tag = tagRepository.findByName(tagName)
-                        .orElseGet(() -> tagRepository.save(new Tag(tagName)));
-                news.getTags().add(new NewsTag(news, tag));
-            }
+            addTagsToNews(news, createNewsDTO.tagNames());
         }
-
-        news.setModified();
-        newsRepository.save(news);
-        return newsMapper.entityToDTO(news);
     }
 
     @Override
