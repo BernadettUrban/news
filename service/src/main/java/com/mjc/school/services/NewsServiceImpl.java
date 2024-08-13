@@ -170,17 +170,25 @@ public class NewsServiceImpl implements NewsService {
                                                 List<Long> tagIds, String authorName,
                                                 String title, String content,
                                                 Pageable pageable) {
-        Specification<News> specification = Specification.where(NewsSpecification.hasAuthorName(authorName))
-                .and(NewsSpecification.hasTitle(title))
-                .and(NewsSpecification.hasContent(content))
-                .and(NewsSpecification.hasTagNames(tagNames))
-                .and(NewsSpecification.hasTagIds(tagIds));
+        Specification<News> specification = buildNewsSpecification(tagNames, tagIds, authorName, title, content);
         Page<News> newsPage = newsRepository.findAll(specification, pageable);
-        List<NewsDTO> newsDTOList = newsPage.getContent().stream()
+
+        List<NewsDTO> newsDTOList = newsPage.getContent()
+                .stream()
                 .map(newsMapper::entityToDTO)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(newsDTOList, pageable, newsPage.getTotalElements());
+    }
+
+    private Specification<News> buildNewsSpecification(List<String> tagNames, List<Long> tagIds,
+                                                       String authorName, String title,
+                                                       String content) {
+        return Specification.where(NewsSpecification.hasAuthorName(authorName))
+                .and(NewsSpecification.hasTitle(title))
+                .and(NewsSpecification.hasContent(content))
+                .and(NewsSpecification.hasTagNames(tagNames))
+                .and(NewsSpecification.hasTagIds(tagIds));
     }
 
 

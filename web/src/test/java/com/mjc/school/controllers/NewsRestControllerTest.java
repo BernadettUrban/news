@@ -1,10 +1,16 @@
 package com.mjc.school.controllers;
 
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
@@ -23,7 +29,21 @@ class NewsRestControllerTest {
         return "http://localhost:" + port + "/api/news";
     }
 
+   /* @Autowired
+    private JdbcTemplate jdbcTemplate;
 
+    @BeforeEach
+    void setUp() throws Exception {
+        // Path to the SQL scripts
+
+        String dataSql = new String(Files.readAllBytes(Paths.get("src/test/resources/data.sql")));
+
+        // Execute schema and data SQL scripts
+
+        jdbcTemplate.execute(dataSql);
+    }
+    
+    */
     @Test
     public void testGetNews() {
         String endpoint = getBaseUrl();
@@ -107,7 +127,7 @@ class NewsRestControllerTest {
                 .body("title", equalTo("Updated Title"));
     }
 
-    /*
+
     @Test
     void testDeleteNews() {
         long newsId = 1;
@@ -176,5 +196,5 @@ class NewsRestControllerTest {
         assertTrue(fail());
     }
 
- */
+
 }
