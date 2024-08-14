@@ -1,10 +1,23 @@
+-- Clear existing data in dependent tables
+DELETE FROM newstag;
+DELETE FROM comment;
+DELETE FROM news;
 
+-- Then clear data in the author table
+DELETE FROM author;
+DELETE FROM tag;
+
+-- Restart the auto-increment sequences
+ALTER TABLE author ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE news ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE comment ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE tag ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE newstag ALTER COLUMN id RESTART WITH 1;
 
 -- Populate author table
 INSERT INTO author (name) VALUES
 ('John Doe'),
 ('Jane Smith');
-
 
 
 -- Populate news table
@@ -30,8 +43,8 @@ INSERT INTO NEWSTAG (news_id, tag_id) VALUES
 (2, 2);
 
 
-ALTER TABLE author ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM author) + 1;
-ALTER TABLE news ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM news) + 1;
-ALTER TABLE comment ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM comment) + 1;
-ALTER TABLE tag ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM tag) + 1;
-ALTER TABLE newstag ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM newstag) + 1;
+---ALTER TABLE author ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM author) + 1;
+---ALTER TABLE news ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM news) + 1;
+---ALTER TABLE comment ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM comment) + 1;
+---ALTER TABLE tag ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM tag) + 1;
+---ALTER TABLE newstag ALTER COLUMN id RESTART WITH (SELECT MAX(id) FROM newstag) + 1;

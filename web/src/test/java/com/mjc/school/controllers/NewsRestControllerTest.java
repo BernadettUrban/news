@@ -1,6 +1,7 @@
 package com.mjc.school.controllers;
 
 import io.restassured.http.ContentType;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@Transactional  // Rollback after each test method
 class NewsRestControllerTest {
 
     @LocalServerPort
@@ -45,6 +48,8 @@ class NewsRestControllerTest {
 
     */
     @Test
+    @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testGetNews() {
         String endpoint = getBaseUrl();
         given()
@@ -63,6 +68,8 @@ class NewsRestControllerTest {
 
 
     @Test
+    @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     public void testGetNewsById() {
         Long newsId = 1L;
         String endpoint = getBaseUrl() + "/{newsId}";
@@ -81,6 +88,8 @@ class NewsRestControllerTest {
 
 
     @Test
+    @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createNews() {
         String endpoint = getBaseUrl();
         String requestBody = """
@@ -104,6 +113,8 @@ class NewsRestControllerTest {
 
 
     @Test
+    @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void updateNews() {
         Long newsId = 1L;
         String endpoint = getBaseUrl() + "/{newsId}";
@@ -129,6 +140,8 @@ class NewsRestControllerTest {
 
 
     @Test
+    @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void testDeleteNews() {
         long newsId = 1;
         String endpoint = getBaseUrl() + "/{newsId}";
@@ -142,6 +155,8 @@ class NewsRestControllerTest {
 
 
     @Test
+    @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void testGetCommentsByNewsId() {
         long newsId = 1;
         String endpoint = getBaseUrl() + "/{newsId}/comments";
@@ -158,8 +173,10 @@ class NewsRestControllerTest {
     }
 
     @Test
+    @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void testGetTagsByNewsId() {
-        long newsId = 1;
+        long newsId = 1L;
         String endpoint = getBaseUrl() + "/{newsId}/tags";
 
         given()
@@ -176,6 +193,8 @@ class NewsRestControllerTest {
     }
 
     @Test
+    @Sql(scripts = "/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void testGetAuthorByNewsId() {
         long newsId = 1; // Replace with actual newsId
         String endpoint = getBaseUrl() + "/{newsId}/author";

@@ -82,7 +82,7 @@ public class TagServiceImpl implements TagService {
             throw new CustomException("Size must be not negative");
         }
         Pageable pageable = PageRequest.of(page, size);
-        Page<Tag> tagsPage = tagRepository.findAll(pageable);
+        Page<Tag> tagsPage = newsTagRepository.findTagsByNewsId(newsId, pageable);
         List<TagDTO> tagDTOList = tagsPage.stream()
                 .map(tag -> tagMapper.entityToDTO(tag))
                 .collect(Collectors.toList());
