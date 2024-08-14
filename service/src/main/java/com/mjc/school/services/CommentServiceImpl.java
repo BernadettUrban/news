@@ -49,16 +49,21 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDTO createComment(CreateCommentDTO createCommentDTO) {
         Long newsId = createCommentDTO.newsId();
+
+        // Fetch the News entity using the provided newsId
         News news = newsRepository.findById(newsId)
                 .orElseThrow(() -> new CustomException("News not found with id: " + newsId));
 
-        // **Changed: Comment creation using the constructor**
+        // Create the Comment entity
         Comment comment = new Comment(createCommentDTO.commentContent(), news);
 
-        // The `@PrePersist` method in Comment entity will handle setting timestamps
+        // Save the Comment entity
         Comment savedComment = commentRepository.save(comment);
+
+        // Return the CommentDTO representation
         return commentMapper.entityToDTO(savedComment);
     }
+
 
     @Override
     public CommentDTO updateComment(Long id, CreateCommentDTO createCommentDTO) {
