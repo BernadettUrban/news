@@ -1,6 +1,8 @@
 package com.mjc.school.controllers;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -210,9 +212,25 @@ class NewsRestControllerTest {
                 .body("name", equalTo("John Doe"));
     }
 
+
     @Test
-    void searchNewsByParameters() {
-        assertTrue(fail());
+    public void testSearchNewsByParameters() {
+        RestAssured.baseURI = getBaseUrl();
+        // Perform the request and verify
+        Response response = given()
+                .queryParam("tagnames", "Tag 1,Tag 2")
+                .queryParam("author", "John Doe")
+                .queryParam("title", "Breaking News 1")
+                .queryParam("page", 0)
+                .queryParam("size", 10)
+                .when()
+                .get("/search")  // Endpoint path
+                .then()
+                .statusCode(200)
+                .body("content", hasSize(2))
+                .body("content[0].title", equalTo("Breaking News 1"))
+                .body("content[1].title", equalTo("Breaking News 2"))
+                .extract().response();
     }
 
 
