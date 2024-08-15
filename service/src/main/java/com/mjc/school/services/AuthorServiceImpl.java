@@ -7,6 +7,7 @@ import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.NewsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -23,10 +24,12 @@ import java.util.stream.Collectors;
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
+    private final NewsRepository newsRepository;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper, NewsRepository newsRepository) {
         this.authorRepository = authorRepository;
         this.authorMapper = authorMapper;
+        this.newsRepository = newsRepository;
     }
 
     @Override
@@ -120,7 +123,12 @@ public class AuthorServiceImpl implements AuthorService {
             throw new IllegalArgumentException("News ID cannot be null");
         }
         Author author = authorRepository.findByNewsId(newsId);
-        return authorMapper.entityToDTO(author);
+        long newsCount = newsRepository.countByAuthorId(author.getId());
+
+        AuthorDTO authorDTO = authorMapper.entityToDTO(author);
+        authorDTO = new AuthorDTO(authorDTO.id(), authorDTO.name(), newsCount);
+
+        return authorDTO;
     }
 
     @Transactional

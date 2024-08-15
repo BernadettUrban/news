@@ -13,6 +13,7 @@ import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
 import com.mjc.school.sortfield.SortField;
 import com.mjc.school.specification.NewsSpecification;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -80,11 +81,14 @@ public class NewsServiceImpl implements NewsService {
         return Sort.by(direction, field.getDatabaseFieldName());
     }
 
+    @Transactional
     @Override
     public NewsDTO createNews(CreateNewsDTO createNewsDTO) {
         Author author = findOrCreateAuthor(createNewsDTO.authorName());
         News news = buildNewsFromDTO(createNewsDTO, author);
         validateNews(news);
+
+        long newsCountbyAuthor = newsRepository.countByAuthorId(author.getId());
 
         newsRepository.save(news);
         return newsMapper.entityToDTO(news);
