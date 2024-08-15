@@ -21,6 +21,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -103,8 +104,8 @@ public class NewsServiceImpl implements NewsService {
                 .author(author)
                 .build();
         addTagsToNews(news, createNewsDTO.tagNames());
-        news.setCreated();
-        news.setModified();
+        news.setCreated(LocalDateTime.now());
+        news.setModified(LocalDateTime.now());
         return news;
     }
 
@@ -133,7 +134,7 @@ public class NewsServiceImpl implements NewsService {
                 .orElseThrow(() -> new CustomException("News not found with id: " + newsId));
 
         updateNewsDetails(news, createNewsDTO);
-        news.setModified();
+        news.setModified(LocalDateTime.now());
         newsRepository.save(news);
 
         return newsMapper.entityToDTO(news);

@@ -1,84 +1,60 @@
 package com.mjc.school.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mjc.school.util.Formatting;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime; // **Changed: Imported LocalDateTime**
 import java.util.*;
 
 @Entity
 @Table(name = "news")
 public class News {
 
-    @Transient
-    SimpleDateFormat SIMPLEDATEFORMAT = Formatting.SIMPLEDATEFORMAT;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Long id;
+
     @Column(unique = true)
     @Size(min = 5, max = 30, message = "Title must be between 5 and 30")
     private String title;
+
     @Column(name = "content")
     @Size(min = 5, max = 255, message = "Content must be between 5 and 255")
     private String newsContent;
+
     @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "author_id")
     private Author author;
-    private String created;
-    private String modified;
+
+    @Column(name = "created", nullable = false) // **Changed: Column for created timestamp**
+    private LocalDateTime created; // **Changed: Timestamp type to LocalDateTime**
+
+    @Column(name = "modified", nullable = false) // **Changed: Column for modified timestamp**
+    private LocalDateTime modified; // **Changed: Timestamp type to LocalDateTime**
+
     @JsonIgnore
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<NewsTag> newstags = new HashSet<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    // Default constructor
     public News() {
-        setCreated();
-        setModified();
+        this.created = LocalDateTime.now(); // **Changed: Default value set to LocalDateTime.now()**
+        this.modified = LocalDateTime.now(); // **Changed: Default value set to LocalDateTime.now()**
     }
 
-    /*
-    public News(Long id, String title, String content, Author author) {
-        this.id = id;
-        this.title = title;
-        this.newsContent = content;
-        this.author = author;
-        setCreated();
-        setModified();
-    }
-
-    public News(String title, String content, Author author) {
-        this.title = title;
-        this.newsContent = content;
-        this.author = author;
-        setCreated();
-        setModified();
-    }
-
-    public News(Long id, String title, String content, Author author, String created, String modified, Set<NewsTag> tags, List<Comment> comments) {
-        this.id = id;
-        this.title = title;
-        this.newsContent = content;
-        this.author = author;
-        this.created = created;
-        this.modified = modified;
-        this.newstags = tags;
-        this.comments = comments;
-    }
-    */
-
+    // Builder pattern
     private News(Builder builder) {
         this.id = builder.id;
         this.title = builder.title;
         this.newsContent = builder.newsContent;
         this.author = builder.author;
-        this.created = builder.created != null ? builder.created : SIMPLEDATEFORMAT.format(new Date());
-        this.modified = builder.modified != null ? builder.modified : SIMPLEDATEFORMAT.format(new Date());
+        this.created = builder.created != null ? builder.created : LocalDateTime.now(); // **Changed: Handle LocalDateTime**
+        this.modified = builder.modified != null ? builder.modified : LocalDateTime.now(); // **Changed: Handle LocalDateTime**
         this.newstags = builder.newstags != null ? builder.newstags : new HashSet<>();
         this.comments = builder.comments != null ? builder.comments : new ArrayList<>();
     }
@@ -88,8 +64,8 @@ public class News {
         private String title;
         private String newsContent;
         private Author author;
-        private String created;
-        private String modified;
+        private LocalDateTime created; // **Changed: Builder handles LocalDateTime**
+        private LocalDateTime modified; // **Changed: Builder handles LocalDateTime**
         private Set<NewsTag> newstags;
         private List<Comment> comments;
 
@@ -113,12 +89,12 @@ public class News {
             return this;
         }
 
-        public Builder created(String created) {
+        public Builder created(LocalDateTime created) { // **Changed: Set LocalDateTime in Builder**
             this.created = created;
             return this;
         }
 
-        public Builder modified(String modified) {
+        public Builder modified(LocalDateTime modified) { // **Changed: Set LocalDateTime in Builder**
             this.modified = modified;
             return this;
         }
@@ -138,6 +114,7 @@ public class News {
         }
     }
 
+    // Getters and Setters
     public List<Comment> getComments() {
         return comments;
     }
@@ -150,21 +127,20 @@ public class News {
         this.newstags = tags;
     }
 
-    public void setCreated() {
-        this.created = SIMPLEDATEFORMAT.format(new Date());
-
-    }
-
-    public void setModified() {
-        this.modified = SIMPLEDATEFORMAT.format(new Date());
-    }
-
-    public String getCreated() {
+    public LocalDateTime getCreated() { // **Changed: Getter for LocalDateTime**
         return created;
     }
 
-    public String getModified() {
+    public void setCreated(LocalDateTime created) { // **Changed: Setter for LocalDateTime**
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() { // **Changed: Getter for LocalDateTime**
         return modified;
+    }
+
+    public void setModified(LocalDateTime modified) { // **Changed: Setter for LocalDateTime**
+        this.modified = modified;
     }
 
     public Long getId() {
@@ -199,13 +175,17 @@ public class News {
         this.author = author;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         News news = (News) o;
-        return Objects.equals(id, news.id) && Objects.equals(title, news.title) && Objects.equals(newsContent, news.newsContent) && Objects.equals(author, news.author) && Objects.equals(created, news.created) && Objects.equals(modified, news.modified);
+        return Objects.equals(id, news.id) &&
+                Objects.equals(title, news.title) &&
+                Objects.equals(newsContent, news.newsContent) &&
+                Objects.equals(author, news.author) &&
+                Objects.equals(created, news.created) &&
+                Objects.equals(modified, news.modified);
     }
 
     @Override

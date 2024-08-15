@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 @Mapper(componentModel = "spring")
 @Component
 public interface CommentMapper {
-    @Mapping(target = "newsId", source = "news.id")
+    //@Mapping(target = "newsId", source = "newsId")
     @Mapping(target = "created", source = "created", qualifiedByName = "localDateTimeToString")
     @Mapping(target = "modified", source = "modified", qualifiedByName = "localDateTimeToString")
     CommentDTO entityToDTO(Comment comment);
 
-    @Mapping(target = "newsId", source = "news.id")
+    //@Mapping(target = "newsId", source = "newsId")
     @Mapping(target = "created", source = "created", qualifiedByName = "stringToLocalDateTime")
     @Mapping(target = "modified", source = "modified", qualifiedByName = "stringToLocalDateTime")
     Comment dtoToEntity(CommentDTO dto);

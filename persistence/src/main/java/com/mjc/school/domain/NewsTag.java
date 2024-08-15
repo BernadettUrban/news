@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "NEWSTAG")
+@Table(name = "news_tag")
 public class NewsTag {
     @Id
     @Column(name = "ID")
