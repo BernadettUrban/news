@@ -1,5 +1,5 @@
 -- Clear existing data in dependent tables
-DELETE FROM newstag;
+DELETE FROM news_tag;
 DELETE FROM comment;
 DELETE FROM news;
 
@@ -12,7 +12,7 @@ ALTER TABLE author ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE news ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE comment ALTER COLUMN id RESTART WITH 1;
 ALTER TABLE tag ALTER COLUMN id RESTART WITH 1;
-ALTER TABLE newstag ALTER COLUMN id RESTART WITH 1;
+ALTER TABLE news_tag ALTER COLUMN id RESTART WITH 1;
 
 -- Populate author table
 INSERT INTO author (name) VALUES
@@ -37,7 +37,7 @@ INSERT INTO tag (name) VALUES
 ('Tag 2');
 
 -- Populate news_tag table
-INSERT INTO NEWSTAG (news_id, tag_id) VALUES
+INSERT INTO news_tag (news_id, tag_id) VALUES
 (1, 1),
 (1, 2),
 (2, 2);
