@@ -8,6 +8,7 @@ import com.mjc.school.dtos.*;
 import com.mjc.school.sortfield.SortField;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -142,8 +143,16 @@ public class NewsRestController {
              @Valid @RequestParam(value = "author", required = false) String author,
              @Valid @RequestParam(value = "title", required = false) String title,
              @Valid @RequestParam(value = "content", required = false) String content,
-             @PageableDefault @SortDefault(sort = "created", direction = Sort.Direction.DESC) Pageable pageable
+             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
+             @Valid @RequestParam(value = "size", defaultValue = "10") int size,
+             @Valid @RequestParam(value = "sort", defaultValue = "created") String sort,
+             @Valid @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction
             ) {
+
+        /**
+         * TODO: should it be changeable for the sort value either created or modified?
+         */
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
         Page<NewsDTO> result = newsService.searchNewsByParameters(
                 tagnames, tagids, author, title, content, pageable);
 
