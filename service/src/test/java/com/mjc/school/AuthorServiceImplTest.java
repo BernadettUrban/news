@@ -6,6 +6,7 @@ import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.services.AuthorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,9 @@ class AuthorServiceTest {
     @InjectMocks
     private AuthorServiceImpl authorService;
 
+    @Mock
+    private NewsRepository newsRepository;
+
     private Author author1;
     private Author author2;
     private List<Author> authors;
@@ -40,6 +44,7 @@ class AuthorServiceTest {
     private AuthorDTO authorDTO1;
     private AuthorDTO authorDTO2;
     private List<AuthorDTO> authorDTOs;
+
 
     @BeforeEach
     void setUp() {
@@ -153,14 +158,16 @@ class AuthorServiceTest {
     @Test
     void testGetAuthorByNewsId() {
         Long newsId = 1L;
-
-        when(authorRepository.findByNewsId(newsId)).thenReturn(author1);
-        when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
+        Author author = new Author.Builder().id(1L).name("Author1").build();
+        when(authorRepository.findByNewsId(newsId)).thenReturn(author);
+        when(newsRepository.countByAuthorId(author.getId())).thenReturn(5L);
+        when(authorMapper.entityToDTO(author)).thenReturn(new AuthorDTO(1L, "Author1", 0L));
 
         AuthorDTO result = authorService.getAuthorByNewsId(newsId);
 
-        assertEquals(authorDTO1, result);
+        assertEquals(5L, result.newsCount());
         verify(authorRepository, times(1)).findByNewsId(newsId);
+        verify(newsRepository, times(1)).countByAuthorId(author.getId());
     }
 
     @Test
