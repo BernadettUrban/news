@@ -1,7 +1,4 @@
--- Populate author table
-INSERT INTO author (name) VALUES
-('John Doe'),
-('Jane Smith');
+
 
 -- Populate news table
 INSERT INTO news (title, content, author_id, created, modified) VALUES
