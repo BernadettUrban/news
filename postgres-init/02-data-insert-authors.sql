@@ -953,7 +953,7 @@ INSERT INTO author (name) VALUES
 ('Ciaran Flynn'),
 ('Carson Estrada'),
 ('Damon Melton'),
-('Katell Freeman')
+('Katell Freeman'),
 ('Nash Perkins'),
 ('Christen Barrera'),
 ('Vincent Galloway'),

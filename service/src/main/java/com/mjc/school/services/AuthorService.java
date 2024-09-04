@@ -9,7 +9,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface AuthorService {
-    List<AuthorDTO> listAllAuthors();
+    //List<AuthorDTO> listAllAuthors();
+    Page<AuthorDTO> listAllAuthors(int page,int size);
 
     AuthorDTO createAuthor(CreateAuthorDTO createAuthorDTO);
 

@@ -38,8 +38,11 @@ public class AuthorRestController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDTO.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    public ResponseEntity<List<AuthorDTO>> getAuthors() {
-        List<AuthorDTO> authorDTOS = authorService.listAllAuthors();
+    public ResponseEntity<Page<AuthorDTO>> getAuthors(
+            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
+            @Valid @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        Page<AuthorDTO> authorDTOS = authorService.listAllAuthors(page,size);
         return new ResponseEntity<>(authorDTOS, HttpStatus.OK);
     }
 

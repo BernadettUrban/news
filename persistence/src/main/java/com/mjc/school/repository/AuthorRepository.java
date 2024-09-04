@@ -3,6 +3,7 @@ package com.mjc.school.repository;
 import com.mjc.school.domain.Author;
 import com.mjc.school.projection.AuthorNewsCountProjection;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public interface AuthorRepository extends JpaRepository<Author, Long> {
     //List<Author> findByNameContainingIgnoreCase(String name);
     Page<Author> findByNameContaining(String name, Pageable pageable);
+    //Page<Author> findAll(PageRequest pageRequest);
 
     Optional<Author> findByName(String name);
 

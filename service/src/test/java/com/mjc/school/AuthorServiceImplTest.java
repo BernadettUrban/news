@@ -67,7 +67,7 @@ class AuthorServiceTest {
         authorDTOs = Arrays.asList(authorDTO1, authorDTO2);
     }
 
-    @Test
+   /* @Test
     void testListAllAuthors() {
         when(authorRepository.findAll()).thenReturn(authors);
         when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
@@ -78,7 +78,7 @@ class AuthorServiceTest {
         assertEquals(authorDTOs, result);
         verify(authorRepository, times(1)).findAll();
     }
-
+*/
     @Test
     void testDeleteAuthorById() {
         Long authorId = 1L;

@@ -11,6 +11,7 @@ import com.mjc.school.repository.NewsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +33,14 @@ public class AuthorServiceImpl implements AuthorService {
         this.newsRepository = newsRepository;
     }
 
+
     @Override
-    public List<AuthorDTO> listAllAuthors() {
-        return authorRepository.findAll().stream()
-                .map(a -> authorMapper.entityToDTO(a))
-                .collect(Collectors.toList());
+    public Page<AuthorDTO> listAllAuthors(int page,int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Author> authorPage = authorRepository.findAll(pageRequest);
+
+        return authorPage.map(authorMapper::entityToDTO);
+
     }
 
     @Transactional
