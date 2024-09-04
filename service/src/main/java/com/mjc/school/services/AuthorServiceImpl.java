@@ -35,7 +35,7 @@ public class AuthorServiceImpl implements AuthorService {
 
 
     @Override
-    public Page<AuthorDTO> listAllAuthors(int page,int size) {
+    public Page<AuthorDTO> listAllAuthors(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<Author> authorPage = authorRepository.findAll(pageRequest);
 
@@ -146,7 +146,6 @@ public class AuthorServiceImpl implements AuthorService {
         }
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new NoSuchElementException("Author not found with id: " + authorId));
-        ;
         author.setName(createAuthorDTO.name());
         authorRepository.save(author);
         return authorMapper.entityToDTO(author);
@@ -196,6 +195,11 @@ public class AuthorServiceImpl implements AuthorService {
                 .map(author -> authorMapper.entityToDTO(author))
                 .collect(Collectors.toList());
         return new PageImpl<>(authorDTOList, pageable, authorsPage.getTotalElements());
+    }
+
+    @Override
+    public void deleteAll() {
+        authorRepository.deleteAll();
     }
 }
 

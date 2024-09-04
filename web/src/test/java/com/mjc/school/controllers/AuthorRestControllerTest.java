@@ -1,7 +1,8 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.domain.Author;
-import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.dtos.AuthorDTO;
+import com.mjc.school.dtos.CreateAuthorDTO;
+import com.mjc.school.services.AuthorService;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ public class AuthorRestControllerTest {
     private int port;
 
     @Autowired
-    private AuthorRepository authorRepository;
+    private AuthorService authorService;
 
     private final String BASE_URL = "http://localhost:";
     private final String AUTHORS_ENDPOINT = "/api/authors";
@@ -36,23 +37,21 @@ public class AuthorRestControllerTest {
                 "name": "Updated Author"
             }
             """;
+    private Long authorId;
 
     @BeforeEach
     void setUp() {
-        authorRepository.deleteAll();
-
-        authorRepository.save(new Author.Builder()
-                .name("John Doe")
-                .build());
-
-        authorRepository.save(new Author.Builder()
-                .name("Jane Doe")
-                .build());
+        // Use the service layer to set up initial data
+        authorService.listAllAuthors(0, 10); // Initialize with pagination to ensure list is not empty
+        AuthorDTO author1 = authorService.createAuthor(new CreateAuthorDTO("John Doll"));
+        AuthorDTO author2 = authorService.createAuthor(new CreateAuthorDTO("Jane Doll"));
+        authorId = author1.id();
     }
 
     @AfterEach
     void tearDown() {
-        authorRepository.deleteAll();
+        // Clean up data using the service layer
+        authorService.deleteAll();
     }
 
     private String getBaseUrl() {
@@ -75,12 +74,6 @@ public class AuthorRestControllerTest {
 
     @Test
     public void deleteAuthor() {
-        Long authorId = authorRepository.findAll().stream()
-                .findFirst()
-                .orElseGet(() -> authorRepository.save(new Author.Builder()
-                        .name("John Doe")
-                        .build())).getId();
-
         String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
         given()
                 .pathParam("id", authorId)
@@ -93,12 +86,6 @@ public class AuthorRestControllerTest {
 
     @Test
     public void getAuthorById() {
-        Long authorId = authorRepository.findAll().stream()
-                .findFirst()
-                .orElseGet(() -> authorRepository.save(new Author.Builder()
-                        .name("John Doe")
-                        .build())).getId();
-
         String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
         given()
                 .pathParam("id", authorId)
@@ -107,32 +94,26 @@ public class AuthorRestControllerTest {
                 .then()
                 .log().body()
                 .statusCode(200)
-                .body("id", equalTo(Integer.parseInt(authorId.toString())))
+                .body("id", equalTo(Math.toIntExact(authorId)))
                 .body("name", notNullValue());
     }
 
     @Test
     public void getAuthors() {
-        String endpoint = getBaseUrl() + AUTHORS_ENDPOINT;
+        String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "?page=0&size=10";
         given()
                 .when()
                 .get(endpoint)
                 .then()
                 .log().body()
                 .statusCode(200)
-                .body("size()", greaterThan(0))
-                .body("id", everyItem(notNullValue()))
-                .body("name", everyItem(notNullValue()));
+                .body("content.size()", greaterThan(0))
+                .body("content.id", everyItem(notNullValue()))
+                .body("content.name", everyItem(notNullValue()));
     }
 
     @Test
     public void updateAuthor() {
-        Long authorId = authorRepository.findAll().stream()
-                .findFirst()
-                .orElseGet(() -> authorRepository.save(new Author.Builder()
-                        .name("John Doe")
-                        .build())).getId();
-
         String endpoint = getBaseUrl() + AUTHORS_ENDPOINT + "/{id}";
         given()
                 .contentType(ContentType.JSON)
@@ -143,7 +124,7 @@ public class AuthorRestControllerTest {
                 .then()
                 .log().body()
                 .statusCode(200)
-                .body("id", equalTo(Integer.parseInt(authorId.toString())))
+                .body("id", equalTo(Math.toIntExact(authorId)))
                 .body("name", equalTo("Updated Author"));
     }
 }

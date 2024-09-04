@@ -32,4 +32,6 @@ public interface AuthorService {
 
     Page<AuthorDTO> getAuthorsWithNewsCount(Pageable pageable);
     Page<AuthorDTO> getAuthorsByName(String name, Pageable pageable);
+
+    void deleteAll();
 }
