@@ -171,8 +171,15 @@ public class AuthorServiceImpl implements AuthorService {
         if (pageable.getPageSize() < 0) {
             throw new IllegalArgumentException("Size must be not negative");
         }
-        Page<AuthorNewsCountProjection> results = authorRepository.findAuthorsWithNewsCount(pageable);
-        return results.map(authorMapper::toAuthorDTO);
+        Page<Author> authors = authorRepository.findAll(pageable);
+
+        return authors.map(author ->
+                new AuthorDTO(
+                        author.getId(),
+                        author.getName(),
+                        (long) author.getNews().size() // Calculate newsCount from the size of the news list
+                )
+        );
     }
 
     @Override
