@@ -41,8 +41,16 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO getCommentById(Long id) {
+        // Fetch the comment by its ID and ensure it exists
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Comment not found with id: " + id));
+
+        // Ensure the comment is associated with a news article
+        if (comment.getNews() == null) {
+            throw new CustomException("Comment with id: " + id + " is not associated with any news.");
+        }
+
+        // Map the comment entity to CommentDTO using the mapper
         return commentMapper.entityToDTO(comment);
     }
 
@@ -90,12 +98,21 @@ public class CommentServiceImpl implements CommentService {
         if (size < 0) {
             throw new CustomException("Size must be not negative");
         }
+        // Ensure the news exists before fetching comments
+        News news = newsRepository.findById(newsId)
+                .orElseThrow(() -> new CustomException("News not found with id: " + newsId));
+
+        // Fetch the comments associated with the news using pagination
         Pageable pageable = PageRequest.of(page, size);
-        Page<Comment> commentsPage = commentRepository.findAll(pageable);
+        Page<Comment> commentsPage = commentRepository.findByNews(news, pageable);
+
+        // Map the fetched comments to CommentDTOs
         List<CommentDTO> commentDTOList = commentsPage.getContent()
                 .stream()
-                .map(comment -> commentMapper.entityToDTO(comment))
+                .map(commentMapper::entityToDTO)  // Use method reference for better readability
                 .collect(Collectors.toList());
+
+        // Return a paginated result of CommentDTOs
         return new PageImpl<>(commentDTOList, pageable, commentsPage.getTotalElements());
     }
 }
