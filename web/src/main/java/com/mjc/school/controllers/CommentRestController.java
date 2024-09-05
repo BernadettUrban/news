@@ -1,5 +1,6 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.dtos.UpdateCommentDTO;
 import com.mjc.school.services.CommentService;
 import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.CreateCommentDTO;
@@ -57,8 +58,8 @@ public class CommentRestController {
     )
     public ResponseEntity<CommentDTO> updateComment(
             @Valid @PathVariable("commentId") Long commentId,
-            @Valid @RequestBody CreateCommentDTO createCommentDTO) {
-        CommentDTO commentDTOCreated = commentService.updateComment(commentId, createCommentDTO);
+            @Valid @RequestBody UpdateCommentDTO updateCommentDTO) {
+        CommentDTO commentDTOCreated = commentService.updateComment(commentId, updateCommentDTO);
         return new ResponseEntity<>(commentDTOCreated, HttpStatus.OK);
     }
 

@@ -4,6 +4,7 @@ import com.mjc.school.domain.Comment;
 import com.mjc.school.domain.News;
 import com.mjc.school.dtos.CommentDTO;
 import com.mjc.school.dtos.CreateCommentDTO;
+import com.mjc.school.dtos.UpdateCommentDTO;
 import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.exceptions.PaginationException;
 import com.mjc.school.mappers.CommentMapper;
@@ -74,16 +75,12 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public CommentDTO updateComment(Long id, CreateCommentDTO createCommentDTO) {
+    public CommentDTO updateComment(Long id, UpdateCommentDTO updateCommentDTO) {
         Comment existingComment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException("Comment not found with id: " + id));
 
-        existingComment.setCommentContent(createCommentDTO.commentContent());
-        Long newsId = createCommentDTO.newsId();
-        News news = newsRepository.findById(newsId)
-                .orElseThrow(() -> new CustomException("News not found with id: " + newsId));
+        existingComment.setCommentContent(updateCommentDTO.commentContent());
 
-        existingComment.setNews(news);
         // The `@PreUpdate` method in Comment entity will handle setting modified timestamp
 
         Comment updatedComment = commentRepository.save(existingComment);
