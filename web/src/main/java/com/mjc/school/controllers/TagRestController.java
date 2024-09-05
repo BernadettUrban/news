@@ -1,10 +1,12 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.dtos.CreateTagDTO;
-import com.mjc.school.services.TagService;
 import com.mjc.school.domain.Tag;
+import com.mjc.school.dtos.CreateTagDTO;
 import com.mjc.school.dtos.TagDTO;
+import com.mjc.school.services.TagService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,7 @@ public class TagRestController {
             consumes = {"application/json"}
     )
     public ResponseEntity<CreateTagDTO> createTag(@Valid @RequestBody CreateTagDTO createTagDTO) {
-        Tag tag = tagService. createTagFromDTO(createTagDTO);
+        Tag tag = tagService.createTagFromDTO(createTagDTO);
         tagService.saveTag(tag);
         return new ResponseEntity<>(createTagDTO, HttpStatus.CREATED);
     }
@@ -65,33 +67,12 @@ public class TagRestController {
             value = "/api/tags/search",
             produces = {"application/json"}
     )
-    public ResponseEntity<List<TagDTO>> searchTagsByName(@Valid @RequestParam(value = "name", required = true) String name) {
-        List<TagDTO> tagDTOs = tagService.searchTagsByName(name);
+    public ResponseEntity<Page<TagDTO>> searchTagsByName(
+            @Valid @RequestParam(value = "name", required = true) String name,
+            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
+            @Valid @RequestParam(value = "size", defaultValue = "10") int size
+    ) {
+        Page<TagDTO> tagDTOs = tagService.searchTagsByName(name, page, size);
         return new ResponseEntity<>(tagDTOs, HttpStatus.OK);
     }
-
-    /*
-    @Override
-
-    @Override
-
-
-    @Override
-
-
-    @Override
-
-
-    @Override
-    public ResponseEntity<TagModel> updateTag(Long tagId, TagModel tagModel) {
-        Optional<Tag> optionalTag = defaultNewsService.getTagById(tagId);
-        if (!optionalTag.isPresent()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Tag tag = optionalTag.get();
-        tagConverter.updateTagFromTagModel(tag, tagModel);
-        defaultNewsService.saveTag(tag);
-        return new ResponseEntity<>(tagModel, HttpStatus.OK);
-    }
-    */
 }

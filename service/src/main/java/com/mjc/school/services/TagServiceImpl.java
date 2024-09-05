@@ -8,10 +8,7 @@ import com.mjc.school.exceptions.PaginationException;
 import com.mjc.school.mappers.TagMapper;
 import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.repository.TagRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +37,19 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public Page<TagDTO> listAllNews(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page <Tag> tagPage = tagRepository.findAll(pageRequest);
+        return tagPage.map(tagMapper::entityToDTO);
+        /*
+
+        Page<Author> authorPage = authorRepository.findAll(pageRequest);
+
+        return authorPage.map(authorMapper::entityToDTO);
+         */
+    }
+
+    @Override
     public void deleteTagById(Long id) {
         tagRepository.deleteById(id);
     }
@@ -65,12 +75,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<TagDTO> searchTagsByName(String name) {
+    public Page<TagDTO> searchTagsByName(String name, int page, int size) {
+        // Handle sorting direction
 
-        return tagRepository.findByNameContainingIgnoreCase(name)
-                .stream()
-                .map(t -> tagMapper.entityToDTO(t))
-                .collect(Collectors.toList());
+        // Create Pageable object with page, size, and sorting information
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Fetch paginated data from the repository
+        Page<Tag> tagPage = tagRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        // Map to DTOs and return the Page of DTOs
+        return tagPage.map(tagMapper::entityToDTO);
     }
 
     @Override

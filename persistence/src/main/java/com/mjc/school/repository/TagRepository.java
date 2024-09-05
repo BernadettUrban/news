@@ -12,7 +12,9 @@ import java.util.Optional;
 
 @RepositoryRestResource(exported = false)
 public interface TagRepository extends JpaRepository<Tag, Long> {
-    List<Tag> findByNameContainingIgnoreCase(String name);
+    //List<Tag> findByNameContainingIgnoreCase(String name);
 
     Optional<Tag> findByName(String tagName);
+
+    Page<Tag> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }
