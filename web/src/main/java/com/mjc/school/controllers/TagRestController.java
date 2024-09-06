@@ -57,8 +57,11 @@ public class TagRestController {
             value = "/api/tags",
             produces = {"application/json"}
     )
-    public ResponseEntity<List<TagDTO>> getTags() {
-        List<TagDTO> tagDTOs = tagService.listAllTags();
+    public ResponseEntity<Page<TagDTO>> getTags(
+            @Valid @RequestParam(value = "page", defaultValue = "0") int page,
+            @Valid @RequestParam(value = "size", defaultValue = "10") int size) {
+
+        Page<TagDTO> tagDTOs = tagService.listAllTags(page, size);
         return new ResponseEntity<>(tagDTOs, HttpStatus.OK);
     }
 

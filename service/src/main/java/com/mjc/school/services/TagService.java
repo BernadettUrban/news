@@ -11,8 +11,8 @@ import org.springframework.data.domain.Sort;
 import java.util.List;
 
 public interface TagService {
-    List<TagDTO> listAllTags();
-    Page<TagDTO> listAllNews(int page, int size);
+
+    Page<TagDTO> listAllTags(int page, int size);
 
     void deleteTagById(Long id);
 

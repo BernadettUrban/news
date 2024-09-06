@@ -27,26 +27,12 @@ public class TagServiceImpl implements TagService {
         this.newsTagRepository = newsTagRepository;
     }
 
-    @Override
-    public List<TagDTO> listAllTags() {
-
-        return tagRepository.findAll()
-                .stream()
-                .map(t -> tagMapper.entityToDTO(t))
-                .collect(Collectors.toList());
-    }
 
     @Override
-    public Page<TagDTO> listAllNews(int page, int size) {
+    public Page<TagDTO> listAllTags(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page <Tag> tagPage = tagRepository.findAll(pageRequest);
         return tagPage.map(tagMapper::entityToDTO);
-        /*
-
-        Page<Author> authorPage = authorRepository.findAll(pageRequest);
-
-        return authorPage.map(authorMapper::entityToDTO);
-         */
     }
 
     @Override
