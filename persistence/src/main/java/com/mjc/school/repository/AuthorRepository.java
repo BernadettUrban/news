@@ -34,10 +34,12 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     @Query("SELECT a FROM Author a JOIN a.news n GROUP BY a ORDER BY COUNT(n) DESC")
     List<Author> findAuthorsOrderedByNewsCount();
 
-    @Query(value = "SELECT a.id AS id, a.name AS name, COUNT(n.id) AS newsCount " +
+   /* @Query(value = "SELECT a.id AS id, a.name AS name, COUNT(n.id) AS newsCount " +
             "FROM Author a LEFT JOIN News n ON a.id = n.author_id " +
             "GROUP BY a.id, a.name",
             countQuery = "SELECT COUNT(DISTINCT a.id) FROM Author a LEFT JOIN News n ON a.id = n.author_id",
             nativeQuery = true)
     Page<AuthorNewsCountProjection> findAuthorsWithNewsCount(Pageable pageable);
+
+    */
 }

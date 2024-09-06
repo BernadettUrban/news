@@ -103,7 +103,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
 
-    @Override
+    /*@Override
     public List<AuthorDTO> searchAuthorsByName(String name) {
         if (name == null) {
             throw new IllegalArgumentException("Author name cannot be null");
@@ -120,7 +120,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .map(authorMapper::entityToDTO)
                 .collect(Collectors.toList());
     }
-
+*/
     @Override
     public AuthorDTO getAuthorByNewsId(Long newsId) {
         if (newsId == null) {
@@ -152,6 +152,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     }
 
+    /*
     @Override
     public List<AuthorDTO> getAuthorsOrderedByNewsCount() {
 
@@ -160,7 +161,7 @@ public class AuthorServiceImpl implements AuthorService {
                 .map(a -> authorMapper.entityToDTO(a))
                 .collect(Collectors.toList());
     }
-
+*/
     public Page<AuthorDTO> getAuthorsWithNewsCount(Pageable pageable) {
         if (pageable == null) {
             throw new IllegalArgumentException("Pageable object cannot be null");

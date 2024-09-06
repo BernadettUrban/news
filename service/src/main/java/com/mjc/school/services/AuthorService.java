@@ -22,13 +22,13 @@ public interface AuthorService {
 
     Author convertDtoToAuthor(AuthorDTO authorDTO);
 
-    List<AuthorDTO> searchAuthorsByName(String name);
+    //List<AuthorDTO> searchAuthorsByName(String name);
 
     AuthorDTO getAuthorByNewsId(Long newsId);
 
     AuthorDTO updateAuthor(Long authorId, CreateAuthorDTO createAuthorDTO);
 
-    List<AuthorDTO> getAuthorsOrderedByNewsCount();
+    //List<AuthorDTO> getAuthorsOrderedByNewsCount();
 
     Page<AuthorDTO> getAuthorsWithNewsCount(Pageable pageable);
     Page<AuthorDTO> getAuthorsByName(String name, Pageable pageable);
