@@ -1,10 +1,10 @@
 package com.mjc.school;
 
 import com.mjc.school.domain.Author;
+import com.mjc.school.domain.News;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
-import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.services.AuthorServiceImpl;
@@ -67,18 +67,28 @@ class AuthorServiceTest {
         authorDTOs = Arrays.asList(authorDTO1, authorDTO2);
     }
 
-   /* @Test
+    @Test
     void testListAllAuthors() {
-        when(authorRepository.findAll()).thenReturn(authors);
+        // Given
+        Author author1 = new Author.Builder().id(1L).name("John Doe").build();
+        Author author2 = new Author.Builder().id(2L).name("Jane Doe").build();
+        AuthorDTO authorDTO1 = new AuthorDTO(1L, "John Doe", 0L);
+        AuthorDTO authorDTO2 = new AuthorDTO(2L, "Jane Doe", 0L);
+        Page<Author> authorPage = new PageImpl<>(List.of(author1, author2));
+        Page<AuthorDTO> expectedPage = new PageImpl<>(List.of(authorDTO1, authorDTO2));
+
+        // When
+        when(authorRepository.findAll(PageRequest.of(0, 10))).thenReturn(authorPage);
         when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
         when(authorMapper.entityToDTO(author2)).thenReturn(authorDTO2);
 
-        List<AuthorDTO> result = authorService.listAllAuthors();
+        // Then
+        Page<AuthorDTO> result = authorService.listAllAuthors(0, 10);
 
-        assertEquals(authorDTOs, result);
-        verify(authorRepository, times(1)).findAll();
+        // Verify
+        assertEquals(expectedPage, result);
     }
-*/
+
     @Test
     void testDeleteAuthorById() {
         Long authorId = 1L;
@@ -207,56 +217,35 @@ class AuthorServiceTest {
 
     @Test
     void testGetAuthorsWithNewsCount() {
-        AuthorNewsCountProjection projection1 = new AuthorNewsCountProjection() {
-            @Override
-            public Long getId() {
-                return 1L;
-            }
-
-            @Override
-            public String getName() {
-                return "Author1";
-            }
-
-            @Override
-            public Long getNewsCount() {
-                return 5L;
-            }
-        };
-
-        AuthorNewsCountProjection projection2 = new AuthorNewsCountProjection() {
-            @Override
-            public Long getId() {
-                return 2L;
-            }
-
-            @Override
-            public String getName() {
-                return "Author2";
-            }
-
-            @Override
-            public Long getNewsCount() {
-                return 10L;
-            }
-        };
-
-        List<AuthorNewsCountProjection> projections = Arrays.asList(projection1, projection2);
-
-        Page<AuthorNewsCountProjection> projectionPage = new PageImpl<>(projections);
-        Page<AuthorDTO> authorDTOPage = new PageImpl<>(authorDTOs);
-
+        // Given
+        Author author1 = new Author.Builder()
+                .id(1L)
+                .name("John Doe")
+                .news(List.of(new News(), new News())) // 2 news items
+                .build();
+        Author author2 = new Author.Builder()
+                .id(2L)
+                .name("Jane Doe")
+                .news(Collections.emptyList()) // 0 news items
+                .build();
+        Page<Author> authorPage = new PageImpl<>(List.of(author1, author2));
         Pageable pageable = PageRequest.of(0, 10);
 
-        when(authorRepository.findAuthorsWithNewsCount(pageable)).thenReturn(projectionPage);
-        when(authorMapper.toAuthorDTO(projection1)).thenReturn(authorDTO1);
-        when(authorMapper.toAuthorDTO(projection2)).thenReturn(authorDTO2);
+        // When
+        when(authorRepository.findAll(pageable)).thenReturn(authorPage);
 
+        // Then
         Page<AuthorDTO> result = authorService.getAuthorsWithNewsCount(pageable);
 
-        assertEquals(authorDTOPage, result);
-        verify(authorRepository, times(1)).findAuthorsWithNewsCount(pageable);
+        // Verify
+        assertNotNull(result);
+        assertEquals(2, result.getContent().size());
+        assertEquals(2L, result.getContent().get(0).newsCount()); // Check news count for author1
+        assertEquals(0L, result.getContent().get(1).newsCount()); // Check news count for author2
+
+        verify(authorRepository, times(1)).findAll(pageable);
     }
+
 
     @Test
     void testCreateAuthorWithNullValueNameInCreateAuthorDTOShouldThrowIllegalArgumentException() {
