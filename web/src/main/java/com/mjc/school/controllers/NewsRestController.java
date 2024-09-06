@@ -6,6 +6,11 @@ import com.mjc.school.services.NewsService;
 import com.mjc.school.services.TagService;
 import com.mjc.school.dtos.*;
 import com.mjc.school.sortfield.SortField;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/news")
 public class NewsRestController {
     private final NewsService newsService;
     private final CommentService commentService;
@@ -34,11 +40,14 @@ public class NewsRestController {
     }
 
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/api/news",
-            produces = {"application/json"}
-    )
+    @GetMapping
+    @Operation(summary = "Retrieve news", description = "Get news articles with pagination and sorting")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved news",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid pagination or sorting parameters"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public Page<NewsDTO> getNews(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -47,55 +56,63 @@ public class NewsRestController {
         return newsService.listAllNews(page, size, sortField, sortDirection);
     }
 
-    @RequestMapping(
-            method = RequestMethod.POST,
-            value = "/api/news",
-            produces = {"application/json"},
-            consumes = {"application/json"}
-    )
+    @PostMapping
+    @Operation(summary = "Create news", description = "Create a new news article")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "News successfully created",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = NewsDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
     public ResponseEntity<NewsDTO> createNews(@Valid @RequestBody CreateNewsDTO createNewsDTO) {
         NewsDTO newsDTO = newsService.createNews(createNewsDTO);
         return new ResponseEntity<>(newsDTO, HttpStatus.OK);
 
     }
 
-    @RequestMapping(
-            method = RequestMethod.PATCH,
-            value = "/api/news/{newsId}",
-            produces = {"application/json"},
-            consumes = {"application/json"}
-    )
-
+    @PatchMapping("/{newsId}")
+    @Operation(summary = "Update news", description = "Update an existing news article by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "News successfully updated",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = NewsDTO.class))),
+            @ApiResponse(responseCode = "404", description = "News article not found"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
     public ResponseEntity<NewsDTO> updateNews(@Valid @PathVariable("newsId") Long newsId, @Valid @RequestBody CreateNewsDTO createNewsDTO) {
         NewsDTO newsDTO = newsService.updateNews(newsId, createNewsDTO);
         return new ResponseEntity<>(newsDTO, HttpStatus.OK);
 
     }
 
-    @RequestMapping(
-            method = RequestMethod.DELETE,
-            value = "/api/news/{newsId}"
-    )
+    @DeleteMapping("/{newsId}")
+    @Operation(summary = "Delete news", description = "Delete a news article by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "News successfully deleted"),
+            @ApiResponse(responseCode = "404", description = "News article not found")
+    })
     public ResponseEntity<Void> deleteNews(@Valid @PathVariable("newsId") Long newsId) {
         newsService.deleteNewsById(newsId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/api/news/{newsId}",
-            produces = {"application/json"}
-    )
+    @GetMapping("/{newsId}")
+    @Operation(summary = "Get news by ID", description = "Retrieve a news article by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved news article",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = NewsDTO.class))),
+            @ApiResponse(responseCode = "404", description = "News article not found")
+    })
     public ResponseEntity<NewsDTO> getNewsById(@Valid @PathVariable("newsId") Long newsId) {
         NewsDTO newsDTO = newsService.getNewsById(newsId).get();
         return new ResponseEntity<>(newsDTO, HttpStatus.OK);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/api/news/{newsId}/comments",
-            produces = {"application/json"}
-    )
+    @GetMapping("/{newsId}/comments")
+    @Operation(summary = "Get comments by news ID", description = "Retrieve comments for a news article by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved comments",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))),
+            @ApiResponse(responseCode = "404", description = "News article not found")
+    })
 
     public ResponseEntity<Page<CommentDTO>> getCommentsByNewsId(
             @Valid @PathVariable("newsId") Long newsId,
@@ -106,11 +123,13 @@ public class NewsRestController {
         return new ResponseEntity<>(commentDTOList, HttpStatus.OK);
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/api/news/{newsId}/tags",
-            produces = {"application/json"}
-    )
+    @GetMapping("/{newsId}/tags")
+    @Operation(summary = "Get tags by news ID", description = "Retrieve tags for a news article by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved tags",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))),
+            @ApiResponse(responseCode = "404", description = "News article not found")
+    })
 
     public ResponseEntity<Page<TagDTO>> getTagsByNewsId(
             @Valid @PathVariable("newsId") Long newsId,
@@ -121,22 +140,27 @@ public class NewsRestController {
     }
 
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/api/news/{newsId}/author",
-            produces = {"application/json"}
-    )
+    @GetMapping("/{newsId}/author")
+    @Operation(summary = "Get author by news ID", description = "Retrieve the author of a news article by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved author",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthorDTO.class))),
+            @ApiResponse(responseCode = "404", description = "News article not found")
+    })
     public ResponseEntity<AuthorDTO> getAuthorByNewsId(@Valid @PathVariable("newsId") Long newsId) {
         AuthorDTO authorDTO = authorService.getAuthorByNewsId(newsId);
         return new ResponseEntity<>(authorDTO, HttpStatus.OK);
     }
 
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/api/news/search",
-            produces = {"application/json"}
-    )
+    @GetMapping("/search")
+    @Operation(summary = "Search news", description = "Search for news articles by various parameters")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved search results",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Page.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid search parameters"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     public ResponseEntity<Page<NewsDTO>> searchNewsByParameters
             (@Valid @RequestParam(value = "tagnames", required = false) List<String> tagnames,
              @Valid @RequestParam(value = "tagids", required = false) List<Long> tagids,
