@@ -7,7 +7,6 @@ import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
-import com.mjc.school.services.AuthorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,7 +22,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class AuthorServiceTest {
+public class AuthorServiceImplTest {
 
     @Mock
     private AuthorRepository authorRepository;
@@ -367,3 +366,5 @@ class AuthorServiceTest {
         assertEquals("Page size must not be less than one", exception.getMessage());
     }
 }
+
+
