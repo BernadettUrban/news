@@ -5,7 +5,6 @@ DELETE FROM news;
 
 -- Then clear data in the author table
 DELETE FROM author;
-DELETE FROM tag;
 
 -- Restart the auto-increment sequences
 ALTER TABLE author ALTER COLUMN id RESTART WITH 1;
