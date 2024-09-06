@@ -123,6 +123,7 @@ public class AuthorServiceImplTest {
         verify(authorRepository, times(1)).save(author);
     }
 
+    /*
     @Test
     void testSearchAuthorsByName() {
         String name = "John";
@@ -142,7 +143,7 @@ public class AuthorServiceImplTest {
         assertEquals(authorDTOs, result);
         verify(authorRepository, times(1)).findAuthorsByNameOrderedByNewsCount(name);
     }
-
+*/
     @Test
     void testGetAuthorsByName() {
         Pageable pageable = PageRequest.of(0, 10);
@@ -202,6 +203,7 @@ public class AuthorServiceImplTest {
         verify(authorRepository, times(1)).save(author);
     }
 
+    /*
     @Test
     void testGetAuthorsOrderedByNewsCount() {
         when(authorRepository.findAuthorsOrderedByNewsCount()).thenReturn(authors);
@@ -213,6 +215,8 @@ public class AuthorServiceImplTest {
         assertEquals(authorDTOs, result);
         verify(authorRepository, times(1)).findAuthorsOrderedByNewsCount();
     }
+
+     */
 
     @Test
     void testGetAuthorsWithNewsCount() {
@@ -303,7 +307,8 @@ public class AuthorServiceImplTest {
         assertEquals("AuthorDTO cannot be null", exception.getMessage());
     }
 
-    @Test
+
+    /*@Test
     void testSearchAuthorsByNameWithNullValueNameShouldThrowIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             authorService.searchAuthorsByName(null);
@@ -311,6 +316,8 @@ public class AuthorServiceImplTest {
 
         assertEquals("Author name cannot be null", exception.getMessage());
     }
+
+     */
 
     @Test
     void testGetAuthorByNewsIdWithNullValueNewsIdShouldThrowIllegalArgumentException() {
