@@ -1,6 +1,6 @@
 *.iml
 target
-.git 
+.gitignore
 
 # Created by https://www.toptal.com/developers/gitignore/api/java,intellij,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,intellij,gradle
