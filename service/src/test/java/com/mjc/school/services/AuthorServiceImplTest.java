@@ -351,7 +351,7 @@ public class AuthorServiceImplTest {
         assertEquals("Page size must not be less than one", exception.getMessage());
     }
 
-     
+
 }
 
 
