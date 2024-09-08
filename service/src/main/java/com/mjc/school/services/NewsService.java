@@ -30,4 +30,5 @@ public interface NewsService {
                                          String title,
                                          String content,
                                          Pageable pageable);
+
 }

@@ -10,7 +10,7 @@ WORKDIR /app
 COPY . .
 
 # Build the JAR file
-RUN mvn clean package -DskipTests
+RUN mvn clean package
 
 # List contents of the JAR file
 RUN jar tf /app/web/target/web-1.0-SNAPSHOT.jar
