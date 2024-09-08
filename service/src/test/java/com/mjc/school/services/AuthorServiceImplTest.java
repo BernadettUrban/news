@@ -6,6 +6,7 @@ import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.AuthorRepositoryCustomImpl;
 import com.mjc.school.repository.NewsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -123,49 +124,38 @@ public class AuthorServiceImplTest {
         verify(authorRepository, times(1)).save(author);
     }
 
-    /*
-    @Test
-    void testSearchAuthorsByName() {
-        String name = "John";
-        Author author = new Author.Builder()
-                .name("John Doe")
-                .build();
-        List<Author> authors = Arrays.asList(author);
-
-        AuthorDTO authorDTO = new AuthorDTO(1L, "John Doe", 5L);
-        List<AuthorDTO> authorDTOs = Arrays.asList(authorDTO);
-
-        when(authorRepository.findAuthorsByNameOrderedByNewsCount(name)).thenReturn(authors);
-        when(authorMapper.entityToDTO(author)).thenReturn(authorDTO);
-
-        List<AuthorDTO> result = authorService.searchAuthorsByName(name);
-
-        assertEquals(authorDTOs, result);
-        verify(authorRepository, times(1)).findAuthorsByNameOrderedByNewsCount(name);
-    }
-
     @Test
     void testGetAuthorsByName() {
-        Pageable pageable = PageRequest.of(0, 10);
-        Page<Author> authorPage = new PageImpl<>(authors, pageable, authors.size());
-        when(authorRepository.findByNameContaining("Author", pageable)).thenReturn(authorPage);
-        when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
-        when(authorMapper.entityToDTO(author2)).thenReturn(authorDTO2);
+        // Given
+        Author author1 = new Author.Builder().id(1L).name("John Doe").build();
+        Author author2 = new Author.Builder().id(2L).name("Jane Doe").build();
+        AuthorDTO authorDTO1 = new AuthorDTO(1L, "John Doe", 5L);
+        AuthorDTO authorDTO2 = new AuthorDTO(2L, "Jane Doe", 10L);
 
-        Page<AuthorDTO> result = authorService.getAuthorsByName("Author", pageable);
+        Pageable pageable = PageRequest.of(0, 10); // Ensure the same pageable configuration is used
+        // Creating a Page<Object[]> with Arrays.asList
+        Page<Object[]> page = new PageImpl<>(Arrays.asList(
+                new Object[]{author1.getId(), author1.getName(), 5L},
+                new Object[]{author2.getId(), author2.getName(), 10L}
+        ), pageable, 2);
 
-        assertNotNull(result);
-        assertEquals(2, result.getTotalElements());
-        assertEquals(2, result.getContent().size());
-        assertEquals(authorDTO1, result.getContent().get(0));
-        assertEquals(authorDTO2, result.getContent().get(1));
+        Page<AuthorDTO> expectedPage = new PageImpl<>(Arrays.asList(authorDTO1, authorDTO2));
 
-        verify(authorRepository, times(1)).findByNameContaining("Author", pageable);
-        verify(authorMapper, times(1)).entityToDTO(author1);
-        verify(authorMapper, times(1)).entityToDTO(author2);
+        // When
+        when(authorRepository.findAuthorsByName("John", PageRequest.of(0, 10))).thenReturn(page);
+
+        // Call the service method
+
+        Page<AuthorDTO> result = authorService.getAuthorsByName("John", pageable);
+
+        // Verify
+        assertNotNull(result); // Ensure the result is not null
+        assertEquals(expectedPage.getTotalElements(), result.getTotalElements());
+        //assertEquals(expectedPage.getSize(), result.getSize());
+        assertEquals(expectedPage.getNumber(), result.getNumber());
+        assertIterableEquals(expectedPage.getContent(), result.getContent());
     }
 
-     */
 
     @Test
     void testGetAuthorByNewsId() {
@@ -205,53 +195,36 @@ public class AuthorServiceImplTest {
         verify(authorRepository, times(1)).save(author);
     }
 
-    /*
-    @Test
-    void testGetAuthorsOrderedByNewsCount() {
-        when(authorRepository.findAuthorsOrderedByNewsCount()).thenReturn(authors);
-        when(authorMapper.entityToDTO(author1)).thenReturn(authorDTO1);
-        when(authorMapper.entityToDTO(author2)).thenReturn(authorDTO2);
-
-        List<AuthorDTO> result = authorService.getAuthorsOrderedByNewsCount();
-
-        assertEquals(authorDTOs, result);
-        verify(authorRepository, times(1)).findAuthorsOrderedByNewsCount();
-    }
-
-
-
     @Test
     void testGetAuthorsWithNewsCount() {
         // Given
-        Author author1 = new Author.Builder()
-                .id(1L)
-                .name("John Doe")
-                .news(List.of(new News(), new News())) // 2 news items
-                .build();
-        Author author2 = new Author.Builder()
-                .id(2L)
-                .name("Jane Doe")
-                .news(Collections.emptyList()) // 0 news items
-                .build();
-        Page<Author> authorPage = new PageImpl<>(List.of(author1, author2));
         Pageable pageable = PageRequest.of(0, 10);
+        List<Object[]> authorData = List.of(
+                new Object[]{author1.getId(), author1.getName(), 5L},
+                new Object[]{author2.getId(), author2.getName(), 10L}
+        );
+        Page<Object[]> authorPage = new PageImpl<>(authorData, pageable, authorData.size());
+
+        // Mock the repository and mapper behavior
+        when(authorRepository.findAllAuthors(pageable)).thenReturn(authorPage);
+        when(authorMapper.entityToDTO(any(Author.class))).thenAnswer(invocation -> {
+            Author author = invocation.getArgument(0);
+            return new AuthorDTO(author.getId(), author.getName(), (long) (author.getId() % 10)); // Simplified mapping
+        });
 
         // When
-        when(authorRepository.findAll(pageable)).thenReturn(authorPage);
-
-        // Then
         Page<AuthorDTO> result = authorService.getAuthorsWithNewsCount(pageable);
 
-        // Verify
+        // Then
         assertNotNull(result);
-        assertEquals(2, result.getContent().size());
-        assertEquals(2L, result.getContent().get(0).newsCount()); // Check news count for author1
-        assertEquals(0L, result.getContent().get(1).newsCount()); // Check news count for author2
+        assertEquals(2, result.getTotalElements());
+        assertEquals(authorDTO1, result.getContent().get(0));
+        assertEquals(authorDTO2, result.getContent().get(1));
 
-        verify(authorRepository, times(1)).findAll(pageable);
+        verify(authorRepository, times(1)).findAllAuthors(pageable);
     }
 
-  */
+
     @Test
     void testCreateAuthorWithNullValueNameInCreateAuthorDTOShouldThrowIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -310,16 +283,16 @@ public class AuthorServiceImplTest {
     }
 
 
-    /*@Test
+    @Test
     void testSearchAuthorsByNameWithNullValueNameShouldThrowIllegalArgumentException() {
+        Pageable pageable = PageRequest.of(0, 10);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            authorService.searchAuthorsByName(null);
+            authorService.getAuthorsByName(null, pageable);
         });
 
-        assertEquals("Author name cannot be null", exception.getMessage());
+        assertEquals("Name cannot be null", exception.getMessage());
     }
 
-     */
 
     @Test
     void testGetAuthorByNewsIdWithNullValueNewsIdShouldThrowIllegalArgumentException() {
@@ -347,16 +320,18 @@ public class AuthorServiceImplTest {
 
         assertEquals("CreateAuthorDTO cannot be null and must have a name", exception.getMessage());
     }
-    /*
+
 
     @Test
     void testGetAuthorsWithNewsCountWithNullValuePageableShouldThrowIllegalArgumentException() {
+        Pageable pageable = PageRequest.of(0, 10);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             authorService.getAuthorsWithNewsCount(null);
         });
 
         assertEquals("Pageable object cannot be null", exception.getMessage());
     }
+
 
     @Test
     void testGetAuthorsWithNewsCountWithNegativePageIndexShouldThrowIllegalArgumentException() {
@@ -376,7 +351,7 @@ public class AuthorServiceImplTest {
         assertEquals("Page size must not be less than one", exception.getMessage());
     }
 
-     */
+     
 }
 
 

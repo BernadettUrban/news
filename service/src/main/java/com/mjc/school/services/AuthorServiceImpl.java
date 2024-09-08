@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
-    private final AuthorRepositoryCustom authorRepositoryCustom;
+    //private final AuthorRepositoryCustom authorRepositoryCustom;
     private final AuthorMapper authorMapper;
     private final NewsRepository newsRepository;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorRepositoryCustom authorRepositoryCustom, AuthorMapper authorMapper, NewsRepository newsRepository) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper, NewsRepository newsRepository) {
         this.authorRepository = authorRepository;
-        this.authorRepositoryCustom = authorRepositoryCustom;
+       // this.authorRepositoryCustom = authorRepositoryCustom;
         this.authorMapper = authorMapper;
         this.newsRepository = newsRepository;
     }
@@ -174,7 +174,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new IllegalArgumentException("Size must be not negative");
         }
 
-        Page<Object[]> results = authorRepositoryCustom.findAllAuthors(pageable);
+        Page<Object[]> results = authorRepository.findAllAuthors(pageable);
 
         List<AuthorDTO> authorDTOs = results.getContent().stream()
                 .map(record -> new AuthorDTO(
@@ -190,6 +190,9 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Page<AuthorDTO> getAuthorsByName(String name, Pageable pageable) {
 
+        if(name == null){
+            throw new IllegalArgumentException("Name cannot be null");
+        }
         if (pageable == null) {
             throw new IllegalArgumentException("Pageable object cannot be null");
         }
@@ -200,7 +203,7 @@ public class AuthorServiceImpl implements AuthorService {
             throw new IllegalArgumentException("Size must be not negative");
         }
 
-        Page<Object[]> results = authorRepositoryCustom.findAuthorsByName(name, pageable);
+        Page<Object[]> results = authorRepository.findAuthorsByName(name, pageable);
 
         List<AuthorDTO> authorDTOs = results.getContent().stream()
                 .map(record -> new AuthorDTO(
