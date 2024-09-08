@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource(exported = false)
-public interface NewsRepository extends JpaRepository<News, Long>,  JpaSpecificationExecutor<News> {
+public interface NewsRepository extends JpaRepository<News, Long>, JpaSpecificationExecutor<News> {
 
     @Query("SELECT COUNT(n) FROM News n WHERE n.author.id = :authorId")
     long countByAuthorId(@Param("authorId") Long authorId);

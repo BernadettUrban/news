@@ -8,7 +8,10 @@ import com.mjc.school.exceptions.PaginationException;
 import com.mjc.school.mappers.TagMapper;
 import com.mjc.school.repository.NewsTagRepository;
 import com.mjc.school.repository.TagRepository;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +34,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Page<TagDTO> listAllTags(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page <Tag> tagPage = tagRepository.findAll(pageRequest);
+        Page<Tag> tagPage = tagRepository.findAll(pageRequest);
         return tagPage.map(tagMapper::entityToDTO);
     }
 

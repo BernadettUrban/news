@@ -1,12 +1,10 @@
 package com.mjc.school.services;
 
 import com.mjc.school.domain.Author;
-import com.mjc.school.domain.News;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.repository.AuthorRepository;
-import com.mjc.school.repository.AuthorRepositoryCustomImpl;
 import com.mjc.school.repository.NewsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +16,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;

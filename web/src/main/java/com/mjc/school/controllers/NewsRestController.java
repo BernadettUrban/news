@@ -1,10 +1,10 @@
 package com.mjc.school.controllers;
 
+import com.mjc.school.dtos.*;
 import com.mjc.school.services.AuthorService;
 import com.mjc.school.services.CommentService;
 import com.mjc.school.services.NewsService;
 import com.mjc.school.services.TagService;
-import com.mjc.school.dtos.*;
 import com.mjc.school.sortfield.SortField;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,8 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
-import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

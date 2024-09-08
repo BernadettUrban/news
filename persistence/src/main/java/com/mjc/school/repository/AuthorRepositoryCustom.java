@@ -1,6 +1,5 @@
 package com.mjc.school.repository;
 
-import com.mjc.school.domain.Author;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

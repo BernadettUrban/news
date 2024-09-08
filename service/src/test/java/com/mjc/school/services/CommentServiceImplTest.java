@@ -82,6 +82,7 @@ class CommentServiceImplTest {
         when(commentRepository.findById(commentId)).thenReturn(Optional.of(comment));
         when(commentMapper.entityToDTO(comment)).thenReturn(commentDTO);
     }
+
     @Test
     void testDeleteCommentById() {
         Long commentId = 1L;

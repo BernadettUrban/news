@@ -5,7 +5,6 @@ import com.mjc.school.domain.Comment;
 import com.mjc.school.domain.News;
 import com.mjc.school.repository.CommentRepository;
 import com.mjc.school.repository.NewsRepository;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

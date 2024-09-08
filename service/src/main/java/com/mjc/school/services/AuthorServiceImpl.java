@@ -6,7 +6,6 @@ import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
 import com.mjc.school.repository.AuthorRepository;
-import com.mjc.school.repository.AuthorRepositoryCustom;
 import com.mjc.school.repository.NewsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper, NewsRepository newsRepository) {
         this.authorRepository = authorRepository;
-       // this.authorRepositoryCustom = authorRepositoryCustom;
+        // this.authorRepositoryCustom = authorRepositoryCustom;
         this.authorMapper = authorMapper;
         this.newsRepository = newsRepository;
     }
@@ -103,25 +102,6 @@ public class AuthorServiceImpl implements AuthorService {
         return authorMapper.dtoToEntity(authorDTO);
     }
 
-
-    /*@Override
-    public List<AuthorDTO> searchAuthorsByName(String name) {
-        if (name == null) {
-            throw new IllegalArgumentException("Author name cannot be null");
-        }
-        List<Author> authors = authorRepository.findAuthorsByNameOrderedByNewsCount(name);
-
-        if (authors.isEmpty()) {
-            // Handle the case when no authors are found, if necessary
-            // For example, return an empty list or throw an exception
-            return Collections.emptyList();
-        }
-
-        return authors.stream()
-                .map(authorMapper::entityToDTO)
-                .collect(Collectors.toList());
-    }
-*/
     @Override
     public AuthorDTO getAuthorByNewsId(Long newsId) {
         if (newsId == null) {
@@ -153,26 +133,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     }
 
-    /*
-    @Override
-    public List<AuthorDTO> getAuthorsOrderedByNewsCount() {
-
-        return authorRepository.findAuthorsOrderedByNewsCount()
-                .stream()
-                .map(a -> authorMapper.entityToDTO(a))
-                .collect(Collectors.toList());
-    }
-*/
     public Page<AuthorDTO> getAuthorsWithNewsCount(Pageable pageable) {
-        if (pageable == null) {
-            throw new IllegalArgumentException("Pageable object cannot be null");
-        }
-        if (pageable.getPageNumber() < 0) {
-            throw new IllegalArgumentException("Page index must be not negative");
-        }
-        if (pageable.getPageSize() < 0) {
-            throw new IllegalArgumentException("Size must be not negative");
-        }
+
+        validatePageable(pageable);
 
         Page<Object[]> results = authorRepository.findAllAuthors(pageable);
 
@@ -187,12 +150,7 @@ public class AuthorServiceImpl implements AuthorService {
         return new PageImpl<>(authorDTOs, pageable, results.getTotalElements());
     }
 
-    @Override
-    public Page<AuthorDTO> getAuthorsByName(String name, Pageable pageable) {
-
-        if(name == null){
-            throw new IllegalArgumentException("Name cannot be null");
-        }
+    private static void validatePageable(Pageable pageable) {
         if (pageable == null) {
             throw new IllegalArgumentException("Pageable object cannot be null");
         }
@@ -202,6 +160,16 @@ public class AuthorServiceImpl implements AuthorService {
         if (pageable.getPageSize() < 0) {
             throw new IllegalArgumentException("Size must be not negative");
         }
+    }
+
+    @Override
+    public Page<AuthorDTO> getAuthorsByName(String name, Pageable pageable) {
+
+        if (name == null) {
+            throw new IllegalArgumentException("Name cannot be null");
+        }
+
+        validatePageable(pageable);
 
         Page<Object[]> results = authorRepository.findAuthorsByName(name, pageable);
 

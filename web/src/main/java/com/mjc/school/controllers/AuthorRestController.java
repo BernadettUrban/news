@@ -1,14 +1,14 @@
 package com.mjc.school.controllers;
 
-import com.mjc.school.services.AuthorServiceImpl;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
+import com.mjc.school.services.AuthorServiceImpl;
 import com.mjc.school.sortfield.AuthorSortField;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,9 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/authors")
@@ -42,7 +39,7 @@ public class AuthorRestController {
             @Valid @RequestParam(value = "page", defaultValue = "0") int page,
             @Valid @RequestParam(value = "size", defaultValue = "10") int size
     ) {
-        Page<AuthorDTO> authorDTOS = authorService.listAllAuthors(page,size);
+        Page<AuthorDTO> authorDTOS = authorService.listAllAuthors(page, size);
         return new ResponseEntity<>(authorDTOS, HttpStatus.OK);
     }
 

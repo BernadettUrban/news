@@ -60,6 +60,7 @@ public class NewsServiceImpl implements NewsService {
 
         return new PageImpl<>(newsDTOs, pageable, newsPage.getTotalElements());
     }
+
     private void validatePagingAndSortingParameters(int page, int size, SortField sortField, Sort.Direction sortDirection) {
         if (page < 0) {
             throw new CustomException("Page number cannot be negative.");
@@ -176,11 +177,7 @@ public class NewsServiceImpl implements NewsService {
                                                 String title, String content,
                                                 Pageable pageable) {
 
-        Specification<News> spec = Specification.where(NewsSpecification.hasAuthorName(authorName))
-                .and(NewsSpecification.hasTitle(title))
-                .and(NewsSpecification.hasContent(content))
-                .and(NewsSpecification.hasTagNames(tagNames))
-                .and(NewsSpecification.hasTagIds(tagIds));
+        Specification<News> spec = buildNewsSpecification(tagNames, tagIds, authorName, title, content);
 
         // Fetch results using the specification
         // Fetch results using the specification
