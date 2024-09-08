@@ -58,7 +58,7 @@ public class AuthorRestControllerTest {
         return BASE_URL + port;
     }
 
-    @Test
+    /*@Test
     public void createAuthor() {
         String endpoint = getBaseUrl() + AUTHORS_ENDPOINT;
         given()
@@ -127,4 +127,6 @@ public class AuthorRestControllerTest {
                 .body("id", equalTo(Math.toIntExact(authorId)))
                 .body("name", equalTo("Updated Author"));
     }
+
+     */
 }

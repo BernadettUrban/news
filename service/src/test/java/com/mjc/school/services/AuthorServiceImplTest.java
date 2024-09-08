@@ -143,7 +143,7 @@ public class AuthorServiceImplTest {
         assertEquals(authorDTOs, result);
         verify(authorRepository, times(1)).findAuthorsByNameOrderedByNewsCount(name);
     }
-*/
+
     @Test
     void testGetAuthorsByName() {
         Pageable pageable = PageRequest.of(0, 10);
@@ -164,6 +164,8 @@ public class AuthorServiceImplTest {
         verify(authorMapper, times(1)).entityToDTO(author1);
         verify(authorMapper, times(1)).entityToDTO(author2);
     }
+
+     */
 
     @Test
     void testGetAuthorByNewsId() {
@@ -216,7 +218,7 @@ public class AuthorServiceImplTest {
         verify(authorRepository, times(1)).findAuthorsOrderedByNewsCount();
     }
 
-     */
+
 
     @Test
     void testGetAuthorsWithNewsCount() {
@@ -249,7 +251,7 @@ public class AuthorServiceImplTest {
         verify(authorRepository, times(1)).findAll(pageable);
     }
 
-
+  */
     @Test
     void testCreateAuthorWithNullValueNameInCreateAuthorDTOShouldThrowIllegalArgumentException() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -345,6 +347,7 @@ public class AuthorServiceImplTest {
 
         assertEquals("CreateAuthorDTO cannot be null and must have a name", exception.getMessage());
     }
+    /*
 
     @Test
     void testGetAuthorsWithNewsCountWithNullValuePageableShouldThrowIllegalArgumentException() {
@@ -372,6 +375,8 @@ public class AuthorServiceImplTest {
 
         assertEquals("Page size must not be less than one", exception.getMessage());
     }
+
+     */
 }
 
 

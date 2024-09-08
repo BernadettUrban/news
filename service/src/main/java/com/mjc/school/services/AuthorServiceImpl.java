@@ -5,8 +5,8 @@ import com.mjc.school.domain.News;
 import com.mjc.school.dtos.AuthorDTO;
 import com.mjc.school.dtos.CreateAuthorDTO;
 import com.mjc.school.mappers.AuthorMapper;
-import com.mjc.school.projection.AuthorNewsCountProjection;
 import com.mjc.school.repository.AuthorRepository;
+import com.mjc.school.repository.AuthorRepositoryCustom;
 import com.mjc.school.repository.NewsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -24,11 +23,13 @@ import java.util.stream.Collectors;
 @Service
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
+    private final AuthorRepositoryCustom authorRepositoryCustom;
     private final AuthorMapper authorMapper;
     private final NewsRepository newsRepository;
 
-    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorMapper authorMapper, NewsRepository newsRepository) {
+    public AuthorServiceImpl(AuthorRepository authorRepository, AuthorRepositoryCustom authorRepositoryCustom, AuthorMapper authorMapper, NewsRepository newsRepository) {
         this.authorRepository = authorRepository;
+        this.authorRepositoryCustom = authorRepositoryCustom;
         this.authorMapper = authorMapper;
         this.newsRepository = newsRepository;
     }
@@ -172,15 +173,18 @@ public class AuthorServiceImpl implements AuthorService {
         if (pageable.getPageSize() < 0) {
             throw new IllegalArgumentException("Size must be not negative");
         }
-        Page<Author> authors = authorRepository.findAll(pageable);
 
-        return authors.map(author ->
-                new AuthorDTO(
-                        author.getId(),
-                        author.getName(),
-                        (long) author.getNews().size() // Calculate newsCount from the size of the news list
-                )
-        );
+        Page<Object[]> results = authorRepositoryCustom.findAllAuthors(pageable);
+
+        List<AuthorDTO> authorDTOs = results.getContent().stream()
+                .map(record -> new AuthorDTO(
+                        (Long) record[0], // id
+                        (String) record[1], // name
+                        (Long) record[2] // newsCount
+                ))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(authorDTOs, pageable, results.getTotalElements());
     }
 
     @Override
@@ -196,13 +200,17 @@ public class AuthorServiceImpl implements AuthorService {
             throw new IllegalArgumentException("Size must be not negative");
         }
 
-        Page<Author> authorsPage = authorRepository.findByNameContaining(name, pageable);
-        List<AuthorDTO> authorDTOList = authorsPage
-                .getContent()
-                .stream()
-                .map(author -> authorMapper.entityToDTO(author))
+        Page<Object[]> results = authorRepositoryCustom.findAuthorsByName(name, pageable);
+
+        List<AuthorDTO> authorDTOs = results.getContent().stream()
+                .map(record -> new AuthorDTO(
+                        (Long) record[0], // id
+                        (String) record[1], // name
+                        (Long) record[2] // newsCount
+                ))
                 .collect(Collectors.toList());
-        return new PageImpl<>(authorDTOList, pageable, authorsPage.getTotalElements());
+
+        return new PageImpl<>(authorDTOs, pageable, results.getTotalElements());
     }
 
     @Override

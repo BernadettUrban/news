@@ -21,4 +21,6 @@ public interface AuthorMapper {
     List<AuthorDTO> authorsToAuthorDTOs(List<Author> authors);
 
     AuthorDTO toAuthorDTO(AuthorNewsCountProjection projection);
+
+    AuthorDTO projectionToAuthorDTO(AuthorNewsCountProjection projection);
 }
