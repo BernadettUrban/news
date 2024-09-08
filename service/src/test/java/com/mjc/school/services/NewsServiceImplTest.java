@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -164,16 +165,17 @@ class NewsServiceImplTest {
         List<String> tagNames = List.of("Tag1");
         List<Long> tagIds = List.of(1L);
 
+        // Create test entities and DTOs
         Author author = new Author.Builder().name(authorName).build();
         News news = new News.Builder().title(title).newsContent(content).author(author).build();
-        NewsDTO newsDTO = new NewsDTO(1L, title, content, author, LocalDateTime.now().toString(), LocalDateTime.now().toString());
+        NewsDTO newsDTO = new NewsDTO(news.getId(), title, content, author, news.getCreated().toString(), news.getModified().toString());
 
         Pageable pageable = PageRequest.of(0, 10);
         Page<News> newsPage = new PageImpl<>(List.of(news), pageable, 1);
         Page<NewsDTO> newsDTOPage = new PageImpl<>(List.of(newsDTO), pageable, 1);
 
         // Mocks setup
-        when(newsRepository.searchNewsByParameters(anyList(), anyList(), anyString(), anyString(), anyString(), any(Pageable.class)))
+        when(newsRepository.findAll(any(Specification.class), any(Pageable.class)))
                 .thenReturn(newsPage);
         when(newsMapper.entityToDTO(any(News.class))).thenReturn(newsDTO);
 

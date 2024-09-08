@@ -127,7 +127,7 @@ class TagServiceImplTest {
         TagDTO tagDTO1 = new TagDTO(1L, "Tag1");
         TagDTO tagDTO2 = new TagDTO(2L, "Tag2");
 
-        when(tagRepository.findTagsByName(name, pageable)).thenReturn(tagPage);
+        when(tagRepository.findByNameContainingIgnoreCase(name, pageable)).thenReturn(tagPage);
         when(tagMapper.entityToDTO(tag1)).thenReturn(tagDTO1);
         when(tagMapper.entityToDTO(tag2)).thenReturn(tagDTO2);
 
@@ -137,7 +137,7 @@ class TagServiceImplTest {
         // Assert
         assertEquals(2, result.getTotalElements());
         assertEquals(2, result.getContent().size());
-        verify(tagRepository, times(1)).findTagsByName(name, pageable);
+        verify(tagRepository, times(1)).findByNameContainingIgnoreCase(name, pageable);
         verify(tagMapper, times(1)).entityToDTO(tag1);
         verify(tagMapper, times(1)).entityToDTO(tag2);
     }

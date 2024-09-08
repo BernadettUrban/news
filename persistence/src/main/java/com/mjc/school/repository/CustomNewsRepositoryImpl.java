@@ -2,6 +2,7 @@ package com.mjc.school.repository;
 
 import com.mjc.school.domain.Author;
 import com.mjc.school.domain.News;
+import com.mjc.school.domain.NewsTag;
 import com.mjc.school.domain.Tag;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -25,47 +26,55 @@ public class CustomNewsRepositoryImpl implements CustomNewsRepository {
                                              List<Long> tagIds, String authorName,
                                              String title, String content,
                                              Pageable pageable) {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<News> criteriaQuery = criteriaBuilder.createQuery(News.class);
-        Root<News> root = criteriaQuery.from(News.class);
+        // JPQL Query with explicit casting and handling of parameters
+        String jpql = "SELECT n FROM News n " +
+                "LEFT JOIN n.newstags nt " +
+                "LEFT JOIN nt.tag t " +
+                "LEFT JOIN n.author a " +
+                "WHERE (:tagNames IS NULL OR t.name IN :tagNames) " +
+                "AND (:tagIds IS NULL OR t.id IN :tagIds) " +
+                "AND (:authorName IS NULL OR LOWER(a.name) LIKE LOWER(CONCAT('%', :authorName, '%'))) " +
+                "AND (:title IS NULL OR LOWER(n.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+                "AND (:content IS NULL OR LOWER(n.newsContent) LIKE LOWER(CONCAT('%', :content, '%')))";
 
-        List<Predicate> predicates = new ArrayList<>();
+        // Create and set parameters for the query
+        TypedQuery<News> query = entityManager.createQuery(jpql, News.class);
+        query.setParameter("tagNames", tagNames);
+        query.setParameter("tagIds", tagIds);
+        query.setParameter("authorName", authorName);
+        query.setParameter("title", title);
+        query.setParameter("content", content);
 
-        if (tagNames != null && !tagNames.isEmpty()) {
-            Join<News, Tag> tags = root.join("tags");
-            predicates.add(tags.get("name").in(tagNames));
-        }
-        if (tagIds != null && !tagIds.isEmpty()) {
-            Join<News, Tag> tags = root.join("tags");
-            predicates.add(tags.get("id").in(tagIds));
-        }
-        if (authorName != null && !authorName.isEmpty()) {
-            Join<News, Author> author = root.join("author");
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(author.get("name")), "%" + authorName.toLowerCase() + "%"));
-        }
-        if (title != null && !title.isEmpty()) {
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
-        }
-        if (content != null && !content.isEmpty()) {
-            predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("content")), "%" + content.toLowerCase() + "%"));
-        }
+        // Pagination
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        List<News> newsList = query.getResultList();
 
-        criteriaQuery.where(predicates.toArray(new Predicate[0]));
+        // Count Query
+        String countJpql = "SELECT COUNT(n) FROM News n " +
+                "LEFT JOIN n.newstags nt " +
+                "LEFT JOIN nt.tag t " +
+                "LEFT JOIN n.author a " +
+                "WHERE (:tagNames IS NULL OR t.name IN :tagNames) " +
+                "AND (:tagIds IS NULL OR t.id IN :tagIds) " +
+                "AND (:authorName IS NULL OR LOWER(a.name) LIKE LOWER(CONCAT('%', :authorName, '%'))) " +
+                "AND (:title IS NULL OR LOWER(n.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+                "AND (:content IS NULL OR LOWER(n.newsContent) LIKE LOWER(CONCAT('%', :content, '%')))";
 
-        // Create and execute the query
-        TypedQuery<News> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult((int) pageable.getOffset());
-        typedQuery.setMaxResults(pageable.getPageSize());
-        List<News> newsList = typedQuery.getResultList();
+        // Create and set parameters for the count query
+        TypedQuery<Long> countQuery = entityManager.createQuery(countJpql, Long.class);
+        countQuery.setParameter("tagNames", tagNames);
+        countQuery.setParameter("tagIds", tagIds);
+        countQuery.setParameter("authorName", authorName);
+        countQuery.setParameter("title", title);
+        countQuery.setParameter("content", content);
 
-        // Count total results
-        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-        Root<News> countRoot = countQuery.from(News.class);
-        countQuery.select(criteriaBuilder.count(countRoot));
-        countQuery.where(predicates.toArray(new Predicate[0]));
-        TypedQuery<Long> countTypedQuery = entityManager.createQuery(countQuery);
-        Long totalElements = countTypedQuery.getSingleResult();
+        Long totalElements = countQuery.getSingleResult();
 
         return new PageImpl<>(newsList, pageable, totalElements);
     }
+
+
+
+
 }
