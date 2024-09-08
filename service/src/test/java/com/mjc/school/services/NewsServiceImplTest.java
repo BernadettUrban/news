@@ -1,13 +1,10 @@
 package com.mjc.school.services;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import com.mjc.school.domain.Author;
 import com.mjc.school.domain.News;
 import com.mjc.school.domain.Tag;
 import com.mjc.school.dtos.CreateNewsDTO;
 import com.mjc.school.dtos.NewsDTO;
-import com.mjc.school.exceptions.CustomException;
 import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
@@ -18,17 +15,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -90,6 +85,7 @@ class NewsServiceImplTest {
         assertEquals(newsDTO.modified(), result.modified());
         verify(newsRepository, times(1)).save(any(News.class));
     }
+
     @Test
     void testUpdateNewsSuccess() {
         // Given
@@ -177,7 +173,8 @@ class NewsServiceImplTest {
         Page<NewsDTO> newsDTOPage = new PageImpl<>(List.of(newsDTO), pageable, 1);
 
         // Mocks setup
-        when(newsRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(newsPage);
+        when(newsRepository.searchNewsByParameters(anyList(), anyList(), anyString(), anyString(), anyString(), any(Pageable.class)))
+                .thenReturn(newsPage);
         when(newsMapper.entityToDTO(any(News.class))).thenReturn(newsDTO);
 
         // When
