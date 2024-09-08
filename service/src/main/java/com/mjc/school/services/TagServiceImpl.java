@@ -68,7 +68,8 @@ public class TagServiceImpl implements TagService {
         Pageable pageable = PageRequest.of(page, size);
 
         // Fetch paginated data from the repository
-        Page<Tag> tagPage = tagRepository.findByNameContainingIgnoreCase(name, pageable);
+        Page<Tag> tagPage = tagRepository.findTagsByName(name,pageable);
+                //findByNameContainingIgnoreCase(name, pageable);
 
         // Map to DTOs and return the Page of DTOs
         return tagPage.map(tagMapper::entityToDTO);
