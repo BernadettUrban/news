@@ -36,7 +36,7 @@ public class NewsSpecification {
             if (content == null || content.isEmpty()) {
                 return builder.conjunction();
             }
-            return builder.like(root.get("content"), "%" + content + "%");
+            return builder.like(root.get("newsContent"), "%" + content + "%");
         };
     }
 
