@@ -7,6 +7,7 @@ import com.mjc.school.services.NewsService;
 import com.mjc.school.services.TagService;
 import com.mjc.school.sortfield.SortField;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -167,16 +168,16 @@ public class NewsRestController {
              @Valid @RequestParam(value = "content", required = false) String content,
              @Valid @RequestParam(value = "page", defaultValue = "0") int page,
              @Valid @RequestParam(value = "size", defaultValue = "10") int size,
-             @Valid @RequestParam(value = "sort", defaultValue = "created") String sort,
-             @Valid @RequestParam(value = "direction", defaultValue = "DESC") Sort.Direction direction
+             @Valid @RequestParam(defaultValue = "created")
+             @Schema(implementation = SortField.class)
+                     SortField sortField,
+             @Valid @RequestParam(defaultValue = "DESC") Sort.Direction sortDirection
             ) {
 
-        /**
-         * TODO: should it be changeable for the sort value either created or modified?
-         */
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sort));
+
+        Pageable pageable = PageRequest.of(page, size, sortDirection, sortField.getDatabaseFieldName());
         Page<NewsDTO> result = newsService.searchNewsByParameters(
-                tagnames, tagids, author, title, content, pageable);
+                tagnames, tagids, author, title, content, sortField, sortDirection, page, size);
 
 
         return new ResponseEntity<>(result, HttpStatus.OK);

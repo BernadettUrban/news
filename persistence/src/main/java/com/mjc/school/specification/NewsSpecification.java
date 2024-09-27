@@ -40,24 +40,24 @@ public class NewsSpecification {
         };
     }
 
-    public static Specification<News> hasTagNames(List<String> tagNames) {
+    // Combined method for filtering by tag names and/or tag IDs
+    public static Specification<News> hasTags(List<String> tagNames, List<Long> tagIds) {
         return (root, query, builder) -> {
-            if (tagNames == null || tagNames.isEmpty()) {
-                return builder.conjunction();
+            if ((tagNames == null || tagNames.isEmpty()) && (tagIds == null || tagIds.isEmpty())) {
+                return builder.conjunction(); // No filtering by tags if both are empty
             }
-            Join<Object, Object> tags = root.join("tags", JoinType.LEFT);
-            return tags.get("name").in(tagNames);
-        };
-    }
+            Join<Object, Object> tags = root.join("newstags", JoinType.LEFT);
 
-
-    public static Specification<News> hasTagIds(List<Long> tagIds) {
-        return (root, query, builder) -> {
-            if (tagIds == null || tagIds.isEmpty()) {
-                return builder.conjunction();
+            if (tagNames != null && !tagNames.isEmpty() && tagIds != null && !tagIds.isEmpty()) {
+                return builder.or(
+                        tags.get("tag").get("name").in(tagNames),
+                        tags.get("tag").get("id").in(tagIds)
+                );
+            } else if (tagNames != null && !tagNames.isEmpty()) {
+                return tags.get("tag").get("name").in(tagNames);
+            } else {
+                return tags.get("tag").get("id").in(tagIds);
             }
-            Join<Object, Object> tags = root.join("tags", JoinType.LEFT);
-            return tags.get("id").in(tagIds);
         };
     }
 }

@@ -29,6 +29,8 @@ public interface NewsService {
                                          String authorName,
                                          String title,
                                          String content,
-                                         Pageable pageable);
+                                         SortField sortField,
+                                         Sort.Direction sortDirection,
+                                         int page, int size);
 
 }

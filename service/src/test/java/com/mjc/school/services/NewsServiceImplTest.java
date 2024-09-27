@@ -9,16 +9,14 @@ import com.mjc.school.mappers.NewsMapper;
 import com.mjc.school.repository.AuthorRepository;
 import com.mjc.school.repository.NewsRepository;
 import com.mjc.school.repository.TagRepository;
+import com.mjc.school.sortfield.SortField;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDateTime;
@@ -170,7 +168,13 @@ class NewsServiceImplTest {
         News news = new News.Builder().title(title).newsContent(content).author(author).build();
         NewsDTO newsDTO = new NewsDTO(news.getId(), title, content, author, news.getCreated().toString(), news.getModified().toString());
 
-        Pageable pageable = PageRequest.of(0, 10);
+        // Mocking Pageable and Page results
+        int page = 0;
+        int size = 10;
+        SortField sortField = SortField.CREATED;
+        Sort.Direction sortDirection = Sort.Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortField.getDatabaseFieldName()));
         Page<News> newsPage = new PageImpl<>(List.of(news), pageable, 1);
         Page<NewsDTO> newsDTOPage = new PageImpl<>(List.of(newsDTO), pageable, 1);
 
@@ -180,7 +184,9 @@ class NewsServiceImplTest {
         when(newsMapper.entityToDTO(any(News.class))).thenReturn(newsDTO);
 
         // When
-        Page<NewsDTO> result = newsService.searchNewsByParameters(tagNames, tagIds, authorName, title, content, pageable);
+        Page<NewsDTO> result = newsService.searchNewsByParameters(
+                tagNames, tagIds, authorName, title, content,
+                sortField, sortDirection, page, size);
 
         // Then
         assertNotNull(result);

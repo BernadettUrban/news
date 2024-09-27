@@ -45,7 +45,8 @@ public class NewsServiceImpl implements NewsService {
         this.validator = validator;
     }
 
-    public Page<NewsDTO> listAllNews(int page, int size, SortField sortField, Sort.Direction sortDirection) {
+    public Page<NewsDTO> listAllNews(int page, int size, SortField sortField,
+                                     Sort.Direction sortDirection) {
         validatePagingAndSortingParameters(page, size, sortField, sortDirection);
 
         Sort sort = createSort(sortField, sortDirection);
@@ -173,14 +174,26 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public Page<NewsDTO> searchNewsByParameters(List<String> tagNames,
-                                                List<Long> tagIds, String authorName,
+                                                List<Long> tagIds,
+                                                String authorName,
                                                 String title, String content,
-                                                Pageable pageable) {
+                                                SortField sortField,
+                                                Sort.Direction sortDirection,
+                                                int page, int size) {
 
-        Specification<News> spec = buildNewsSpecification(tagNames, tagIds, authorName, title, content);
 
-        // Fetch results using the specification
-        // Fetch results using the specification
+        validatePagingAndSortingParameters(page, size, sortField, sortDirection);
+
+
+        Sort sort = createSort(sortField, sortDirection);
+
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        Specification<News> spec =
+                buildNewsSpecification(tagNames, tagIds, authorName, title, content);
+
+
         Page<News> newsPage = newsRepository.findAll(spec, pageable);
 
         // Map entities to DTOs
@@ -197,8 +210,7 @@ public class NewsServiceImpl implements NewsService {
         return Specification.where(NewsSpecification.hasAuthorName(authorName))
                 .and(NewsSpecification.hasTitle(title))
                 .and(NewsSpecification.hasContent(content))
-                .and(NewsSpecification.hasTagNames(tagNames))
-                .and(NewsSpecification.hasTagIds(tagIds));
+                .and(NewsSpecification.hasTags(tagNames, tagIds));
     }
 
 
